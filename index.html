@@ -5,1745 +5,893 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Life of Saint Francis of Assisi</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
-
-  #gameCanvas {
-    display: block;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
-
-  #ui {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 10;
-    font-family: 'Segoe UI', sans-serif;
-  }
-
-  /* N64-style pixelated font feel */
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=MedievalSharp&display=swap');
-
-  #titleScreen {
-    position: fixed; inset: 0; z-index: 100;
-    background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0010 60%, #000 100%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-family: 'Georgia', serif;
-    pointer-events: all;
-    overflow: hidden;
-  }
-
-  .title-stars {
-    position: absolute; inset: 0;
-    background-image: radial-gradient(1px 1px at 20% 30%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 80% 10%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 50% 70%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 10% 80%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 90% 60%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 35% 15%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 65% 85%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 15% 50%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 75% 40%, #fff 100%, transparent),
-      radial-gradient(1px 1px at 45% 25%, #fff 100%, transparent),
-      radial-gradient(2px 2px at 55% 55%, #ffd700 100%, transparent),
-      radial-gradient(2px 2px at 25% 75%, #ffd700 100%, transparent);
-  }
-
-  .title-cross {
-    font-size: clamp(60px, 12vw, 120px);
-    color: #ffd700;
-    text-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00, 0 0 90px #ffd700;
-    animation: glowPulse 2s ease-in-out infinite;
-    margin-bottom: 10px;
-  }
-  @keyframes glowPulse {
-    0%,100% { text-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00; }
-    50% { text-shadow: 0 0 50px #ffd700, 0 0 100px #ff8c00, 0 0 140px #ffd700; }
-  }
-
-  .title-main {
-    font-size: clamp(20px, 5vw, 52px);
-    color: #ffd700;
-    text-align: center;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-shadow: 3px 3px 0 #8B6914, 6px 6px 10px rgba(0,0,0,0.8);
-    animation: titleFadeIn 1.5s ease-out forwards;
-    line-height: 1.2;
-  }
-  @keyframes titleFadeIn {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .title-sub {
-    font-size: clamp(10px, 2.5vw, 22px);
-    color: #d4af37;
-    letter-spacing: 3px;
-    margin-top: 8px;
-    opacity: 0;
-    animation: titleFadeIn 1.5s ease-out 0.5s forwards;
-  }
-
-  .title-bio {
-    max-width: min(700px, 90vw);
-    margin: 20px auto 0;
-    padding: 20px 24px;
-    background: rgba(0,0,0,0.7);
-    border: 2px solid #8B6914;
-    border-radius: 4px;
-    color: #e8d5a0;
-    font-style: italic;
-    font-size: clamp(10px, 2vw, 15px);
-    line-height: 1.7;
-    text-align: center;
-    opacity: 0;
-    animation: titleFadeIn 1.5s ease-out 1s forwards;
-  }
-
-  .title-quote-attr {
-    color: #ffd700; font-style: normal; font-size: 0.85em; margin-top: 6px;
-  }
-
-  .start-btn {
-    margin-top: 24px;
-    padding: 14px 48px;
-    background: linear-gradient(135deg, #8B6914, #ffd700, #8B6914);
-    border: 3px solid #ffd700;
-    color: #1a0a2e;
-    font-size: clamp(12px, 2.5vw, 18px);
-    font-weight: bold;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: Georgia, serif;
-    border-radius: 4px;
-    pointer-events: all;
-    animation: titleFadeIn 1s ease-out 1.5s forwards, btnPulse 1.5s ease-in-out 2s infinite;
-    opacity: 0;
-    transition: transform 0.1s;
-    box-shadow: 0 0 20px rgba(255,215,0,0.4);
-  }
-  @keyframes btnPulse {
-    0%,100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
-    50% { box-shadow: 0 0 40px rgba(255,215,0,0.9); }
-  }
-  .start-btn:hover { transform: scale(1.05); }
-  .start-btn:active { transform: scale(0.97); }
-
-  /* HUD elements */
-  #stageBanner {
-    position: fixed; top: 0; left: 0; right: 0;
-    text-align: center;
-    padding: 10px 20px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-    color: #ffd700;
-    font-family: Georgia, serif;
-    font-size: clamp(11px, 2.5vw, 18px);
-    letter-spacing: 3px;
-    display: none;
-    pointer-events: none;
-    z-index: 20;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 4px #000;
-  }
-
-  #dialogueBox {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-    width: min(800px, 92vw);
-    background: rgba(10,5,25,0.95);
-    border: 3px solid #8B6914;
-    border-radius: 6px;
-    padding: 16px 20px;
-    color: #e8d5a0;
-    font-family: Georgia, serif;
-    font-size: clamp(10px, 2vw, 15px);
-    line-height: 1.7;
-    display: none;
-    z-index: 30;
-    pointer-events: none;
-    box-shadow: 0 0 30px rgba(139,105,20,0.5), inset 0 0 20px rgba(0,0,0,0.5);
-  }
-  #dialogueBox .speaker {
-    color: #ffd700; font-weight: bold; font-size: 1.1em;
-    margin-bottom: 6px; letter-spacing: 2px;
-    font-style: normal;
-  }
-  #dialogueBox .text { font-style: italic; }
-  #dialogueBox .attribution {
-    color: #d4af37; font-size: 0.82em; margin-top: 8px;
-    font-style: normal; text-align: right;
-  }
-  #dialogueBox .continue-hint {
-    color: #888; font-size: 0.78em; margin-top: 6px; text-align: center;
-    animation: blinkAnim 1s ease-in-out infinite;
-  }
-  @keyframes blinkAnim { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  #interactPrompt {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.8);
-    border: 2px solid #ffd700;
-    border-radius: 4px;
-    padding: 10px 20px;
-    color: #ffd700;
-    font-family: Georgia, serif;
-    font-size: clamp(11px, 2.5vw, 16px);
-    display: none;
-    z-index: 25;
-    pointer-events: none;
-    text-align: center;
-    animation: blinkAnim 1s ease-in-out infinite;
-  }
-
-  #objectiveBar {
-    position: fixed; top: 14px; left: 14px;
-    background: rgba(0,0,0,0.75);
-    border: 2px solid #8B6914;
-    border-radius: 4px;
-    padding: 8px 14px;
-    color: #ffd700;
-    font-family: Georgia, serif;
-    font-size: clamp(9px, 1.8vw, 13px);
-    display: none;
-    z-index: 20;
-    pointer-events: none;
-    max-width: min(280px, 40vw);
-  }
-  #objectiveBar .obj-title { color: #d4af37; font-size: 0.85em; letter-spacing: 2px; text-transform: uppercase; }
-  #objectiveBar .obj-text { color: #e8d5a0; margin-top: 4px; }
-
-  #stageProgress {
-    position: fixed; top: 14px; right: 14px;
-    background: rgba(0,0,0,0.75);
-    border: 2px solid #8B6914;
-    border-radius: 4px;
-    padding: 8px 14px;
-    color: #ffd700;
-    font-family: Georgia, serif;
-    font-size: clamp(9px, 1.8vw, 13px);
-    display: none;
-    z-index: 20;
-    pointer-events: none;
-    text-align: right;
-  }
-
-  /* Touch D-pad */
-  #dpad {
-    position: fixed; bottom: 20px; left: 20px;
-    width: 120px; height: 120px;
-    display: none;
-    z-index: 40;
-    pointer-events: all;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  #dpad .dpad-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 40px);
-    grid-template-rows: repeat(3, 40px);
-    gap: 0;
-  }
-  .dpad-btn {
-    background: rgba(0,0,0,0.6);
-    border: 2px solid rgba(255,215,0,0.5);
-    color: #ffd700;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    border-radius: 2px;
-    transition: background 0.1s;
-  }
-  .dpad-btn:active, .dpad-btn.pressed { background: rgba(139,105,20,0.6); }
-  .dpad-center { background: rgba(0,0,0,0.3) !important; border: none !important; }
-
-  #actionBtns {
-    position: fixed; bottom: 20px; right: 20px;
-    display: none;
-    z-index: 40;
-    pointer-events: all;
-    gap: 10px;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .action-btn {
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    border: 3px solid rgba(255,215,0,0.7);
-    background: rgba(0,0,0,0.65);
-    color: #ffd700;
-    font-size: 13px;
-    font-weight: bold;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    user-select: none;
-    font-family: Georgia, serif;
-    letter-spacing: 0.5px;
-  }
-  .action-btn:active { background: rgba(139,105,20,0.7); transform: scale(0.93); }
-
-  /* Cutscene overlay */
-  #cutscene {
-    position: fixed; inset: 0; z-index: 80;
-    background: #000;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    pointer-events: all;
-  }
-  #cutscene .cut-art {
-    font-size: clamp(80px, 20vw, 180px);
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #cutscene .cut-title {
-    font-family: Georgia, serif;
-    font-size: clamp(16px, 4vw, 36px);
-    color: #ffd700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 16px;
-    text-shadow: 0 0 20px #ffd700;
-  }
-  #cutscene .cut-text {
-    max-width: min(700px, 88vw);
-    font-family: Georgia, serif;
-    font-size: clamp(11px, 2.2vw, 16px);
-    color: #e8d5a0;
-    line-height: 1.8;
-    font-style: italic;
-    text-align: center;
-    padding: 16px 20px;
-    background: rgba(0,0,0,0.6);
-    border: 1px solid #8B6914;
-    border-radius: 4px;
-    margin: 0 16px;
-  }
-  #cutscene .cut-attr {
-    color: #d4af37; font-style: normal; font-size: 0.85em;
-    margin-top: 8px; display: block;
-  }
-  #cutscene .cut-continue {
-    margin-top: 20px;
-    color: #ffd700;
-    font-family: Georgia, serif;
-    font-size: clamp(11px, 2vw, 15px);
-    animation: blinkAnim 1s ease-in-out infinite;
-    letter-spacing: 2px;
-    cursor: pointer;
-    padding: 10px 30px;
-    border: 2px solid #8B6914;
-    border-radius: 4px;
-    background: rgba(0,0,0,0.5);
-  }
-
-  #particleOverlay {
-    position: fixed; inset: 0; pointer-events: none;
-    z-index: 5; overflow: hidden;
-  }
-
-  .particle {
-    position: absolute;
-    border-radius: 50%;
-    animation: floatUp linear infinite;
-    pointer-events: none;
-  }
-  @keyframes floatUp {
-    from { transform: translateY(0) rotate(0deg); opacity: 1; }
-    to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-  }
-
-  #miraceEffect {
-    position: fixed; inset: 0; z-index: 50;
-    background: radial-gradient(ellipse at center, rgba(255,215,0,0.9) 0%, rgba(255,140,0,0.5) 40%, transparent 70%);
-    display: none;
-    pointer-events: none;
-    animation: miraclePulse 0.5s ease-out;
-  }
-  @keyframes miraclePulse {
-    0% { opacity: 0; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(1.2); }
-    100% { opacity: 0; transform: scale(1.5); }
-  }
-
-  #loading {
-    position: fixed; inset: 0; z-index: 200;
-    background: #000;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-family: Georgia, serif;
-    color: #ffd700;
-    font-size: clamp(14px, 3vw, 22px);
-    letter-spacing: 3px;
-  }
-  #loadingBar {
-    width: min(300px, 80vw); height: 8px;
-    background: #1a0a2e;
-    border: 2px solid #8B6914;
-    border-radius: 4px;
-    margin-top: 20px;
-    overflow: hidden;
-  }
-  #loadingFill {
-    height: 100%;
-    background: linear-gradient(to right, #8B6914, #ffd700);
-    width: 0%;
-    transition: width 0.3s;
-    border-radius: 2px;
-  }
-
-  #finalScreen {
-    position: fixed; inset: 0; z-index: 90;
-    background: radial-gradient(ellipse at center, #fff5cc 0%, #ffd700 30%, #ff8c00 60%, #1a0a2e 100%);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    font-family: Georgia, serif;
-    pointer-events: all;
-    padding: 20px;
-  }
-  #finalScreen .final-title {
-    font-size: clamp(24px, 6vw, 56px);
-    color: #1a0a2e; font-weight: bold;
-    letter-spacing: 4px;
-    text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
-    text-align: center;
-    animation: titleFadeIn 2s ease-out;
-  }
-  #finalScreen .final-quote {
-    max-width: min(680px, 90vw);
-    font-size: clamp(12px, 2.5vw, 18px);
-    color: #1a0a2e;
-    font-style: italic;
-    line-height: 1.8;
-    text-align: center;
-    margin: 24px 0;
-    padding: 20px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 8px;
-    animation: titleFadeIn 2s ease-out 0.5s backwards;
-  }
-  #finalScreen .restart-btn {
-    padding: 12px 40px;
-    background: #1a0a2e;
-    color: #ffd700;
-    border: 3px solid #ffd700;
-    font-size: clamp(12px, 2.5vw, 18px);
-    font-family: Georgia, serif;
-    letter-spacing: 3px;
-    cursor: pointer;
-    border-radius: 4px;
-    text-transform: uppercase;
-    animation: titleFadeIn 2s ease-out 1s backwards;
-  }
-  #finalScreen .restart-btn:hover { background: #ffd700; color: #1a0a2e; }
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;top:0;left:0;-webkit-tap-highlight-color:transparent;touch-action:none;}
+#gameCanvas{position:fixed;top:0;left:0;width:100%!important;height:100%!important;display:block;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none;}
+#loading{position:fixed;inset:0;z-index:999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:'Cinzel',serif;color:#ffd700;}
+#loading .lc{font-size:clamp(40px,10vw,80px);animation:glowPulse 1.5s ease-in-out infinite;}
+#loading .lt{font-size:clamp(12px,3vw,22px);letter-spacing:4px;text-transform:uppercase;}
+#loadingBar{width:min(300px,70vw);height:6px;background:#1a0a2e;border:2px solid #8B6914;border-radius:3px;overflow:hidden;}
+#loadingFill{height:100%;background:linear-gradient(to right,#8B6914,#ffd700);width:0%;transition:width .25s;}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 20px #ffd700,0 0 40px #ff8c00;}50%{text-shadow:0 0 50px #ffd700,0 0 100px #ff8c00,0 0 140px #ffd700;}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes blinkAnim{0%,100%{opacity:1;}50%{opacity:.25;}}
+@keyframes btnPulse{0%,100%{box-shadow:0 0 20px rgba(255,215,0,.4);}50%{box-shadow:0 0 50px rgba(255,215,0,.95);}}
+@keyframes floatUp{from{transform:translateY(0) scale(1);opacity:.8;}to{transform:translateY(-110vh) scale(.3);opacity:0;}}
+@keyframes miracleAnim{0%{opacity:0;transform:scale(.4);}35%{opacity:1;transform:scale(1.05);}100%{opacity:0;transform:scale(1.6);}}
+#titleScreen{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at center,#1a0a2e 0%,#06000f 70%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;overflow:hidden;padding:clamp(12px,4vw,28px);}
+.title-stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 12% 18%,#fff 100%,transparent),radial-gradient(1px 1px at 78% 8%,#fff 100%,transparent),radial-gradient(1px 1px at 44% 65%,#fff 100%,transparent),radial-gradient(1px 1px at 6% 82%,#fff 100%,transparent),radial-gradient(1px 1px at 92% 57%,#fff 100%,transparent),radial-gradient(1px 1px at 31% 12%,#fff 100%,transparent),radial-gradient(2px 2px at 55% 55%,#ffd700 100%,transparent),radial-gradient(2px 2px at 24% 74%,#ffd700 100%,transparent);}
+.title-cross{font-size:clamp(44px,12vw,100px);color:#ffd700;text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;animation:glowPulse 2s ease-in-out infinite;line-height:1.1;}
+.title-main{font-family:'Cinzel Decorative',serif;font-size:clamp(15px,4.5vw,44px);color:#ffd700;text-align:center;letter-spacing:3px;line-height:1.35;text-shadow:3px 3px 0 #5a3c00,6px 6px 10px rgba(0,0,0,.8);animation:fadeDown 1.2s ease-out both;margin-top:6px;}
+.title-sub{font-size:clamp(8px,2vw,16px);color:#d4af37;letter-spacing:5px;margin-top:6px;animation:fadeDown 1.2s ease-out .3s both;}
+.title-bio{max-width:min(660px,90vw);margin-top:16px;padding:14px 20px;background:rgba(0,0,0,.65);border:2px solid #8B6914;border-radius:4px;color:#e8d5a0;font-style:italic;font-size:clamp(8px,1.7vw,13px);line-height:1.75;text-align:center;animation:fadeDown 1.2s ease-out .6s both;}
+.title-bio-attr{color:#ffd700;font-style:normal;font-size:.85em;margin-top:5px;display:block;}
+.start-btn{margin-top:18px;padding:clamp(9px,1.8vh,15px) clamp(24px,5vw,52px);background:linear-gradient(135deg,#6a4c00,#ffd700,#6a4c00);border:3px solid #ffd700;color:#1a0a2e;font-family:'Cinzel',serif;font-size:clamp(10px,2vw,16px);font-weight:700;letter-spacing:4px;text-transform:uppercase;cursor:pointer;border-radius:4px;animation:fadeDown 1.2s ease-out .9s both,btnPulse 2s ease-in-out 2.5s infinite;transition:transform .1s;}
+.start-btn:hover{transform:scale(1.05);}.start-btn:active{transform:scale(.95);}
+#cutscene{position:fixed;inset:0;z-index:90;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;padding:clamp(12px,3vw,24px);gap:10px;}
+.cut-art{font-size:clamp(56px,16vw,140px);text-align:center;line-height:1;}
+.cut-title{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,3.2vw,30px);color:#ffd700;letter-spacing:3px;text-transform:uppercase;text-align:center;text-shadow:0 0 20px #ffd700;}
+.cut-text{max-width:min(680px,90vw);font-family:'Cinzel',serif;font-size:clamp(9px,1.9vw,14px);color:#e8d5a0;line-height:1.85;font-style:italic;text-align:center;padding:14px 18px;background:rgba(0,0,0,.6);border:1px solid #8B6914;border-radius:4px;white-space:pre-line;}
+.cut-continue{color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(9px,1.7vw,13px);letter-spacing:2px;animation:blinkAnim 1s ease-in-out infinite;padding:9px 26px;border:2px solid #8B6914;border-radius:4px;background:rgba(0,0,0,.5);cursor:pointer;text-align:center;}
+#stageBanner{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:10px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.88),transparent);color:#ffd700;font-family:'Cinzel Decorative',serif;font-size:clamp(8px,2vw,15px);letter-spacing:3px;text-shadow:2px 2px 4px #000;pointer-events:none;display:none;text-transform:uppercase;}
+#objectiveBar{position:fixed;top:44px;left:10px;z-index:20;background:rgba(0,0,0,.78);border:2px solid #8B6914;border-radius:4px;padding:7px 12px;font-family:'Cinzel',serif;pointer-events:none;display:none;max-width:min(240px,40vw);}
+#objectiveBar .obj-title{color:#d4af37;font-size:clamp(6px,1.3vw,10px);letter-spacing:2px;text-transform:uppercase;}
+#objectiveBar .obj-text{color:#e8d5a0;font-size:clamp(7px,1.5vw,11px);margin-top:3px;line-height:1.5;}
+#stageProgress{position:fixed;top:44px;right:10px;z-index:20;background:rgba(0,0,0,.78);border:2px solid #8B6914;border-radius:4px;padding:7px 12px;text-align:right;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(7px,1.5vw,11px);pointer-events:none;display:none;}
+#dialogueBox{position:fixed;bottom:clamp(80px,14vh,120px);left:50%;transform:translateX(-50%);width:min(800px,94vw);z-index:30;background:rgba(8,4,20,.96);border:3px solid #8B6914;border-radius:6px;padding:13px 17px;font-family:'Cinzel',serif;pointer-events:all;display:none;box-shadow:0 0 30px rgba(139,105,20,.5),inset 0 0 20px rgba(0,0,0,.5);}
+#dialogueBox .dlg-speaker{color:#ffd700;font-size:clamp(8px,1.6vw,13px);font-weight:700;margin-bottom:4px;letter-spacing:2px;}
+#dialogueBox .dlg-text{color:#e8d5a0;font-size:clamp(8px,1.6vw,13px);line-height:1.72;font-style:italic;}
+#dialogueBox .dlg-attr{color:#b8922a;font-size:clamp(6px,1.2vw,10px);margin-top:6px;font-style:normal;text-align:right;}
+#dialogueBox .dlg-hint{color:#555;font-size:clamp(6px,1.2vw,10px);margin-top:5px;text-align:center;animation:blinkAnim 1s ease-in-out infinite;}
+#interactPrompt{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.84);border:2px solid #ffd700;border-radius:4px;padding:8px 16px;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(8px,1.8vw,13px);display:none;z-index:25;pointer-events:none;text-align:center;animation:blinkAnim 1s ease-in-out infinite;}
+/* JOYSTICK */
+#joystickWrap{position:fixed;bottom:clamp(16px,3vh,28px);left:clamp(16px,3vw,28px);width:clamp(100px,22vw,130px);height:clamp(100px,22vw,130px);display:none;z-index:40;pointer-events:all;user-select:none;-webkit-user-select:none;touch-action:none;}
+#joystickBase{width:100%;height:100%;border-radius:50%;background:rgba(0,0,0,.5);border:3px solid rgba(255,215,0,.45);position:relative;box-shadow:0 0 12px rgba(0,0,0,.4);}
+#joystickKnob{position:absolute;width:40%;height:40%;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,215,0,.9),rgba(180,120,0,.8));border:2px solid rgba(255,215,0,.9);top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 2px 8px rgba(0,0,0,.5);pointer-events:none;display:flex;align-items:center;justify-content:center;color:rgba(120,60,0,.8);font-size:clamp(10px,3vw,16px);font-weight:bold;}
+/* ACTION BUTTONS */
+#actionBtns{position:fixed;bottom:clamp(16px,3vh,28px);right:clamp(16px,3vw,28px);display:none;z-index:40;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:all;}
+.act-btn{width:clamp(52px,13vw,68px);height:clamp(52px,13vw,68px);border-radius:50%;border:3px solid rgba(255,215,0,.85);background:rgba(20,10,40,.85);color:#ffd700;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;user-select:none;font-family:'Cinzel',serif;line-height:1.2;touch-action:manipulation;box-shadow:0 0 14px rgba(255,215,0,.3);transition:transform .08s,background .08s;}
+.act-btn:active,.act-btn.pressed{background:rgba(139,105,20,.75);transform:scale(.91);}
+#btnAct{font-size:clamp(16px,4vw,22px);animation:btnPulse 2s ease-in-out 1s infinite;}
+#btnAct .btn-label{font-size:clamp(6px,1.4vw,9px);letter-spacing:1px;margin-top:1px;}
+#btnNext{font-size:clamp(16px,4vw,20px);}
+/* MIRACLE FLASH */
+#miracleFlash{position:fixed;inset:0;z-index:50;pointer-events:none;display:none;background:radial-gradient(ellipse at center,rgba(255,215,0,.9) 0%,rgba(255,140,0,.5) 40%,transparent 70%);}
+#miracleFlash.active{display:block;animation:miracleAnim .7s ease-out forwards;}
+#miracleFlash.white{background:radial-gradient(ellipse at center,rgba(255,255,255,.99) 0%,rgba(255,215,0,.75) 30%,transparent 65%);}
+#particleOverlay{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+.cssParticle{position:absolute;border-radius:50%;pointer-events:none;animation:floatUp linear forwards;}
+#finalScreen{position:fixed;inset:0;z-index:95;background:radial-gradient(ellipse at center,#fff5cc 0%,#ffd700 25%,#ff8c00 55%,#1a0a2e 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(16px,4vw,32px);gap:14px;overflow-y:auto;}
+.final-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,4.5vw,44px);color:#1a0a2e;text-align:center;font-weight:700;text-shadow:2px 2px 0 rgba(255,255,255,.4);animation:fadeDown 1.5s ease-out;}
+.final-quote{max-width:min(660px,90vw);font-size:clamp(9px,1.8vw,15px);color:#1a0a2e;font-style:italic;line-height:1.85;text-align:center;padding:18px 20px;background:rgba(255,255,255,.38);border-radius:8px;animation:fadeDown 1.5s ease-out .4s both;}
+.final-canon{font-size:.82em;margin-top:5px;display:block;color:#3a2000;}
+.restart-btn{padding:clamp(9px,1.8vh,13px) clamp(24px,5vw,44px);background:#1a0a2e;color:#ffd700;border:3px solid #ffd700;font-family:'Cinzel',serif;font-size:clamp(10px,2vw,16px);letter-spacing:3px;cursor:pointer;border-radius:4px;text-transform:uppercase;animation:fadeDown 1.5s ease-out .9s both;transition:background .2s,color .2s;}
+.restart-btn:hover{background:#ffd700;color:#1a0a2e;}
 </style>
 </head>
 <body>
 
-<div id="loading">
-  <div>✝ LOADING ✝</div>
-  <div id="loadingBar"><div id="loadingFill"></div></div>
-</div>
+<div id="loading"><div class="lc">&#10007;</div><div class="lt">Loading&hellip;</div><div id="loadingBar"><div id="loadingFill"></div></div></div>
 
-<div id="titleScreen" style="display:none;">
+<div id="titleScreen">
   <div class="title-stars"></div>
-  <div class="title-cross">✝</div>
+  <div class="title-cross">&#10007;</div>
   <div class="title-main">The Life of<br>Saint Francis<br>of Assisi</div>
-  <div class="title-sub">Il Poverello · 1181 – 1226</div>
+  <div class="title-sub">Il Poverello &middot; 1181&ndash;1226</div>
   <div class="title-bio">
-    "Francis was not yet perfect in virtue, but he was drawing near to that perfection of the humble life which he was afterwards to lead. His heart was being stirred by the Holy Ghost, and though he knew it not, he was being prepared by the grace of God for that great work to which he had been called."
-    <div class="title-quote-attr">— Thomas of Celano, <em>Vita Prima Sancti Francisci</em>, c. 1228</div>
+    &ldquo;Francis was not yet perfect in virtue, but he was drawing near to that perfection of the humble life which he was afterwards to lead. His heart was being stirred by the Holy Ghost, and though he knew it not, he was being prepared by the grace of God for that great work to which he had been called.&rdquo;
+    <span class="title-bio-attr">&mdash; Thomas of Celano, <em>Vita Prima Sancti Francisci</em>, c.&nbsp;1228</span>
   </div>
-  <button class="start-btn" onclick="startGame()">Begin the Journey ✝</button>
+  <button class="start-btn" id="startBtn">Begin the Journey &nbsp;&#10007;</button>
 </div>
 
 <canvas id="gameCanvas"></canvas>
-
-<div id="ui">
-  <div id="stageBanner"></div>
-  <div id="objectiveBar">
-    <div class="obj-title">Objective</div>
-    <div class="obj-text" id="objText"></div>
-  </div>
-  <div id="stageProgress" id="stageProgress"></div>
-  <div id="dialogueBox">
-    <div class="speaker" id="dlgSpeaker"></div>
-    <div class="text" id="dlgText"></div>
-    <div class="attribution" id="dlgAttr"></div>
-    <div class="continue-hint">▼ Tap or press SPACE / ENTER to continue</div>
-  </div>
-  <div id="interactPrompt"></div>
-</div>
-
-<div id="dpad">
-  <div class="dpad-grid">
-    <div class="dpad-btn" id="dUL" data-dir="ul">↖</div>
-    <div class="dpad-btn" id="dU" data-dir="u">▲</div>
-    <div class="dpad-btn" id="dUR" data-dir="ur">↗</div>
-    <div class="dpad-btn" id="dL" data-dir="l">◄</div>
-    <div class="dpad-btn dpad-center"></div>
-    <div class="dpad-btn" id="dR" data-dir="r">►</div>
-    <div class="dpad-btn" id="dDL" data-dir="dl">↙</div>
-    <div class="dpad-btn" id="dD" data-dir="d">▼</div>
-    <div class="dpad-btn" id="dDR" data-dir="dr">↘</div>
-  </div>
-</div>
-
-<div id="actionBtns" style="display:flex;">
-  <div class="action-btn" id="btnInteract" onclick="handleInteract()">✝<br><span style="font-size:9px">ACT</span></div>
-  <div class="action-btn" onclick="handleDialogueContinue()" style="width:48px;height:48px;">▶</div>
-</div>
 
 <div id="cutscene">
   <div class="cut-art" id="cutArt"></div>
   <div class="cut-title" id="cutTitle"></div>
   <div class="cut-text" id="cutText"></div>
-  <div class="cut-continue" onclick="cutsceneContinue()">[ Tap or Press Any Key to Continue ]</div>
+  <div class="cut-continue">[ Tap or press any key to continue ]</div>
 </div>
 
-<div id="miraceEffect"></div>
+<div id="stageBanner"></div>
+<div id="objectiveBar"><div class="obj-title">Objective</div><div class="obj-text" id="objText"></div></div>
+<div id="stageProgress"></div>
 
-<div id="finalScreen" style="display:none; flex-direction:column;">
-  <div class="final-title">✝ Pax et Bonum ✝<br>Peace and All Good</div>
-  <div class="final-quote">
-    "Praised be You, my Lord, through Sister Bodily Death, from whom no one living can escape. Woe to those who die in mortal sin! Blessed are those whom death will find in Your most holy will, for the second death will do them no harm."
-    <br><em style="font-size:0.85em;">— St. Francis of Assisi, Canticle of the Sun, 1225</em>
-    <br><br>
-    Francis of Assisi departed this world on the evening of October 3, 1226, singing Psalm 141 as he lay on the bare earth. He was canonized just two years later, on July 16, 1228, by Pope Gregory IX. His example of poverty, humility, and love for all creation continues to inspire millions across the world.
-  </div>
-  <button class="restart-btn" onclick="location.reload()">✝ Play Again ✝</button>
+<div id="dialogueBox">
+  <div class="dlg-speaker" id="dlgSpeaker"></div>
+  <div class="dlg-text" id="dlgText"></div>
+  <div class="dlg-attr" id="dlgAttr"></div>
+  <div class="dlg-hint">&#9660; Tap here or press SPACE / ENTER to continue</div>
 </div>
 
+<div id="interactPrompt"></div>
+
+<div id="joystickWrap"><div id="joystickBase"><div id="joystickKnob">&#10022;</div></div></div>
+
+<div id="actionBtns">
+  <div class="act-btn" id="btnAct"><span>&#10007;</span><span class="btn-label">PRAY</span></div>
+  <div class="act-btn" id="btnNext">&#9654;</div>
+</div>
+
+<div id="miracleFlash"></div>
 <div id="particleOverlay"></div>
+
+<div id="finalScreen">
+  <div class="final-title">&#10007; Pax et Bonum &#10007;<br>Peace and All Good</div>
+  <div class="final-quote">
+    &ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will, for the second death shall do them no harm.&rdquo;
+    <span class="final-canon">&mdash; St. Francis of Assisi, <em>Canticle of the Sun</em>, 1225</span>
+    <br><br>
+    Francis departed this world on the evening of October&nbsp;3,&nbsp;1226, singing Psalm&nbsp;141 while lying on bare earth. He was canonised on July&nbsp;16,&nbsp;1228 by Pope Gregory&nbsp;IX &mdash; among the fastest canonisations in history. His example of poverty, humility, and love for all creation endures across every corner of the world to this day.
+  </div>
+  <button class="restart-btn" onclick="location.reload()">&#10007; Play Again &#10007;</button>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-'use strict';
+/* ═══════════════════════════════════════════════════════════
+   THE LIFE OF SAINT FRANCIS OF ASSISI
+   Fully corrected: joystick, all runtime bugs fixed
+═══════════════════════════════════════════════════════════ */
 
-// ─── GLOBAL STATE ────────────────────────────────────────────────────────────
-const G = {
-  scene: null, camera: null, renderer: null, clock: null,
-  player: null, playerMesh: null, playerDir: new THREE.Vector3(0,0,-1),
-  moveInput: { x:0, z:0 },
-  keys: {},
-  stage: 'title',
-  stageIndex: 0,
-  dialogueQueue: [],
-  dialogueActive: false,
-  interactable: null,
-  interactables: [],
-  animId: null,
-  particles3D: [],
-  churchPieces: [],
-  fixedPieces: 0,
-  totalPieces: 5,
-  birds: [],
-  wolfMesh: null,
-  wolfTamed: false,
-  miraclesDone: 0,
-  birdsPeached: false,
-  stigmataReceived: false,
-  frameCount: 0,
-  fps: 144,
-  lastFrame: 0,
-  targetMs: 1000/144,
-  skyColor: 0x87CEEB,
-  fogColor: 0x87CEEB,
-  groundColor: 0x228B22,
+/* ─── STATE ─────────────────────────────────────────────── */
+const G={
+  scene:null,camera:null,renderer:null,
+  playerGroup:null,px:0,pz:0,
+  keys:{},
+  joy:{ax:0,az:0},
+  gameStarted:false,stageIndex:0,
+  dlgQueue:[],dlgIdx:0,dlgCb:null,dlgActive:false,
+  cutCb:null,
+  interactables:[],nearTarget:null,
+  churchPieces:[],fixedPieces:0,totalPieces:5,
+  wolfGroup:null,wolfTail:null,wolfEyes:[],wolfTamed:false,
+  birds:[],birdsDone:false,stigmataDone:false,
+  particles3D:[],
+  frameCount:0,lastFrame:0,targetMs:1000/144,
 };
 
-// ─── DIALOGUE DATA ─────────────────────────────────────────────────────────
-const DIALOGUES = {
-  assisi_welcome: [
-    { speaker:"Narrator", text:"Assisi, Umbria — circa 1201 AD. Giovanni di Pietro di Bernardone, known as Francis, was the son of a prosperous cloth merchant. He lived a life of revelry and song, the most celebrated youth in the city.", attr:"Thomas of Celano, Vita Prima, 1228" },
-    { speaker:"Narrator", text:"\"He was so extravagant in his expenses that he seemed not a merchant's son but a great prince. He was eager for pleasure, full of jests and song, going about the streets of Assisi by day and night, reveling with his companions.\"", attr:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. I" },
-    { speaker:"Francis", text:"Friends! Life is sweet and the night is young! Eat, drink, and sing — for tomorrow God only knows what He has planned for us!", attr:"" },
-    { speaker:"Narrator", text:"But in his heart, a restlessness grew. After a battle with Perugia and a year as a prisoner of war, Francis returned to Assisi changed — hollow and ill. Something was stirring within him.", attr:"" },
+/* ─── DIALOGUE DATA ─────────────────────────────────────── */
+const DLG={
+  assisi_welcome:[
+    {s:"Narrator",t:"Assisi, Umbria — circa 1201 AD. Giovanni di Pietro di Bernardone, called Francis, was the son of a prosperous cloth merchant. He lived a life of revelry, music, and song — the most celebrated youth in the city.",a:"Thomas of Celano, Vita Prima Sancti Francisci, c. 1228"},
+    {s:"Narrator",t:"\"He was so extravagant in his expenses that he seemed not a merchant's son but a great prince. He was eager for pleasure, full of jests and song, going about the streets of Assisi by day and night, reveling with his companions.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. I"},
+    {s:"Francis",t:"Friends! Life is sweet and the night is young! Eat, drink, and sing — for tomorrow God only knows what He has planned for us!",a:""},
+    {s:"Narrator",t:"But after a battle with Perugia and a long illness, Francis returned changed — searching. Something was calling him northward, toward the ruined chapel of San Damiano.",a:""},
   ],
-  voice_of_god: [
-    { speaker:"Narrator", text:"One day, near the ruined chapel of San Damiano, Francis knelt before a painted crucifix. Then, a voice — clear and unmistakable — broke the silence.", attr:"" },
-    { speaker:"The Voice of Christ", text:"\"Francis... Francis... go and repair My house, which, as you see, is falling completely to ruin.\"", attr:"Three Companions, Legenda Trium Sociorum, c. 1241" },
-    { speaker:"Francis", text:"Lord... I trembled in my whole body! I did not know at first if You spoke of this little church, or something greater still. I will obey!", attr:"Francis himself, in Thomas of Celano, Vita Prima" },
-    { speaker:"Narrator", text:"Francis at first took the command literally. He sold cloth from his father's shop to raise money and began the physical repair of the chapel of San Damiano.", attr:"" },
+  voice_of_god:[
+    {s:"Narrator",t:"Francis knelt alone before the painted crucifix in the crumbling chapel of San Damiano. Damp stone, silence, candlelight. Then — a voice, clear and unmistakable, broke the stillness.",a:""},
+    {s:"Christ",t:"\"Francis... Francis... go and repair My house, which, as you see, is falling completely to ruin.\"",a:"Three Companions, Legenda Trium Sociorum, c. 1241"},
+    {s:"Francis",t:"Lord... I trembled in my whole body! I did not know if You spoke of this small chapel, or of something far greater. But I will obey.",a:"Francis himself, cited in Thomas of Celano, Vita Prima"},
+    {s:"Narrator",t:"Francis sold cloth from his father's warehouse to fund the work. His father Pietro was enraged. Before the bishop, Francis stripped off his fine garments and declared:",a:""},
+    {s:"Francis",t:"\"Until now I have called Pietro di Bernardone my father. But now I say: Our Father, who art in heaven — He alone is my father now.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. VI"},
   ],
-  repair_intro: [
-    { speaker:"Objective", text:"The chapel of San Damiano lies in ruins. God has called Francis to repair it. Walk to each broken section of the church and press ✝ ACT to mend it with prayer and labor.", attr:"" },
-    { speaker:"Brother Stone Mason", text:"No man can mend these walls alone. But I have seen stranger things than stone obeying the will of a saint.", attr:"" },
+  repair_intro:[
+    {s:"Narrator",t:"The chapel of San Damiano lies in ruins — crumbling upper wall, a fallen arch, a shattered window, a collapsed column, and a missing roof section.",a:""},
+    {s:"Francis",t:"\"Lord, make me an instrument of Your peace. Where there is darkness, light; where there is sadness, joy.\"",a:"Prayer attributed to St. Francis of Assisi"},
+    {s:"Stone Mason",t:"No man can mend these walls alone, brother. But I have seen stranger things than stone obeying the prayer of a saint.",a:""},
+    {s:"Objective",t:"Walk to each of the 5 broken sections and press PRAY to repair them with prayer and labour.",a:""},
   ],
-  repair_piece: [
-    { speaker:"Francis", text:"\"Lord, make me an instrument of Your peace. Where there is hatred, let me sow love; where there is injury, pardon.\"", attr:"Prayer attributed to St. Francis of Assisi" },
+  repair_piece:[
+    {s:"Francis",t:"\"Most High, glorious God, enlighten the darkness of my heart and give me true faith, certain hope, and perfect charity, sense and knowledge, Lord, that I may carry out Your holy and true command.\"",a:"St. Francis of Assisi, Prayer before the Crucifix at San Damiano"},
   ],
-  repair_complete: [
-    { speaker:"Narrator", text:"\"With his own hands he repaired three churches: San Damiano, San Pietro della Spina, and the Portiuncula. When he had fully restored them, he felt the Spirit of God driving him onward to a still greater work.\"", attr:"Thomas of Celano, Vita Prima, Ch. XXI" },
-    { speaker:"Francis", text:"The Lord has spoken to me about poverty, humility, and the holy Gospel. That is all I wish, with all my heart!", attr:"St. Francis, as recorded by Thomas of Celano" },
+  repair_complete:[
+    {s:"Narrator",t:"\"With his own hands he repaired three churches: San Damiano, San Pietro della Spina, and the Portiuncula. When he had fully restored them, he felt the Spirit of God driving him onward to a still greater work.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. XXI"},
+    {s:"Francis",t:"The Lord has spoken to me about poverty, humility, and the holy Gospel. That is all I wish — with all my heart!",a:"St. Francis, recorded by Thomas of Celano"},
   ],
-  birds_intro: [
-    { speaker:"Narrator", text:"Near Bevagna, Francis and his companions walked along the road when Francis noticed a great flock of birds of all kinds gathered in the trees and fields nearby.", attr:"" },
-    { speaker:"Francis", text:"Brothers, wait here for me while I go preach to our sisters the birds!", attr:"Thomas of Celano, Vita Prima, Ch. LVIII" },
-    { speaker:"Objective", text:"Walk to the flock of birds gathered on the hillside. Press ✝ ACT to preach to them.", attr:"" },
+  birds_intro:[
+    {s:"Narrator",t:"Near the village of Bevagna, Francis and his companions walked along the road when Francis noticed a great flock of birds of all kinds gathered in the trees and fields nearby.",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
+    {s:"Francis",t:"Brothers, wait here for me while I go preach to our sisters the birds!",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
+    {s:"Companion",t:"Our sisters the birds? Francis — they will simply fly away!",a:""},
+    {s:"Francis",t:"Let us see what God has ordained. All creation belongs to Him.",a:""},
   ],
-  birds_miracle: [
-    { speaker:"Narrator", text:"Francis went to the birds, and when he began to preach, they did not fly away. They stretched their necks, spread their wings, and opened their beaks, gazing upon him with great attention.", attr:"" },
-    { speaker:"Francis", text:"\"My sisters the birds, you owe much to God your Creator, and you ought to sing His praise at all times and in all places, because He has given you liberty to fly about into all places. He has also given you a double and triple clothing. Moreover He preserved your seed in Noah's ark.\"", attr:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. LVIII, c. 1228" },
-    { speaker:"Francis", text:"\"You sow not, neither do you reap; and God feedeth you, and giveth you the streams and fountains for your drink; the mountains and valleys for your refuge and the high trees whereon to make your nests. And although you neither spin nor weave, God dresseth you and your children, wherefore your Creator loveth you much.\"", attr:"The Little Flowers of St. Francis, Chapter XVI, 14th c." },
-    { speaker:"Narrator", text:"\"The birds all manifested very great joy... they began to open their beaks, to stretch their necks, to spread their wings, and reverently to bow their heads to the ground, showing by their motions and songs that the holy father had given them great delight.\"", attr:"The Little Flowers of St. Francis, Ch. XVI" },
+  birds_miracle:[
+    {s:"Narrator",t:"Francis went to the birds, and when he began to preach, they did not fly away. They stretched their necks, spread their wings, and opened their beaks, gazing upon him with great attention.",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
+    {s:"Francis",t:"\"My sisters the birds, you owe much to God your Creator, and you ought to sing His praise at all times and in all places, because He has given you liberty to fly about into all places. He has also given you a double and triple clothing.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. LVIII, c. 1228"},
+    {s:"Francis",t:"\"You sow not, neither do you reap; and God feedeth you, and giveth you the streams and fountains for your drink; the mountains and valleys for your refuge. And although you neither spin nor weave, God dresseth you and your children, wherefore your Creator loveth you much.\"",a:"The Little Flowers of St. Francis, Chapter XVI, 14th century"},
+    {s:"Narrator",t:"\"The birds all manifested very great joy... they began to open their beaks, to stretch their necks, to spread their wings, and reverently to bow their heads to the ground, showing by their motions and songs that the holy father had given them great delight.\"",a:"The Little Flowers of St. Francis, Ch. XVI"},
   ],
-  wolf_intro: [
-    { speaker:"Narrator", text:"Near the city of Gubbio, a fierce wolf terrorized the people — devouring not only animals but men. The inhabitants dared not leave the city gates. Francis resolved to go out and meet the beast alone.", attr:"" },
-    { speaker:"Townsman", text:"Holy brother! Do not go! The wolf has devoured many men — he fears nothing! The whole countryside is laid waste by him!", attr:"The Little Flowers of St. Francis, Ch. XXI" },
-    { speaker:"Francis", text:"Fear not, brother. I will go to speak with Brother Wolf, in the name of Christ.", attr:"St. Francis, as recorded in the Fioretti" },
-    { speaker:"Objective", text:"Go out beyond the city gates and find the wolf. Press ✝ ACT when near to make peace with him in the name of Christ.", attr:"" },
+  wolf_intro:[
+    {s:"Narrator",t:"Near the city of Gubbio, a fierce wolf terrorized the people — devouring animals and men alike. The citizens dared not leave the city gates. Francis resolved to go out alone and meet the beast.",a:"The Little Flowers of St. Francis, Ch. XXI"},
+    {s:"Townsman",t:"Holy brother! Do not go out! The wolf has devoured many men — he fears nothing and no one! The whole countryside is laid waste!",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+    {s:"Francis",t:"Fear not, good brother. I will go to speak with Brother Wolf, in the name of Jesus Christ.",a:"St. Francis, recorded in the Fioretti"},
+    {s:"Objective",t:"Go beyond the city gates and approach the wolf. Press PRAY when near him to make peace in Christ's name.",a:""},
   ],
-  wolf_encounter: [
-    { speaker:"Narrator", text:"The wolf, seeing Francis approach, ran at him with open mouth. Francis made the Sign of the Cross, and the wolf slowed, then stopped, and shut its terrible jaws.", attr:"" },
-    { speaker:"Francis", text:"\"Come here, Brother Wolf. I command thee on behalf of Christ, that thou do harm neither to me nor to any other person.\"", attr:"The Little Flowers of St. Francis, Chapter XXI, 14th century" },
-    { speaker:"Narrator", text:"\"Marvellous to tell, immediately the wolf, at the command of Saint Francis, closed his mouth and stood still... and came gently as a lamb, and laid himself down at the feet of Saint Francis.\"", attr:"The Little Flowers of St. Francis, Ch. XXI" },
-    { speaker:"Francis", text:"Brother Wolf, I desire to make peace between you and these people. They will harm you no more, if you will promise never to harm them again. Will you so promise?", attr:"St. Francis, as in Fioretti" },
-    { speaker:"Narrator", text:"\"The wolf... bowed his head, and by the movements of his body, his tail, and his eyes, made signs, as well as he was able, that he consented to what Saint Francis had said and would keep his promise.\"", attr:"The Little Flowers of St. Francis, Ch. XXI, 14th century" },
+  wolf_encounter:[
+    {s:"Narrator",t:"The wolf, seeing Francis approach, ran at him with open jaws. Francis made the Sign of the Cross and called out:",a:"The Little Flowers of St. Francis, Ch. XXI"},
+    {s:"Francis",t:"\"Come here, Brother Wolf. I command thee on behalf of Christ, that thou do harm neither to me nor to any other person.\"",a:"The Little Flowers of St. Francis, Chapter XXI, 14th century"},
+    {s:"Narrator",t:"\"Marvellous to tell, immediately the wolf closed his mouth and stood still... and came gently as a lamb, and laid himself down at the feet of Saint Francis.\"",a:"The Little Flowers of St. Francis, Ch. XXI"},
+    {s:"Francis",t:"\"Brother Wolf, I desire to make peace between you and these people. They will harm you no more, if you will promise never to harm them again. Do you give your word?\"",a:"St. Francis, recorded in the Fioretti"},
+    {s:"Narrator",t:"\"The wolf bowed his head, and by the movements of his body, tail, and eyes, made signs that he consented and would keep his promise.\" Francis led him gently back into the city.",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
   ],
-  stigmata_intro: [
-    { speaker:"Narrator", text:"In September 1224, Francis was fasting and praying on the mountain of La Verna, forty days in honor of the Archangel Michael. On the Feast of the Holy Cross, he had a vision of the most extraordinary kind.", attr:"" },
-    { speaker:"Francis", text:"\"My Lord Jesus Christ, before I die, I beseech Thee to grant me two graces: the first is that during my life I may feel in my soul and in my body, as much as possible, that pain which Thou, dear Jesus, didst sustain in the hour of Thy most bitter Passion.\"", attr:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata" },
-    { speaker:"Objective", text:"Ascend La Verna mountain and kneel before the Cross in prayer.", attr:"" },
+  stigmata_intro:[
+    {s:"Narrator",t:"September 1224. Francis was fasting on the mountain of La Verna, forty days in honour of the Archangel Michael. On the Feast of the Holy Cross, he withdrew to pray alone in the darkness.",a:"Thomas of Celano, Vita Prima, Ch. III"},
+    {s:"Francis",t:"\"My Lord Jesus Christ, before I die, I beseech Thee to grant me two graces: first, that I may feel in my soul and body that sorrow which You endured in the hour of Your most bitter Passion.\"",a:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata"},
+    {s:"Objective",t:"Ascend La Verna and approach the glowing Cross at the summit. Press PRAY to receive what God has prepared.",a:""},
   ],
-  stigmata_miracle: [
-    { speaker:"Narrator", text:"\"And suddenly there appeared in the sky a seraph with six resplendent and flaming wings; and as the seraph, flying rapidly, drew near to Francis... he saw in the middle of the vision the form of a man crucified, with hands and feet extended in the form of a cross.\"", attr:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata, 14th century" },
-    { speaker:"Narrator", text:"\"When the vision vanished, it left in the hands, feet, and side of Francis a wonderful image and impression of the Wounds of our Lord Jesus Christ. His hands and feet seemed to be pierced through the middle with nails, the points of which appeared on the inner side of the hands and on the upper side of the feet.\"", attr:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, §94–95, 1228" },
-    { speaker:"Francis", text:"\"Welcome, Sister Pain. Welcome. I have longed for you, prayed for you. Now bind me more closely to my Lord.\"", attr:"St. Francis, as traditionally attributed" },
-    { speaker:"Narrator", text:"Francis received the Stigmata — the five wounds of Christ — becoming the first recorded person in history to bear them. He kept the wounds hidden from most, wrapping his hands in cloth.", attr:"" },
+  stigmata_miracle:[
+    {s:"Narrator",t:"\"And suddenly there appeared in the sky a seraph with six resplendent and flaming wings; and in the middle of the vision the form of a man crucified, with hands and feet extended in the form of a cross.\"",a:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata, 14th century"},
+    {s:"Narrator",t:"\"When the vision vanished, it left in the hands, feet, and side of Francis a wonderful image and impression of the Wounds of our Lord Jesus Christ. His hands and feet seemed to be pierced through the middle with nails.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, §94-95, c. 1228"},
+    {s:"Francis",t:"\"Welcome, Sister Pain. I have longed for you, prayed for you. Now bind me more closely to my Lord Jesus Christ.\"",a:"St. Francis, as traditionally attributed"},
+    {s:"Narrator",t:"Francis received the five Stigmata — the wounds of Christ — becoming the first recorded person in history to bear them. He hid them under cloth, and wept with both sorrow and joy.",a:"St. Bonaventure, Major Life of St. Francis, Ch. XIII, 1263"},
   ],
-  canticle_scene: [
-    { speaker:"Narrator", text:"Ill and nearly blind, Francis composed his greatest poem — the Canticle of the Sun — at San Damiano in 1225, one of the earliest written works of the Italian language.", attr:"" },
-    { speaker:"Francis", text:"\"Most High, all-powerful, all-good Lord! All praise is Yours, all glory, all honour and all blessings. To You alone, Most High, do they belong. No mortal lips are worthy to pronounce Your Name.\"", attr:"St. Francis of Assisi, Canticle of the Sun (Canticle of Brother Sun), 1225" },
-    { speaker:"Francis", text:"\"Praised be You, my Lord, with all Your creatures, especially Sir Brother Sun, who is the day through whom You give us light. And he is beautiful and radiant with great splendour, of You Most High he bears the likeness.\"", attr:"St. Francis of Assisi, Canticle of the Sun, 1225" },
-    { speaker:"Francis", text:"\"Praised be You, my Lord, through Sister Moon and the stars. In the heavens You formed them, clear and precious and beautiful. Praised be You through Brother Wind and through the air, cloudy and serene, and every kind of weather.\"", attr:"St. Francis of Assisi, Canticle of the Sun, 1225" },
-    { speaker:"Francis", text:"\"Praised be You through our Sister Mother Earth, who sustains and governs us, and produces varied fruits with coloured flowers and herbs.\"", attr:"St. Francis of Assisi, Canticle of the Sun, 1225" },
+  canticle_scene:[
+    {s:"Narrator",t:"Ill, nearly blind, yet radiant — Francis composed his greatest poem at San Damiano in 1225. The Canticle of the Sun was among the first works of Italian literature. Sister Clare wept as he sang.",a:""},
+    {s:"Francis",t:"\"Most High, all-powerful, all-good Lord! All praise is Yours, all glory, all honour and all blessings. To You alone, Most High, do they belong. No mortal lips are worthy to pronounce Your Name.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+    {s:"Francis",t:"\"Praised be You, my Lord, with all Your creatures, especially Sir Brother Sun, who is the day through whom You give us light. And he is beautiful and radiant with great splendour; of You Most High he bears the likeness.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+    {s:"Francis",t:"\"Praised be You, my Lord, through Sister Moon and the stars. In the heavens You formed them, clear and precious and beautiful. Praised be You through Brother Wind, through the air, cloudy and serene, and every kind of weather.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+    {s:"Francis",t:"\"Praised be You through our Sister Mother Earth, who sustains and governs us, and who produces varied fruits with coloured flowers and herbs.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+    {s:"Francis",t:"\"Praised be You through those who give pardon for Your love, and bear infirmity and tribulation. Blessed are those who endure in peace, for by You, Most High, they shall be crowned.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
   ],
 };
 
-// ─── CUTSCENE DATA ─────────────────────────────────────────────────────────
-const CUTSCENES = [
-  {
-    art:'⛪', title:'STAGE I — YOUNG FRANCIS',
-    text:'"He was a lover of music, and would often lead his companions through the streets at night singing songs. His manner was gentle, his liberality boundless, his bearing that of a prince... and yet, in the midst of all his joy, something was wanting."\n\n— Thomas of Celano, Vita Prima Sancti Francisci, c. 1228',
-    stageKey:'assisi'
-  },
-  {
-    art:'🏗️', title:'STAGE II — REBUILD MY CHURCH',
-    text:'"Francis heard a voice from the crucifix saying: \'Francis, go and repair my house, which, as you see, is falling into ruins.\' At this, Francis was not a little disturbed. He trembled and was greatly astonished."\n\n— Three Companions, Legenda Trium Sociorum, c. 1241',
-    stageKey:'sanDamiano'
-  },
-  {
-    art:'🕊️', title:'STAGE III — PREACH TO THE BIRDS',
-    text:'"Brother Francis left his companions on the road and ran eagerly to the birds. And when he came close to them they did not fly away, but stayed to hear his sermon. Thus is fulfilled what the prophet said: \'The beasts of the field shall be at peace with thee.\'"\n\n— Thomas of Celano, Vita Prima, Ch. LVIII',
-    stageKey:'birds'
-  },
-  {
-    art:'🐺', title:'STAGE IV — THE WOLF OF GUBBIO',
-    text:'"This terrible wolf had not only devoured animals, but had attacked human beings. All the people of the town went about in fear. Saint Francis, having compassion on the people, decided to go out to the wolf."\n\n— The Little Flowers of St. Francis (Fioretti), Ch. XXI, 14th century',
-    stageKey:'wolf'
-  },
-  {
-    art:'⛰️', title:'STAGE V — THE STIGMATA',
-    text:'"The marks of the nails began to appear in his hands and feet, as he had seen them a little before in the figure of the man crucified. His hands and feet seemed to be pierced through the middle with nails."\n\n— Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, c. 1228',
-    stageKey:'laverna'
-  },
-  {
-    art:'☀️', title:'FINALE — THE CANTICLE OF THE SUN',
-    text:'"In the beginning of his conversion Francis had a great tenderness for lepers... he came upon a leper one day and, though he felt great repugnance, he mastered himself, dismounted, and gave the leper a coin, kissing his hand. The leper gave him a kiss of peace, and Francis remounted and rode on; looking back he could see no one at all."\n\n— St. Bonaventure, Major Life of St. Francis, Ch. I, 1263',
-    stageKey:'canticle'
-  },
+/* ─── CUTSCENE DATA ─────────────────────────────────────── */
+const CUTS=[
+  {art:'⛪',title:'Stage I — Young Francis of Assisi',
+   text:'"He was a lover of music, and would often lead his companions through the streets at night singing songs. His manner was gentle, his liberality boundless, his bearing that of a prince... and yet, in the midst of all his joy, something was wanting."\n\n— Thomas of Celano, Vita Prima Sancti Francisci, c. 1228',
+   key:'assisi',intro:'assisi_welcome'},
+  {art:'🏗',title:'Stage II — Rebuild My Church',
+   text:'"Francis heard a voice from the crucifix saying: \'Francis, go and repair my house, which, as you see, is falling into ruins.\' At this, Francis trembled and was greatly astonished."\n\n— Three Companions, Legenda Trium Sociorum, c. 1241',
+   key:'sanDamiano',intro:'repair_intro'},
+  {art:'🕊',title:'Stage III — Preach to the Birds',
+   text:'"Brother Francis left his companions on the road and ran eagerly towards the birds. And when he came close to them they did not fly away, but stayed to hear his sermon. Thus is fulfilled what the prophet said: The beasts of the field shall be at peace with thee."\n\n— Thomas of Celano, Vita Prima, Ch. LVIII',
+   key:'birds',intro:'birds_intro'},
+  {art:'🐺',title:'Stage IV — The Wolf of Gubbio',
+   text:'"This terrible wolf had not only devoured animals, but had attacked human beings. All the people of the town went in fear. Saint Francis, having compassion on the people, decided to go out to the wolf."\n\n— The Little Flowers of St. Francis, Ch. XXI, 14th century',
+   key:'wolf',intro:'wolf_intro'},
+  {art:'⛰',title:'Stage V — The Holy Stigmata',
+   text:'"The marks of the nails began to appear in his hands and feet, as he had seen them a little before in the figure of the man crucified. His hands and feet seemed to be pierced through the middle with nails."\n\n— Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, c. 1228',
+   key:'laverna',intro:'stigmata_intro'},
+  {art:'☀',title:'Finale — The Canticle of the Sun',
+   text:'"In the beginning of his conversion Francis had a great tenderness for lepers. He came upon a leper one day and, though he felt great repugnance, he mastered himself and kissed the leper\'s hand. When Francis looked back, he could see no one at all."\n\n— St. Bonaventure, Major Life of St. Francis, Ch. I, 1263',
+   key:'canticle',intro:'canticle_scene'},
 ];
 
-// ─── STAGE INDEX ─────────────────────────────────────────────────────────────
-const STAGE_ORDER = ['assisi','sanDamiano','birds','wolf','laverna','canticle'];
-
-// ─── THREE.JS SETUP ───────────────────────────────────────────────────────────
-function initThree() {
-  const canvas = document.getElementById('gameCanvas');
-  G.renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
-  G.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-  G.renderer.shadowMap.enabled = true;
-  G.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  resizeRenderer();
-
-  G.scene = new THREE.Scene();
-  G.clock = new THREE.Clock();
-
-  G.camera = new THREE.PerspectiveCamera(70, canvas.width/canvas.height, 0.1, 300);
-  G.camera.position.set(0, 6, 14);
-
-  window.addEventListener('resize', resizeRenderer);
+/* ══════════════════════════════════════════════════════════
+   THREE.JS INIT
+══════════════════════════════════════════════════════════ */
+function initRenderer(){
+  const cv=document.getElementById('gameCanvas');
+  G.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
+  G.renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  G.renderer.shadowMap.enabled=true;
+  G.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  G.scene=new THREE.Scene();
+  G.camera=new THREE.PerspectiveCamera(68,1,0.1,300);
+  doResize();
+  try{new ResizeObserver(doResize).observe(document.body);}catch(e){}
+  window.addEventListener('resize',doResize);
+  window.addEventListener('orientationchange',()=>setTimeout(doResize,250));
 }
 
-function resizeRenderer() {
-  const w = window.innerWidth, h = window.innerHeight;
-  G.renderer.setSize(w, h);
-  if (G.camera) {
-    G.camera.aspect = w/h;
-    G.camera.updateProjectionMatrix();
-  }
-  const canvas = document.getElementById('gameCanvas');
-  canvas.style.width = w+'px';
-  canvas.style.height = h+'px';
+function doResize(){
+  var w=window.innerWidth,h=window.innerHeight;
+  if(!w||!h||!G.renderer)return;
+  G.renderer.setSize(w,h,false);
+  var cv=document.getElementById('gameCanvas');
+  cv.style.width=w+'px';cv.style.height=h+'px';
+  if(G.camera){G.camera.aspect=w/h;G.camera.updateProjectionMatrix();}
 }
 
-// ─── PLAYER ────────────────────────────────────────────────────────────────
-function createPlayer() {
-  const group = new THREE.Group();
-
-  // Body — brown robe (N64 low-poly)
-  const bodyGeo = new THREE.CylinderGeometry(0.35, 0.5, 1.2, 6);
-  const bodyMat = new THREE.MeshLambertMaterial({color:0x6B4226});
-  const body = new THREE.Mesh(bodyGeo, bodyMat);
-  body.position.y = 0.6;
-  body.castShadow = true;
-  group.add(body);
-
-  // Head
-  const headGeo = new THREE.SphereGeometry(0.3, 6, 5);
-  const headMat = new THREE.MeshLambertMaterial({color:0xDEB887});
-  const head = new THREE.Mesh(headGeo, headMat);
-  head.position.y = 1.55;
-  head.castShadow = true;
-  group.add(head);
-
-  // Rope belt
-  const beltGeo = new THREE.TorusGeometry(0.37, 0.04, 4, 8);
-  const beltMat = new THREE.MeshLambertMaterial({color:0xF5DEB3});
-  const belt = new THREE.Mesh(beltGeo, beltMat);
-  belt.rotation.x = Math.PI/2;
-  belt.position.y = 0.55;
-  group.add(belt);
-
-  // Halo (golden ring)
-  const haloGeo = new THREE.TorusGeometry(0.38, 0.04, 4, 12);
-  const haloMat = new THREE.MeshLambertMaterial({color:0xFFD700, emissive:0xFFD700, emissiveIntensity:0.5});
-  const halo = new THREE.Mesh(haloGeo, haloMat);
-  halo.position.y = 1.96;
-  group.add(halo);
-
-  group.position.set(0, 0, 0);
-  G.scene.add(group);
-  G.playerMesh = group;
-
-  // Collision capsule (invisible)
-  G.player = { x:0, y:0, z:0, r:0.5 };
+/* ══════════════════════════════════════════════════════════
+   SCENE HELPERS
+══════════════════════════════════════════════════════════ */
+function tagObj(o){o.userData._stage=true;return o;}
+function clearStage(){
+  var rm=[];
+  G.scene.traverse(function(o){if(o.userData._stage)rm.push(o);});
+  for(var i=0;i<rm.length;i++)G.scene.remove(rm[i]);
+  G.interactables=[];G.churchPieces=[];G.fixedPieces=0;
+  G.birds=[];G.particles3D=[];
+  G.wolfGroup=null;G.wolfTail=null;G.wolfEyes=[];
+  G.wolfTamed=false;G.birdsDone=false;G.stigmataDone=false;
+  G.nearTarget=null;
 }
 
-// ─── ENVIRONMENT BUILDERS ─────────────────────────────────────────────────
-function clearScene() {
-  // Remove all objects except lights
-  const toRemove = [];
-  G.scene.traverse(obj => {
-    if (obj !== G.scene && obj.userData.removable) toRemove.push(obj);
-  });
-  toRemove.forEach(o => G.scene.remove(o));
-  G.interactables = [];
-  G.churchPieces = [];
-  G.fixedPieces = 0;
-  G.birds = [];
-  G.wolfMesh = null;
-  G.wolfTamed = false;
-  G.particles3D = [];
-}
+function sceneAdd(o){tagObj(o);G.scene.add(o);return o;}
 
-function makeRemovable(obj) { obj.userData.removable = true; return obj; }
-
-function buildGround(color=0x4a7c3f, w=80, d=80) {
-  const geo = new THREE.PlaneGeometry(w, d, 8, 8);
-  const mat = new THREE.MeshLambertMaterial({color});
-  const m = new THREE.Mesh(geo, mat);
-  m.rotation.x = -Math.PI/2;
-  m.receiveShadow = true;
-  G.scene.add(makeRemovable(m));
-}
-
-function buildSky(color=0x5b9fd4, fogColor=0x5b9fd4) {
-  G.scene.background = new THREE.Color(color);
-  G.scene.fog = new THREE.Fog(fogColor, 30, 100);
-}
-
-function buildLights() {
-  const amb = new THREE.AmbientLight(0xfff5cc, 0.6);
-  G.scene.add(makeRemovable(amb));
-  const sun = new THREE.DirectionalLight(0xffeedd, 1.2);
-  sun.position.set(15, 30, 10);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(1024,1024);
-  G.scene.add(makeRemovable(sun));
-}
-
-// Low-poly building block
-function makeBox(w,h,d,color,x,y,z,rx=0,ry=0) {
-  const geo = new THREE.BoxGeometry(w,h,d);
-  const mat = new THREE.MeshLambertMaterial({color});
-  const m = new THREE.Mesh(geo,mat);
-  m.position.set(x,y,z);
-  m.rotation.set(rx,ry,0);
-  m.castShadow = true; m.receiveShadow = true;
-  G.scene.add(makeRemovable(m));
+function mkMat(col,emissiveCol,ei){
+  var m=new THREE.MeshLambertMaterial({color:col});
+  if(emissiveCol!=null){m.emissive=new THREE.Color(emissiveCol);m.emissiveIntensity=ei||0;}
   return m;
 }
-
-// ─── STAGE: ASSISI ─────────────────────────────────────────────────────────
-function buildStageAssisi() {
-  buildSky(0x87ceeb, 0x87ceeb);
-  buildLights();
-  buildGround(0x5a8a3a);
-
-  // Rolling hills (low poly)
-  for (let i=0; i<6; i++) {
-    const r = 4+Math.random()*6;
-    const h = 3+Math.random()*5;
-    const geo = new THREE.SphereGeometry(r,6,4);
-    const mat = new THREE.MeshLambertMaterial({color:0x3d7a3a});
-    const m = new THREE.Mesh(geo,mat);
-    const angle = (i/6)*Math.PI*2;
-    m.position.set(Math.cos(angle)*35, h-r+1, Math.sin(angle)*35);
-    m.castShadow = true;
-    G.scene.add(makeRemovable(m));
-  }
-
-  // Assisi buildings (blocky, medieval)
-  const stoneColor = 0xd4c4a0;
-  const roofColor = 0x8b3a3a;
-
-  // Main building 1
-  makeBox(8,6,6,stoneColor, -12,3,-15);
-  makeBox(8,1.5,6,roofColor, -12,6.75,-15);
-
-  // Main building 2
-  makeBox(6,8,5,stoneColor, -5,4,-18);
-  makeBox(6,1.5,5,roofColor, -5,8.75,-18);
-
-  // Tower
-  makeBox(3,12,3,0xc0b090, 6,6,-16);
-  makeBox(3,1.5,3,0x7a2020, 6,12.75,-16);
-
-  // Church facade ahead
-  makeBox(10,8,2,stoneColor, 0,4,-22);
-  makeBox(4,4,2,stoneColor, 0,10,-22);
-  makeBox(2,2,2,0xffdd88, 0,13,-22); // bell
-
-  // Arch window
-  const archGeo = new THREE.CylinderGeometry(1.5,1.5,0.3,8,1,false,0,Math.PI);
-  const archMat = new THREE.MeshLambertMaterial({color:0x2255aa});
-  const arch = new THREE.Mesh(archGeo,archMat);
-  arch.rotation.set(Math.PI/2,0,0);
-  arch.position.set(0,8.5,-21);
-  G.scene.add(makeRemovable(arch));
-
-  // Road / cobblestones path
-  makeBox(4,0.1,20,0xbbaa88,0,0.05,-12);
-
-  // Trees
-  for(let i=0;i<8;i++){
-    const angle=(i/8)*Math.PI*2;
-    const tx=Math.cos(angle)*18;
-    const tz=Math.sin(angle)*15+(-5);
-    makeBox(0.6,4,0.6,0x8B4513,tx,2,tz);
-    const geo=new THREE.ConeGeometry(2.5,5,6);
-    const mat=new THREE.MeshLambertMaterial({color:0x2d6b2d});
-    const cone=new THREE.Mesh(geo,mat);
-    cone.position.set(tx,7,tz);
-    cone.castShadow=true;
-    G.scene.add(makeRemovable(cone));
-  }
-
-  // NPC Companion
-  const npc = makeNPC(0xc47a45, 8,0,2);
-  npc.userData.isInteractable = true;
-  npc.userData.dialogue = 'assisi_welcome';
-  npc.userData.prompt = 'Speak to Companion';
-  G.interactables.push(npc);
-
-  // Trigger zone to advance
-  const trigger = { x:0, z:-20, r:3, dialogue:'voice_of_god', trigger:'advance', label:'Enter San Damiano Chapel' };
-  G.interactables.push(trigger);
-
-  G.player.x=0; G.player.z=0;
-  G.playerMesh.position.set(0,0,0);
-  G.camera.position.set(0,8,16);
+function mkBox(w,h,d,col,x,y,z){
+  var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(col));
+  m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return sceneAdd(m);
+}
+function mkCone(r,h,s,col,x,y,z){
+  var m=new THREE.Mesh(new THREE.ConeGeometry(r,h,s),mkMat(col));
+  m.position.set(x,y,z);m.castShadow=true;return sceneAdd(m);
+}
+function mkSphere(r,ws,hs,col,x,y,z){
+  var m=new THREE.Mesh(new THREE.SphereGeometry(r,ws,hs),mkMat(col));
+  m.position.set(x,y,z);m.castShadow=true;return sceneAdd(m);
+}
+function mkGround(col,w,d){
+  var m=new THREE.Mesh(new THREE.PlaneGeometry(w||90,d||90,4,4),mkMat(col));
+  m.rotation.x=-Math.PI/2;m.receiveShadow=true;return sceneAdd(m);
+}
+function mkAmbL(col,i){return sceneAdd(new THREE.AmbientLight(col,i));}
+function mkDirL(col,i,px,py,pz){
+  var l=new THREE.DirectionalLight(col,i);
+  l.position.set(px,py,pz);l.castShadow=true;
+  l.shadow.mapSize.set(1024,1024);return sceneAdd(l);
+}
+function mkFog(col,n,f){G.scene.background=new THREE.Color(col);G.scene.fog=new THREE.Fog(col,n,f);}
+function mkNPC(col,x,y,z){
+  var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.1,6),mkMat(col));body.position.y=.55;
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));head.position.y=1.32;
+  g.add(body,head);g.position.set(x,y,z);g.castShadow=true;return sceneAdd(g);
+}
+function mkGlowMesh(geo,col,emCol,ei){
+  var mat=new THREE.MeshLambertMaterial({color:col,emissive:new THREE.Color(emCol),emissiveIntensity:ei});
+  return new THREE.Mesh(geo,mat);
 }
 
-// ─── STAGE: SAN DAMIANO (CHURCH REPAIR) ──────────────────────────────────
-function buildStageSanDamiano() {
-  buildSky(0x7ba3cc, 0x9bb5cc);
-  buildLights();
-  buildGround(0x8B7355);
+/* ══════════════════════════════════════════════════════════
+   PLAYER
+══════════════════════════════════════════════════════════ */
+function createPlayer(){
+  if(G.playerGroup)G.scene.remove(G.playerGroup);
+  var g=new THREE.Group();
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.34,.5,1.25,6),mkMat(0x6B4226));body.position.y=.625;g.add(body);
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.29,6,5),mkMat(0xDEB887));head.position.y=1.55;g.add(head);
+  var hood=new THREE.Mesh(new THREE.SphereGeometry(.3,6,3,0,Math.PI*2,0,Math.PI*.5),mkMat(0x5a3318));hood.position.y=1.65;g.add(hood);
+  var belt=new THREE.Mesh(new THREE.TorusGeometry(.38,.045,4,8),mkMat(0xF5DEB3));belt.rotation.x=Math.PI/2;belt.position.y=.55;g.add(belt);
+  var haloMat=new THREE.MeshLambertMaterial({color:0xFFD700,emissive:new THREE.Color(0xFFD700),emissiveIntensity:.6});
+  var halo=new THREE.Mesh(new THREE.TorusGeometry(.38,.04,4,14),haloMat);halo.position.y=1.93;g.add(halo);
+  G.playerGroup=g;
+  G.scene.add(g);
+  setPlayerPos(0,0);
+}
+function setPlayerPos(x,z){G.px=x;G.pz=z;if(G.playerGroup)G.playerGroup.position.set(x,0,z);}
 
-  // Church ruins base
-  const stoneColor = 0xc8b89a;
-  makeBox(14,0.5,10,0xbbaa80,0,0.25,0); // floor
+/* ══════════════════════════════════════════════════════════
+   STAGE BUILDERS
+══════════════════════════════════════════════════════════ */
 
-  // Standing walls
-  makeBox(14,4,0.8,stoneColor,0,2,-5); // back wall
-  makeBox(0.8,6,10,stoneColor,-7,3,0);  // left wall standing
-
-  // Right wall with damage (invisible placeholder)
-  makeBox(0.8,3,10,stoneColor,7,1.5,0);
-
-  // BROKEN PIECES — stored so we can fix them
-  G.churchPieces = [];
-  G.fixedPieces = 0;
-
-  // Piece 1: Crumbling right wall upper
-  const p1 = makeBrokenPiece(0xaa9977, 0.8,3,10, 7,4.5,0, '① Crumbling upper wall');
-  p1.userData.fixedColor = 0xd4c4a0;
-
-  // Piece 2: Fallen arch
-  const p2 = makeBrokenPiece(0x998866, 6,0.8,0.8, 0,6,-5, '② Fallen arch');
-  p2.userData.fixedColor = 0xc0a870;
-
-  // Piece 3: Broken window
-  const p3 = makeBrokenPiece(0x7788aa, 2.5,2.5,0.3, 0,4,-5, '③ Shattered window');
-  p3.userData.fixedColor = 0x4488cc;
-
-  // Piece 4: Collapsed column
-  const p4 = makeBrokenPiece(0x999080, 0.6,4,0.6, -5,2,0, '④ Fallen column');
-  p4.userData.fixedColor = 0xd0c0a0;
-
-  // Piece 5: Missing roof section
-  const p5 = makeBrokenPiece(0x6a4a2a, 14,0.4,5, 0,7,2, '⑤ Missing roof');
-  p5.userData.fixedColor = 0x8B4513;
-
-  // Altar at the back
-  makeBox(3,1.5,1.5,0xf0e8d0,0,0.75,-4.2);
-  const crossGeo = new THREE.BoxGeometry(0.2,2,0.2);
-  const crossMat = new THREE.MeshLambertMaterial({color:0xffd700,emissive:0xffd700,emissiveIntensity:0.4});
-  const crossV = new THREE.Mesh(crossGeo,crossMat);
-  crossV.position.set(0,2.5,-4.2);
-  G.scene.add(makeRemovable(crossV));
-  const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.2,0.2),crossMat);
-  crossH.position.set(0,3.2,-4.2);
-  G.scene.add(makeRemovable(crossH));
-
-  // Rubble piles
-  for(let i=0;i<8;i++) {
-    const rx=(Math.random()-0.5)*12;
-    const rz=(Math.random()-0.5)*8;
-    makeBox(0.5+Math.random(),0.3+Math.random()*0.5,0.5+Math.random(), 0x998877, rx,0.3,rz);
-  }
-
-  G.player.x=0; G.player.z=8;
-  G.playerMesh.position.set(0,0,8);
-  G.camera.position.set(0,8,18);
-
-  document.getElementById('objText').innerHTML = 'Repair the 5 broken sections of San Damiano chapel (0/5)';
-  document.getElementById('stageProgress').textContent = '⚒ Repaired: 0 / 5';
-  document.getElementById('stageProgress').style.display = 'block';
+/* —— STAGE 0: ASSISI —— */
+function buildAssisi(){
+  mkFog(0x87ceeb,35,100);mkAmbL(0xfff5cc,.55);mkDirL(0xffeedd,1.2,15,30,10);mkGround(0x5a8a3a,90,90);
+  for(var i=0;i<5;i++){var a=(i/5)*Math.PI*2,r=28+Math.random()*8,hh=5+Math.random()*6;mkSphere(r,6,4,0x3d7a3a,Math.cos(a)*r,hh-r+2,Math.sin(a)*r-5);}
+  mkBox(8,6,6,0xd4c4a0,-12,3,-15);mkBox(8,1.5,6,0x8b3a3a,-12,7,-15);
+  mkBox(6,8,5,0xd4c4a0,-5,4,-18);mkBox(6,1.5,5,0x8b3a3a,-5,8.9,-18);
+  mkBox(3,12,3,0xc0b090,6,6,-16);mkBox(3,1.5,3,0x7a2020,6,13,-16);
+  mkBox(10,8,2,0xd4c4a0,0,4,-22);mkBox(4,4,2,0xd4c4a0,0,10,-22);mkBox(2,2,2,0xffdd88,0,13,-22);
+  mkBox(4,.1,20,0xbbaa88,0,.05,-12);
+  for(var j=0;j<8;j++){var a2=(j/8)*Math.PI*2,tx=Math.cos(a2)*18,tz=Math.sin(a2)*14-5;mkBox(.6,4,.6,0x8B4513,tx,2,tz);mkCone(2.5,5,5,0x2d6b2d,tx,7,tz);}
+  var comp=mkNPC(0xb06030,5,0,3);comp.userData={prompt:'Talk to Companion',dlgKey:'assisi_welcome'};
+  G.interactables.push(comp);
+  G.interactables.push({zone:true,x:0,z:-21,r:3.2,prompt:'Enter San Damiano Chapel',action:'dlgAdv',dlgKey:'voice_of_god'});
+  setPlayerPos(0,2);setObj('Explore Assisi. Walk north to the San Damiano Chapel.');hideProgress();
 }
 
-function makeBrokenPiece(color, w,h,d, x,y,z, label) {
-  // Broken appearance: tilted, jagged color
-  const geo = new THREE.BoxGeometry(w,h,d);
-  const mat = new THREE.MeshLambertMaterial({color, wireframe:false});
-  const m = new THREE.Mesh(geo,mat);
-  m.position.set(x,y,z);
-  m.rotation.z = (Math.random()-0.5)*0.3;
-  m.rotation.x = (Math.random()-0.5)*0.15;
-  m.castShadow = true;
-  m.userData.broken = true;
-  m.userData.label = label;
-  m.userData.isInteractable = true;
-  m.userData.isChurchPiece = true;
-  m.userData.prompt = 'Repair: ' + label;
-  G.scene.add(makeRemovable(m));
-  G.interactables.push(m);
-  G.churchPieces.push(m);
-  return m;
+/* —— STAGE 1: SAN DAMIANO —— */
+function buildSanDamiano(){
+  mkFog(0x7ba3cc,30,90);mkAmbL(0xfff2dd,.5);mkDirL(0xffeedd,1.1,12,28,8);mkGround(0x8B7355,80,80);
+  mkBox(14,.5,10,0xbbaa80,0,.25,0);mkBox(14,4,.8,0xc8b89a,0,2,-5);mkBox(.8,6,10,0xc8b89a,-7,3,0);
+  mkBox(3,1.5,1.5,0xf0e8d0,0,.75,-4.2);
+  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.5});
+  var cv=new THREE.Mesh(new THREE.BoxGeometry(.2,2,.2),cm);cv.position.set(0,2.5,-4.2);sceneAdd(cv);
+  var ch=new THREE.Mesh(new THREE.BoxGeometry(.8,.2,.2),cm);ch.position.set(0,3.2,-4.2);sceneAdd(ch);
+  for(var i=0;i<8;i++)mkBox(.5+Math.random(),.4,.5+Math.random(),0x998877,(Math.random()-.5)*12,.3,(Math.random()-.5)*8);
+  addPiece(0xa09070,.8,3,10, 7,4.5,0, 'Upper Wall',0xd4c4a0);
+  addPiece(0x998866,6,.8,.8, 0,6.2,-5,'Fallen Arch',0xc0a870);
+  addPiece(0x7788aa,2.5,2.5,.3,0,4,-5,'Window',0x4488cc);
+  addPiece(0x999080,.6,4,.6,-5,2,0, 'Column',0xd0c0a0);
+  addPiece(0x6a4a2a,14,.4,5, 0,7,2, 'Roof Section',0x8B4513);
+  setPlayerPos(0,8);setObj('Repair all 5 broken sections of San Damiano (0/5)');showProgress('Repaired: 0/5');
 }
 
-function repairChurchPiece(piece) {
-  if (!piece.userData.broken) return;
-  piece.userData.broken = false;
+function addPiece(col,w,h,d,x,y,z,label,fixedCol){
+  var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:col}));
+  m.position.set(x,y,z);m.rotation.z=(Math.random()-.5)*.35;m.rotation.x=(Math.random()-.5)*.12;
+  m.castShadow=m.receiveShadow=true;
+  m.userData={broken:true,fixedColor:fixedCol,prompt:'Repair '+label,action:'repair'};
+  sceneAdd(m);G.interactables.push(m);G.churchPieces.push(m);
+}
+
+function doRepair(piece){
+  if(!piece||!piece.userData||!piece.userData.broken)return;
+  piece.userData.broken=false;
   piece.rotation.set(0,0,0);
-  piece.material.color.setHex(piece.userData.fixedColor || 0xd4c4a0);
-  piece.material.emissive = new THREE.Color(0xffd700);
-  piece.material.emissiveIntensity = 0.3;
+  piece.material.color.setHex(piece.userData.fixedColor||0xd4c4a0);
+  piece.material.emissive=new THREE.Color(0xffd700);
+  piece.material.emissiveIntensity=.35;
   G.fixedPieces++;
-
-  // Golden flash
-  showMiracle();
-  spawnParticles3D(piece.position, 0xffd700, 30);
-
-  const idx = G.interactables.indexOf(piece);
-  if (idx !== -1) G.interactables.splice(idx, 1);
-
-  document.getElementById('stageProgress').textContent = `⚒ Repaired: ${G.fixedPieces} / ${G.totalPieces}`;
-  document.getElementById('objText').innerHTML = `Repair the 5 broken sections of San Damiano chapel (${G.fixedPieces}/5)`;
-
-  showDialogue([DIALOGUES.repair_piece[0]]);
-
-  setTimeout(() => {
-    piece.material.emissiveIntensity = 0;
-  }, 2000);
-
-  if (G.fixedPieces >= G.totalPieces) {
-    setTimeout(() => {
-      showDialogue(DIALOGUES.repair_complete, () => {
-        advanceStage();
-      });
-    }, 2500);
-  }
+  var idx=G.interactables.indexOf(piece);if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);spawnParticles3D(piece.position,0xffd700,28);
+  showDlg([DLG.repair_piece[0]]);
+  var p=piece;setTimeout(function(){if(p&&p.material)p.material.emissiveIntensity=0;},2200);
+  showProgress('Repaired: '+G.fixedPieces+'/'+G.totalPieces);
+  setObj('Repair all 5 broken sections of San Damiano ('+G.fixedPieces+'/5)');
+  if(G.fixedPieces>=G.totalPieces)setTimeout(function(){showDlg(DLG.repair_complete,advanceStage);},2800);
 }
 
-// ─── STAGE: BIRDS ─────────────────────────────────────────────────────────
-function buildStageBirds() {
-  buildSky(0x5b9fd4, 0x82b8d8);
-  buildLights();
-  buildGround(0x4a9040);
-
-  // Tree cluster for birds to sit
-  for(let i=0;i<5;i++){
-    const tx = (i-2)*4;
-    makeBox(0.5,5,0.5, 0x5D3A1A, tx,2.5,-15);
-    const geo=new THREE.ConeGeometry(2.5+i*0.3,6,5);
-    const mat=new THREE.MeshLambertMaterial({color:0x2E8B2E});
-    const c=new THREE.Mesh(geo,mat);
-    c.position.set(tx,9,-15);
-    c.castShadow=true;
-    G.scene.add(makeRemovable(c));
+/* —— STAGE 2: BIRDS —— */
+function buildBirds(){
+  mkFog(0x5b9fd4,35,100);mkAmbL(0xfff8ee,.6);mkDirL(0xffeedd,1.3,18,32,10);mkGround(0x4a9040,90,90);
+  for(var i=0;i<5;i++){var tx=(i-2)*4.5;mkBox(.5,5,.5,0x5D3A1A,tx,2.5,-15);mkCone(2.5+i*.3,6,5,0x2E8B2E,tx,9,-15);}
+  for(var j=0;j<5;j++)mkSphere(7+j*3,6,4,0x3a7a3a,(j-2)*18,-4,-32);
+  var fc=[0xff6688,0xffee44,0xff9944,0xee44ff,0x44aaff];
+  for(var k=0;k<20;k++){var fx=(Math.random()-.5)*28,fz=(Math.random()-.5)*18-5;mkBox(.12,.7,.12,0x228822,fx,.35,fz);mkSphere(.22,4,3,fc[k%5],fx,1,fz);}
+  mkBox(3,.08,22,0xbbaa80,0,.04,-10);
+  var bc=[0xdd9944,0x448866,0xaa4422,0x334488,0x663322];
+  for(var b=0;b<24;b++){
+    var bx=(Math.random()-.5)*14-1,by=.6+Math.floor(b/8)*1.6,bz=-11+(Math.random()-.5)*5;
+    var bm=new THREE.Mesh(new THREE.ConeGeometry(.22,.14,4),new THREE.MeshLambertMaterial({color:bc[b%5]}));
+    bm.position.set(bx,by,bz);bm.rotation.x=Math.PI/2;
+    bm.userData={origY:by,phase:Math.random()*Math.PI*2,dancing:false};
+    sceneAdd(bm);G.birds.push(bm);
   }
-
-  // Meadow flowers
-  for(let i=0;i<20;i++){
-    const geo=new THREE.SphereGeometry(0.2,4,3);
-    const colors=[0xff6688,0xffee44,0xff9944,0xee44ff,0x44aaff];
-    const mat=new THREE.MeshLambertMaterial({color:colors[i%5]});
-    const f=new THREE.Mesh(geo,mat);
-    f.position.set((Math.random()-0.5)*30, 0.2,(Math.random()-0.5)*20-5);
-    G.scene.add(makeRemovable(f));
-  }
-
-  // Hills background
-  for(let i=0;i<5;i++){
-    const geo=new THREE.SphereGeometry(8+i*3,6,4);
-    const mat=new THREE.MeshLambertMaterial({color:0x3a7a3a});
-    const hill=new THREE.Mesh(geo,mat);
-    hill.position.set((i-2)*20, -4,-30);
-    G.scene.add(makeRemovable(hill));
-  }
-
-  // Flock of birds (small flat diamonds)
-  G.birds = [];
-  const birdColors=[0xdd9944,0x448866,0xaa4422,0x334488,0x663322];
-  for(let i=0;i<24;i++){
-    const spread = (i<12) ? 8 : 12;
-    const bx = (Math.random()-0.5)*spread-2;
-    const by = 0.5 + Math.floor(i/8)*1.5;
-    const bz = -12 + (Math.random()-0.5)*5;
-    const geo=new THREE.ConeGeometry(0.25,0.15,4);
-    const mat=new THREE.MeshLambertMaterial({color:birdColors[i%5]});
-    const bird=new THREE.Mesh(geo,mat);
-    bird.position.set(bx,by,bz);
-    bird.rotation.x = Math.PI/2;
-    bird.userData.origY = by;
-    bird.userData.phase = Math.random()*Math.PI*2;
-    bird.userData.preached = false;
-    G.scene.add(makeRemovable(bird));
-    G.birds.push(bird);
-  }
-
-  // Trigger zone near birds
-  const trigger = {x:0,z:-10,r:4.5,dialogue:'birds_miracle',trigger:'birdsMiracle',label:'Preach to the birds'};
-  G.interactables.push(trigger);
-
-  G.player.x=0; G.player.z=5;
-  G.playerMesh.position.set(0,0,5);
-  G.camera.position.set(0,8,15);
-
-  document.getElementById('objText').innerHTML = 'Walk to the flock of birds and preach to them';
-  document.getElementById('stageProgress').style.display='none';
+  G.interactables.push({zone:true,x:0,z:-12,r:4.5,prompt:'Preach to the birds',action:'birds'});
+  setPlayerPos(0,6);setObj('Walk north to the flock of birds and preach to them');hideProgress();
 }
 
-// ─── STAGE: WOLF ─────────────────────────────────────────────────────────
-function buildStageWolf() {
-  buildSky(0x6688aa, 0x7799bb);
-  buildLights();
-  buildGround(0x4a7040);
-
-  // Dark forest edges
-  for(let i=0;i<12;i++){
-    const angle=(i/12)*Math.PI*2;
-    const r=25+Math.random()*8;
-    const tx=Math.cos(angle)*r, tz=Math.sin(angle)*r;
-    makeBox(0.8,8+Math.random()*4,0.8,0x3a2510, tx,4,tz);
-    const geo=new THREE.ConeGeometry(3+Math.random()*2,8,5);
-    const mat=new THREE.MeshLambertMaterial({color:0x1a4a1a});
-    const cone=new THREE.Mesh(geo,mat);
-    cone.position.set(tx,11,tz);
-    G.scene.add(makeRemovable(cone));
-  }
-
-  // City gate (Gubbio)
-  makeBox(2,8,1,0xc0a880,-4,4,-18);
-  makeBox(2,8,1,0xc0a880,4,4,-18);
-  makeBox(10,2,1,0xc0a880,0,9,-18);
-  const geo=new THREE.CylinderGeometry(2,2,0.5,6);
-  const mat=new THREE.MeshLambertMaterial({color:0xaa8855});
-  const m=new THREE.Mesh(geo,mat); m.position.set(0,11,-18);
-  G.scene.add(makeRemovable(m));
-
-  // Rocks
-  for(let i=0;i<10;i++){
-    const rx=(Math.random()-0.5)*20, rz=(Math.random()-0.5)*15;
-    makeBox(1+Math.random()*1.5,0.5+Math.random(),1+Math.random()*1.5,0x888877,rx,0.5,rz);
-  }
-
-  // Wolf
-  const wolfGroup = new THREE.Group();
-  // body
-  const bg=new THREE.BoxGeometry(1.8,1,2.4); const bm=new THREE.MeshLambertMaterial({color:0x556655});
-  const body=new THREE.Mesh(bg,bm); body.position.y=0.8; wolfGroup.add(body);
-  // head
-  const hg=new THREE.BoxGeometry(0.9,0.8,1); const hm=new THREE.MeshLambertMaterial({color:0x4a5a4a});
-  const whead=new THREE.Mesh(hg,hm); whead.position.set(0,1.5,-1.5); wolfGroup.add(whead);
-  // snout
-  const sg=new THREE.BoxGeometry(0.5,0.4,0.5);
-  const snout=new THREE.Mesh(sg,hm); snout.position.set(0,1.3,-2.1); wolfGroup.add(snout);
-  // legs
-  for(let i=0;i<4;i++){
-    const lx=(i%2===0?-0.6:0.6), lz=(i<2?-0.7:0.7);
-    const leg=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.8,0.3),bm);
-    leg.position.set(lx,0.1,lz); wolfGroup.add(leg);
-  }
-  // tail
-  const tail=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.3,1),bm);
-  tail.position.set(0,1.2,1.3); tail.rotation.x=-0.4; wolfGroup.add(tail);
-
-  // eyes (red — angry)
-  const eyeMat=new THREE.MeshLambertMaterial({color:0xff2200,emissive:0xff0000,emissiveIntensity:0.8});
-  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.08,4,4),eyeMat);
-  eyeL.position.set(-0.2,1.65,-1.95); wolfGroup.add(eyeL);
-  const eyeR=eyeL.clone(); eyeR.position.x=0.2; wolfGroup.add(eyeR);
-
-  wolfGroup.position.set(0,0,-10);
-  G.scene.add(makeRemovable(wolfGroup));
-  G.wolfMesh = wolfGroup;
-  wolfGroup.userData.isInteractable = true;
-  wolfGroup.userData.prompt = 'Make peace with Brother Wolf';
-  G.interactables.push(wolfGroup);
-
-  G.player.x=0; G.player.z=5;
-  G.playerMesh.position.set(0,0,5);
-
-  document.getElementById('objText').innerHTML = 'Find and make peace with the wolf terrorizing Gubbio';
-  document.getElementById('stageProgress').style.display='none';
+/* —— STAGE 3: WOLF —— */
+function buildWolf(){
+  mkFog(0x556688,25,85);mkAmbL(0xaabbcc,.5);mkDirL(0xddeeff,.9,-10,25,8);mkGround(0x4a5a40,90,90);
+  for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2,r=26+Math.random()*8,tx=Math.cos(a)*r,tz=Math.sin(a)*r;mkBox(.8,9+Math.random()*4,.8,0x3a2510,tx,4.5,tz);mkCone(3+Math.random()*2,9,5,0x1a4a1a,tx,12,tz);}
+  mkBox(2,8,1,0xc0a880,-4,4,-18);mkBox(2,8,1,0xc0a880,4,4,-18);mkBox(10,2,1,0xc0a880,0,9,-18);
+  for(var j=0;j<10;j++)mkBox(1+Math.random(),.6,1+Math.random(),0x888877,(Math.random()-.5)*20,.5,(Math.random()-.5)*14);
+  buildWolfMesh();
+  G.wolfGroup.position.set(0,0,-11);
+  G.wolfGroup.userData.prompt='Make peace with Brother Wolf';
+  G.wolfGroup.userData.action='wolf';
+  G.interactables.push(G.wolfGroup);
+  setPlayerPos(0,6);setObj('Find the wolf beyond the city gates and make peace');hideProgress();
 }
 
-function tameWolf() {
-  if (!G.wolfMesh || G.wolfTamed) return;
-  G.wolfTamed = true;
+function buildWolfMesh(){
+  var g=new THREE.Group();
+  var wm=new THREE.MeshLambertMaterial({color:0x556655});
+  var hm=new THREE.MeshLambertMaterial({color:0x4a5a4a});
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.8,1,2.4),wm.clone());body.position.y=.8;g.add(body);
+  var wh=new THREE.Mesh(new THREE.BoxGeometry(.9,.8,1),hm.clone());wh.position.set(0,1.5,-1.55);g.add(wh);
+  var sn=new THREE.Mesh(new THREE.BoxGeometry(.5,.4,.5),hm.clone());sn.position.set(0,1.3,-2.1);g.add(sn);
+  for(var i=0;i<4;i++){var lg=new THREE.Mesh(new THREE.BoxGeometry(.3,.8,.3),wm.clone());lg.position.set(i%2===0?-.6:.6,.1,i<2?-.75:.75);g.add(lg);}
+  // Tail — stored by direct reference, NOT children[n]
+  var tail=new THREE.Mesh(new THREE.BoxGeometry(.3,.3,1.1),wm.clone());
+  tail.position.set(0,1.2,1.3);tail.rotation.x=-.4;g.add(tail);
+  G.wolfTail=tail;
+  // Eyes — stored by direct reference, NOT children[n]
+  var eyeML=new THREE.MeshLambertMaterial({color:0xff2200,emissive:new THREE.Color(0xff0000),emissiveIntensity:.9});
+  var eyeMR=eyeML.clone();
+  var eL=new THREE.Mesh(new THREE.SphereGeometry(.09,4,4),eyeML);eL.position.set(-.2,1.65,-1.95);g.add(eL);
+  var eR=new THREE.Mesh(new THREE.SphereGeometry(.09,4,4),eyeMR);eR.position.set(.2,1.65,-1.95);g.add(eR);
+  G.wolfEyes=[eL,eR];
+  G.wolfGroup=g;
+  sceneAdd(g);  // tags the group for clearStage removal
+}
 
-  // Change wolf eyes to peaceful green
-  G.wolfMesh.traverse(child => {
-    if (child.isMesh && child.material.emissive) {
-      child.material.color.setHex(0x88aa66);
-      child.material.emissive.setHex(0x004400);
-      child.material.emissiveIntensity = 0.2;
-    }
-  });
+function doWolfMiracle(){
+  if(G.wolfTamed)return;G.wolfTamed=true;
+  var idx=G.interactables.indexOf(G.wolfGroup);if(idx!==-1)G.interactables.splice(idx,1);
+  for(var i=0;i<G.wolfEyes.length;i++){
+    var e=G.wolfEyes[i];
+    e.material.color.setHex(0x88cc66);
+    e.material.emissive.setHex(0x004400);
+    e.material.emissiveIntensity=.3;
+  }
+  if(G.wolfGroup)G.wolfGroup.rotation.y=Math.PI;
+  flashMiracle(false);spawnParticles3D(G.wolfGroup.position.clone(),0xaaffaa,45);
+  showDlg(DLG.wolf_encounter,advanceStage);
+}
 
-  // Make wolf sit (rotate)
-  G.wolfMesh.rotation.y = Math.PI; // face Francis
-  showMiracle();
-  spawnParticles3D(G.wolfMesh.position, 0xaaffaa, 40);
+/* —— STAGE 4: LA VERNA —— */
+function buildLaVerna(){
+  G.scene.background=new THREE.Color(0x1a2255);G.scene.fog=new THREE.Fog(0x1a2255,20,80);
+  mkAmbL(0x334488,.4);mkDirL(0x8899cc,.7,-5,20,5);mkGround(0x5a4a3a,80,80);
+  var rc=[0x6a5a4a,0x5a4a3a,0x4a3a2a,0x7a6a5a,0x8a7a6a];
+  for(var i=0;i<5;i++){var s=5+i*3.5;var mm=new THREE.Mesh(new THREE.ConeGeometry(s,s*1.5,5),new THREE.MeshLambertMaterial({color:rc[i]}));mm.position.set((i-2)*1.5,s*.75-1,-20-i*3);sceneAdd(mm);}
+  for(var j=0;j<8;j++)mkBox(3,.3,1.5,0x8a7a6a,0,j*.8,-j*2.4-2);
+  var cm2=new THREE.MeshLambertMaterial({color:0xffdd88,emissive:new THREE.Color(0xffdd00),emissiveIntensity:.9});
+  var vcross=new THREE.Mesh(new THREE.BoxGeometry(.28,4.5,.28),cm2);vcross.position.set(0,13,-21);sceneAdd(vcross);
+  var hcross=new THREE.Mesh(new THREE.BoxGeometry(2.8,.28,.28),cm2);hcross.position.set(0,14.9,-21);sceneAdd(hcross);
+  var gl=new THREE.PointLight(0xffd700,2.5,18);gl.position.set(0,15,-21);gl.userData.glow=true;sceneAdd(gl);
+  var sv=[];for(var k=0;k<400;k++)sv.push((Math.random()-.5)*200,25+Math.random()*80,(Math.random()-.5)*200-30);
+  var sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sv,3));
+  sceneAdd(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.35})));
+  mkSphere(4,8,6,0xddddee,-30,40,-60);
+  G.interactables.push({zone:true,x:0,z:-20,r:3.5,prompt:'Kneel before the Cross',action:'stigmata'});
+  setPlayerPos(0,5);setObj('Ascend La Verna and pray before the glowing Cross');hideProgress();
+}
 
-  showDialogue(DIALOGUES.wolf_encounter, () => {
-    advanceStage();
+/* —— STAGE 5: CANTICLE —— */
+function buildCanticle(){
+  G.scene.background=new THREE.Color(0xff9030);G.scene.fog=new THREE.Fog(0xff7020,25,90);
+  mkAmbL(0xffddaa,.9);mkDirL(0xff8844,1.6,-25,18,8);mkGround(0x8a6a40,90,90);
+  var st=0xd4c090;
+  mkBox(12,8,2,st,0,4,-20);mkBox(5,4,2,st,0,10,-20);mkBox(2.5,2.5,2,0xffee88,0,13.2,-20);
+  var cm3=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffdd00),emissiveIntensity:.5});
+  var vc2=new THREE.Mesh(new THREE.BoxGeometry(.2,3,.2),cm3);vc2.position.set(0,15.5,-20);sceneAdd(vc2);
+  var hc2=new THREE.Mesh(new THREE.BoxGeometry(1.6,.2,.2),cm3);hc2.position.set(0,16.8,-20);sceneAdd(hc2);
+  var fc2=[0xff4466,0xff8844,0xffee44,0xee44aa,0xff6688];
+  for(var i=0;i<18;i++){var fx=(Math.random()-.5)*14,fz=(Math.random()-.5)*10-5;mkBox(.15,.85,.15,0x228822,fx,.42,fz);mkSphere(.3,5,4,fc2[i%5],fx,1.05,fz);}
+  for(var j=0;j<4;j++){var tx=(j-1.5)*9;mkBox(.5,4.5,.5,0x5D3A1A,tx,2.25,3);mkCone(2.8,6,6,0x2d6b2d,tx,8,3);}
+  for(var b=0;b<12;b++){
+    var bm=new THREE.Mesh(new THREE.ConeGeometry(.28,.18,4),new THREE.MeshLambertMaterial({color:0x88aacc}));
+    bm.position.set((Math.random()-.5)*20,8+Math.random()*6,(Math.random()-.5)*16);
+    bm.userData={phase:Math.random()*Math.PI*2,origY:bm.position.y};
+    sceneAdd(bm);G.birds.push(bm);
+  }
+  var sunD=new THREE.Mesh(new THREE.CircleGeometry(9,16),new THREE.MeshBasicMaterial({color:0xffcc00,side:THREE.DoubleSide}));
+  sunD.position.set(-45,28,-55);sunD.rotation.y=.45;sceneAdd(sunD);
+  var clare=mkNPC(0x6688cc,5,0,1);clare.userData={prompt:'Speak with Sister Clare',dlgKey:'canticle_scene'};
+  G.interactables.push(clare);
+  G.interactables.push({zone:true,x:0,z:-19,r:4,prompt:'Enter chapel — sing the Canticle',action:'ending'});
+  setPlayerPos(0,7);setObj('Approach the chapel and sing the Canticle of the Sun');hideProgress();
+}
+
+/* ══════════════════════════════════════════════════════════
+   STAGE MANAGEMENT
+══════════════════════════════════════════════════════════ */
+function loadStage(idx){
+  G.stageIndex=idx;
+  var cut=CUTS[idx];
+  if(!cut){showFinal();return;}
+  hideHUD();
+  G.dlgActive=false;
+  document.getElementById('dialogueBox').style.display='none';
+  document.getElementById('interactPrompt').style.display='none';
+  showCutscene(cut,function(){
+    clearStage();
+    createPlayer();
+    if(cut.key==='assisi')buildAssisi();
+    else if(cut.key==='sanDamiano')buildSanDamiano();
+    else if(cut.key==='birds')buildBirds();
+    else if(cut.key==='wolf')buildWolf();
+    else if(cut.key==='laverna')buildLaVerna();
+    else if(cut.key==='canticle')buildCanticle();
+    showHUD(cut.title);
+    if(cut.intro&&DLG[cut.intro])showDlg(DLG[cut.intro]);
   });
 }
 
-// ─── STAGE: LA VERNA (STIGMATA) ──────────────────────────────────────────
-function buildStageLaVerna() {
-  buildSky(0x2233aa, 0x223399);
-  G.scene.fog = new THREE.Fog(0x223399, 20, 80);
-  buildLights();
-  buildGround(0x5a4a3a);
-
-  // Rocky mountain (La Verna)
-  for(let i=0;i<5;i++){
-    const s=5+i*3;
-    const geo=new THREE.ConeGeometry(s,s*1.5,5);
-    const mat=new THREE.MeshLambertMaterial({color:[0x6a5a4a,0x5a4a3a,0x4a3a2a,0x7a6a5a,0x8a7a6a][i]});
-    const cone=new THREE.Mesh(geo,mat);
-    cone.position.set((i-2)*2, s*0.75-1, -20-i*3);
-    cone.castShadow=true;
-    G.scene.add(makeRemovable(cone));
-  }
-
-  // Rocky path upward
-  for(let i=0;i<8;i++){
-    makeBox(3,0.3,1.5,0x8a7a6a, 0, i*0.8, -i*2.5-2);
-  }
-
-  // Summit cross (glowing)
-  const crossMat=new THREE.MeshLambertMaterial({color:0xffdd88,emissive:0xffdd00,emissiveIntensity:0.8});
-  const cv=new THREE.Mesh(new THREE.BoxGeometry(0.3,4,0.3),crossMat);
-  cv.position.set(0,12,-20);
-  G.scene.add(makeRemovable(cv));
-  const ch=new THREE.Mesh(new THREE.BoxGeometry(2.5,0.3,0.3),crossMat);
-  ch.position.set(0,13.5,-20);
-  G.scene.add(makeRemovable(ch));
-
-  // Animated glow point light
-  const glow=new THREE.PointLight(0xffd700,2,15);
-  glow.position.set(0,14,-20);
-  glow.userData.glow=true;
-  G.scene.add(makeRemovable(glow));
-
-  // Stars in sky
-  const starGeo=new THREE.BufferGeometry();
-  const starPos=[];
-  for(let i=0;i<300;i++){
-    starPos.push((Math.random()-0.5)*200,(20+Math.random()*80),(Math.random()-0.5)*200-30);
-  }
-  starGeo.setAttribute('position',new THREE.Float32BufferAttribute(starPos,3));
-  const starMat=new THREE.PointsMaterial({color:0xffffff,size:0.3});
-  const stars=new THREE.Points(starGeo,starMat);
-  G.scene.add(makeRemovable(stars));
-
-  // Trigger zone at summit
-  const trigger={x:0,z:-19,r:3.5,dialogue:'stigmata_miracle',trigger:'stigmata',label:'Receive the Stigmata'};
-  G.interactables.push(trigger);
-
-  G.player.x=0; G.player.z=5;
-  G.playerMesh.position.set(0,0,5);
-
-  document.getElementById('objText').innerHTML = 'Ascend La Verna and pray before the Cross';
-  document.getElementById('stageProgress').style.display='none';
+function advanceStage(){
+  G.dlgActive=false;
+  document.getElementById('dialogueBox').style.display='none';
+  loadStage(G.stageIndex+1);
 }
 
-// ─── STAGE: CANTICLE ─────────────────────────────────────────────────────
-function buildStageCanticle() {
-  buildSky(0xffa040, 0xff8020);
-  G.scene.fog = new THREE.Fog(0xff9030, 25, 90);
-
-  // Sunset/golden lights
-  const amb=new THREE.AmbientLight(0xffddaa,0.8);
-  G.scene.add(makeRemovable(amb));
-  const sun=new THREE.DirectionalLight(0xff8844,1.5);
-  sun.position.set(-20,15,10);
-  G.scene.add(makeRemovable(sun));
-
-  buildGround(0x8a6a40);
-
-  // San Damiano facade (restored — beautiful now)
-  const stoneColor=0xd4c090;
-  makeBox(12,8,2,stoneColor,0,4,-20);
-  makeBox(5,4,2,stoneColor,0,10,-20);
-  makeBox(2.5,2.5,2,0xffdd88,0,13.5,-20);
-  makeBox(0.25,3,0.25,0xffd700,0,15,-20);
-  makeBox(1.5,0.25,0.25,0xffd700,0,16,-20);
-
-  // Garden roses and plants
-  for(let i=0;i<15;i++){
-    const rx=(Math.random()-0.5)*14, rz=(Math.random()-0.5)*10-5;
-    const colors=[0xff4466,0xff8844,0xffee44,0xee44aa,0xff6688];
-    makeBox(0.15,0.8,0.15,0x228822,rx,0.4,rz);
-    const head=new THREE.Mesh(new THREE.SphereGeometry(0.3,5,4),new THREE.MeshLambertMaterial({color:colors[i%5]}));
-    head.position.set(rx,1,rz);
-    G.scene.add(makeRemovable(head));
+/* ══════════════════════════════════════════════════════════
+   INTERACTION
+══════════════════════════════════════════════════════════ */
+function checkNear(){
+  if(!G.gameStarted)return;
+  var px=G.px,pz=G.pz,best=null,bestD=Infinity;
+  for(var i=0;i<G.interactables.length;i++){
+    var obj=G.interactables[i];
+    var ox,oz,orr;
+    if(obj.isObject3D){ox=obj.position.x;oz=obj.position.z;orr=2.5;}
+    else{ox=obj.x;oz=obj.z;orr=obj.r||2.5;}
+    var d=Math.sqrt((px-ox)*(px-ox)+(pz-oz)*(pz-oz));
+    if(d<orr+.8&&d<bestD){bestD=d;best=obj;}
   }
-
-  // Birds flying overhead
-  G.birds=[];
-  for(let i=0;i<10;i++){
-    const bx=(Math.random()-0.5)*20;
-    const by=8+Math.random()*6;
-    const bz=(Math.random()-0.5)*15;
-    const geo=new THREE.ConeGeometry(0.3,0.18,4);
-    const bird=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:0x88aacc}));
-    bird.position.set(bx,by,bz);
-    bird.userData.phase=Math.random()*Math.PI*2;
-    G.scene.add(makeRemovable(bird));
-    G.birds.push(bird);
-  }
-
-  // Sun disc
-  const sunGeo=new THREE.CircleGeometry(8,16);
-  const sunMat=new THREE.MeshBasicMaterial({color:0xffcc00,side:THREE.DoubleSide});
-  const sunDisc=new THREE.Mesh(sunGeo,sunMat);
-  sunDisc.position.set(-40,25,-50);
-  sunDisc.rotation.y=0.4;
-  G.scene.add(makeRemovable(sunDisc));
-
-  // NPC Clare (Sister Clare)
-  const npc=makeNPC(0x4488cc,5,0,0);
-  npc.userData.isInteractable=true;
-  npc.userData.dialogue='canticle_scene';
-  npc.userData.prompt='Speak with Sister Clare';
-  G.interactables.push(npc);
-
-  // Ending trigger
-  const trigger={x:0,z:-18,r:4,trigger:'ending',label:'Enter the chapel — sing the Canticle of the Sun'};
-  G.interactables.push(trigger);
-
-  G.player.x=0; G.player.z=6;
-  G.playerMesh.position.set(0,0,6);
-
-  document.getElementById('objText').innerHTML = 'Approach the restored chapel and sing the Canticle of the Sun';
-  document.getElementById('stageProgress').style.display='none';
+  G.nearTarget=best;
+  var ip=document.getElementById('interactPrompt');
+  if(best){
+    var lbl=(best.userData&&best.userData.prompt)||best.prompt||'Interact';
+    ip.textContent='✝ PRAY — '+lbl;ip.style.display='block';
+  }else{ip.style.display='none';}
 }
 
-// ─── NPC HELPER ──────────────────────────────────────────────────────────
-function makeNPC(color, x,y,z) {
-  const g=new THREE.Group();
-  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.4,1,6),new THREE.MeshLambertMaterial({color}));
-  body.position.y=0.5;
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.26,6,5),new THREE.MeshLambertMaterial({color:0xDEB887}));
-  head.position.y=1.3;
-  g.add(body,head);
-  g.position.set(x,y,z);
-  g.castShadow=true;
-  g.userData.isNPC=true;
-  G.scene.add(makeRemovable(g));
-  return g;
-}
-
-// ─── PARTICLES ────────────────────────────────────────────────────────────
-function spawnParticles3D(pos, color=0xffd700, count=20) {
-  for(let i=0;i<count;i++){
-    const geo=new THREE.SphereGeometry(0.08,4,4);
-    const mat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:1});
-    const p=new THREE.Mesh(geo,mat);
-    p.position.copy(pos);
-    p.userData.vel=new THREE.Vector3((Math.random()-0.5)*0.2,(Math.random()*0.15+0.05),(Math.random()-0.5)*0.2);
-    p.userData.life=1;
-    G.scene.add(makeRemovable(p));
-    G.particles3D.push(p);
-  }
-}
-
-function updateParticles3D(dt) {
-  for(let i=G.particles3D.length-1;i>=0;i--){
-    const p=G.particles3D[i];
-    p.userData.life-=dt*0.8;
-    p.position.add(p.userData.vel);
-    p.material.opacity=p.userData.life;
-    if(p.userData.life<=0){
-      G.scene.remove(p);
-      G.particles3D.splice(i,1);
-    }
-  }
-}
-
-function showMiracle() {
-  const el=document.getElementById('miraceEffect');
-  el.style.display='block';
-  setTimeout(()=>el.style.display='none',600);
-}
-
-// ─── DIALOGUE SYSTEM ──────────────────────────────────────────────────────
-let dlgQueue=[], dlgIdx=0, dlgCallback=null;
-
-function showDialogue(lines, cb=null) {
-  if(!lines || lines.length===0) { if(cb) cb(); return; }
-  dlgQueue=lines; dlgIdx=0; dlgCallback=cb;
-  G.dialogueActive=true;
-  renderDlg();
-  document.getElementById('dialogueBox').style.display='block';
-}
-
-function renderDlg(){
-  if(dlgIdx>=dlgQueue.length){
-    closeDlg();
+function handleAct(){
+  if(G.dlgActive){dlgNext();return;}
+  if(!G.nearTarget)return;
+  var obj=G.nearTarget;
+  var action=(obj.userData&&obj.userData.action)||obj.action;
+  if(action==='repair'){if(obj.userData&&obj.userData.broken)doRepair(obj);return;}
+  if(action==='wolf'){doWolfMiracle();return;}
+  if(action==='birds'){doBirdsMiracle();return;}
+  if(action==='stigmata'){doStigmata();return;}
+  if(action==='dlgAdv'){
+    var key=(obj.userData&&obj.userData.dlgKey)||obj.dlgKey;
+    var idx=G.interactables.indexOf(obj);if(idx!==-1)G.interactables.splice(idx,1);
+    if(key&&DLG[key])showDlg(DLG[key],advanceStage);else advanceStage();
     return;
   }
-  const d=dlgQueue[dlgIdx];
-  document.getElementById('dlgSpeaker').textContent=d.speaker||'';
-  document.getElementById('dlgText').textContent=d.text||'';
-  document.getElementById('dlgAttr').textContent=d.attr||'';
+  if(action==='ending'){
+    var idx2=G.interactables.indexOf(obj);if(idx2!==-1)G.interactables.splice(idx2,1);
+    showDlg(DLG.canticle_scene,function(){setTimeout(showFinal,500);});
+    return;
+  }
+  var dlgKey=(obj.userData&&obj.userData.dlgKey)||obj.dlgKey;
+  if(dlgKey&&DLG[dlgKey]){showDlg(DLG[dlgKey]);return;}
 }
 
+function doBirdsMiracle(){
+  if(G.birdsDone)return;G.birdsDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.action==='birds';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);spawnParticles3D(G.playerGroup.position.clone(),0xaaffff,55);
+  for(var i=0;i<G.birds.length;i++){
+    (function(b){b.userData.dancing=true;setTimeout(function(){if(b.userData)b.userData.dancing=false;},5000);})(G.birds[i]);
+  }
+  showDlg(DLG.birds_miracle,advanceStage);
+}
+
+function doStigmata(){
+  if(G.stigmataDone)return;G.stigmataDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.action==='stigmata';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(true);
+  spawnParticles3D(G.playerGroup.position.clone(),0xffffff,80);
+  spawnParticles3D(G.playerGroup.position.clone(),0xffd700,60);
+  showDlg(DLG.stigmata_miracle,advanceStage);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DIALOGUE
+══════════════════════════════════════════════════════════ */
+function showDlg(lines,cb){
+  if(!lines||!lines.length){if(cb)cb();return;}
+  G.dlgQueue=lines;G.dlgIdx=0;G.dlgCb=cb||null;G.dlgActive=true;
+  renderDlg();document.getElementById('dialogueBox').style.display='block';
+}
+function renderDlg(){
+  if(G.dlgIdx>=G.dlgQueue.length){closeDlg();return;}
+  var d=G.dlgQueue[G.dlgIdx];
+  document.getElementById('dlgSpeaker').textContent=d.s||'';
+  document.getElementById('dlgText').textContent=d.t||'';
+  document.getElementById('dlgAttr').textContent=d.a||'';
+}
+function dlgNext(){
+  if(!G.dlgActive)return;
+  G.dlgIdx++;
+  if(G.dlgIdx>=G.dlgQueue.length)closeDlg();else renderDlg();
+}
 function closeDlg(){
-  G.dialogueActive=false;
-  document.getElementById('dialogueBox').style.display='none';
-  dlgQueue=[]; dlgIdx=0;
-  if(dlgCallback){const c=dlgCallback; dlgCallback=null; c();}
+  G.dlgActive=false;document.getElementById('dialogueBox').style.display='none';
+  var cb=G.dlgCb;G.dlgCb=null;if(cb)cb();
 }
 
-function handleDialogueContinue(){
-  if(!G.dialogueActive) return;
-  dlgIdx++;
-  if(dlgIdx>=dlgQueue.length) closeDlg();
-  else renderDlg();
-}
-
-// ─── CUTSCENE SYSTEM ──────────────────────────────────────────────────────
-let cutsceneQueue=[], cutsceneIdx=0, cutsceneCallback=null;
-
-function showCutscene(data, cb){
-  cutsceneQueue=[data]; cutsceneIdx=0; cutsceneCallback=cb;
+/* ══════════════════════════════════════════════════════════
+   CUTSCENE
+══════════════════════════════════════════════════════════ */
+function showCutscene(data,cb){
+  G.cutCb=cb;
   document.getElementById('cutArt').textContent=data.art||'✝';
   document.getElementById('cutTitle').textContent=data.title||'';
   document.getElementById('cutText').textContent=data.text||'';
   document.getElementById('cutscene').style.display='flex';
 }
-
-function cutsceneContinue(){
+function cutNext(){
   document.getElementById('cutscene').style.display='none';
-  if(cutsceneCallback){const c=cutsceneCallback;cutsceneCallback=null;c();}
+  var cb=G.cutCb;G.cutCb=null;if(cb)cb();
 }
 
-// ─── INTERACTION SYSTEM ────────────────────────────────────────────────────
-function checkInteractables(){
-  const px=G.player.x, pz=G.player.z;
-  let nearest=null, nearestDist=Infinity;
-  const pr=G.player.r||0.5;
+/* ══════════════════════════════════════════════════════════
+   EFFECTS
+══════════════════════════════════════════════════════════ */
+function flashMiracle(white){
+  var fl=document.getElementById('miracleFlash');
+  fl.classList.remove('active','white');
+  fl.getBoundingClientRect(); // force reflow
+  if(white)fl.classList.add('white');
+  fl.classList.add('active');
+  setTimeout(function(){fl.classList.remove('active','white');},750);
+}
 
-  for(const obj of G.interactables){
-    let ox,oz,or;
-    if(obj.isObject3D){
-      ox=obj.position.x; oz=obj.position.z; or=2;
-    } else {
-      ox=obj.x; oz=obj.z; or=obj.r||2;
-    }
-    const dx=px-ox, dz=pz-oz;
-    const dist=Math.sqrt(dx*dx+dz*dz);
-    if(dist<or+pr+0.5 && dist<nearestDist){
-      nearestDist=dist; nearest=obj;
-    }
-  }
-  G.interactable=nearest;
-  const prompt=document.getElementById('interactPrompt');
-  if(nearest){
-    const label=nearest.userData?.prompt||nearest.label||'Interact';
-    prompt.innerHTML=`✝ ACT — ${label}`;
-    prompt.style.display='block';
-  } else {
-    prompt.style.display='none';
+function spawnParticles3D(pos,color,count){
+  color=color||0xffd700;count=count||20;
+  for(var i=0;i<count;i++){
+    var m=new THREE.Mesh(
+      new THREE.SphereGeometry(.07+Math.random()*.05,4,4),
+      new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:1})
+    );
+    m.position.copy(pos);
+    m.userData.vel=new THREE.Vector3((Math.random()-.5)*.18,Math.random()*.18+.05,(Math.random()-.5)*.18);
+    m.userData.life=1+Math.random()*.5;
+    tagObj(m);G.scene.add(m);G.particles3D.push(m);
   }
 }
 
-function handleInteract(){
-  if(G.dialogueActive){ handleDialogueContinue(); return; }
-  if(!G.interactable) return;
-  const obj=G.interactable;
-
-  if(obj.userData?.isChurchPiece && obj.userData.broken){
-    repairChurchPiece(obj);
-    return;
-  }
-  if(obj===G.wolfMesh && !G.wolfTamed){
-    showDialogue(DIALOGUES.wolf_intro.slice(-1));
-    tameWolf();
-    return;
-  }
-  if(obj.userData?.dialogue){
-    const d=DIALOGUES[obj.userData.dialogue];
-    if(d) showDialogue(d);
-    return;
-  }
-  if(obj.trigger==='advance') { advanceStage(); return; }
-  if(obj.trigger==='birdsMiracle') { handleBirdsMiracle(); return; }
-  if(obj.trigger==='stigmata') { handleStigmata(); return; }
-  if(obj.trigger==='ending') { showEnding(); return; }
-}
-
-function handleBirdsMiracle(){
-  if(G.birdsPeached) return;
-  G.birdsPeached=true;
-  const idx=G.interactables.findIndex(o=>o.trigger==='birdsMiracle');
-  if(idx!==-1) G.interactables.splice(idx,1);
-  showMiracle();
-  spawnParticles3D(G.playerMesh.position,0xaaffff,50);
-  // Birds animate
-  G.birds.forEach((b,i)=>{
-    b.userData.dancing=true;
-    setTimeout(()=>{b.userData.dancing=false;},4000);
-  });
-  showDialogue(DIALOGUES.birds_miracle, ()=>{ advanceStage(); });
-}
-
-function handleStigmata(){
-  if(G.stigmataReceived) return;
-  G.stigmataReceived=true;
-  const idx=G.interactables.findIndex(o=>o.trigger==='stigmata');
-  if(idx!==-1) G.interactables.splice(idx,1);
-
-  // Flash of gold/white light
-  const el=document.getElementById('miraceEffect');
-  el.style.background='radial-gradient(ellipse at center, rgba(255,255,255,0.99) 0%, rgba(255,215,0,0.8) 30%, transparent 70%)';
-  el.style.display='block';
-  setTimeout(()=>{el.style.display='none'; el.style.background='';},1200);
-
-  spawnParticles3D(G.playerMesh.position,0xffffff,80);
-  spawnParticles3D(G.playerMesh.position,0xffd700,60);
-
-  showDialogue(DIALOGUES.stigmata_miracle, ()=>{ advanceStage(); });
-}
-
-function showEnding(){
-  showDialogue(DIALOGUES.canticle_scene, ()=>{
-    setTimeout(()=>{
-      document.getElementById('finalScreen').style.display='flex';
-    },500);
-  });
-}
-
-// ─── STAGE MANAGEMENT ────────────────────────────────────────────────────
-let currentCutsceneIdx = -1;
-
-function advanceStage(){
-  G.stageIndex++;
-  if(G.stageIndex>=CUTSCENES.length){
-    // All done
-    document.getElementById('finalScreen').style.display='flex';
-    return;
-  }
-  loadStage(G.stageIndex);
-}
-
-function loadStage(idx){
-  G.stageIndex=idx;
-  const cutData=CUTSCENES[idx];
-  if(!cutData) return;
-
-  // Hide game UI temporarily
-  document.getElementById('stageBanner').style.display='none';
-  document.getElementById('objectiveBar').style.display='none';
-  document.getElementById('dpad').style.display='none';
-  document.getElementById('actionBtns').style.display='none';
-  G.dialogueActive=false;
-  document.getElementById('dialogueBox').style.display='none';
-  document.getElementById('interactPrompt').style.display='none';
-
-  showCutscene(cutData, ()=>{
-    clearScene();
-    buildPlayerAndScene(cutData.stageKey);
-    // Show in-stage intro dialogue
-    const introKey = cutData.stageKey + '_intro';
-    const introDlg = DIALOGUES[introKey];
-    document.getElementById('stageBanner').textContent = cutData.title;
-    document.getElementById('stageBanner').style.display='block';
-    document.getElementById('objectiveBar').style.display='block';
-    document.getElementById('dpad').style.display='block';
-    document.getElementById('actionBtns').style.display='flex';
-    if(introDlg){
-      showDialogue(introDlg);
-    }
-  });
-}
-
-function buildPlayerAndScene(key){
-  createPlayer();
-  switch(key){
-    case 'assisi': buildStageAssisi(); break;
-    case 'sanDamiano': buildStageSanDamiano(); break;
-    case 'birds': buildStageBirds(); break;
-    case 'wolf': buildStageWolf(); break;
-    case 'laverna': buildStageLaVerna(); break;
-    case 'canticle': buildStageCanticle(); break;
+function updateParticles(dt){
+  for(var i=G.particles3D.length-1;i>=0;i--){
+    var p=G.particles3D[i];
+    p.userData.life-=dt*.85;
+    p.position.addScaledVector(p.userData.vel,1);
+    p.userData.vel.y-=.002;
+    p.material.opacity=Math.max(0,p.userData.life);
+    if(p.userData.life<=0){G.scene.remove(p);G.particles3D.splice(i,1);}
   }
 }
 
-// ─── MOVEMENT & CAMERA ────────────────────────────────────────────────────
-const SPEED = 5;
-const CAM_HEIGHT = 7;
-const CAM_DIST = 14;
-let camAngle = 0;
+setInterval(function(){
+  if(!G.gameStarted)return;
+  var ov=document.getElementById('particleOverlay');
+  var p=document.createElement('div');p.className='cssParticle';
+  var sz=2+Math.random()*4,dur=5+Math.random()*6;
+  var cols=['#ffd700','#ff8c00','#fff5aa','#ffffff','#ffeebb'];
+  p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:0;background:'+cols[Math.floor(Math.random()*5)]+';opacity:'+(0.3+Math.random()*.5)+';animation-duration:'+dur+'s;animation-delay:'+(Math.random()*2)+'s;';
+  ov.appendChild(p);setTimeout(function(){if(p.parentNode)p.remove();},(dur+3)*1000);
+},900);
+
+/* ══════════════════════════════════════════════════════════
+   MOVEMENT + CAMERA
+══════════════════════════════════════════════════════════ */
+var SPEED=5.5,CAM_H=7.5,CAM_BACK=14;
 
 function updateMovement(dt){
-  if(G.dialogueActive) return;
-
-  let mx=G.moveInput.x, mz=G.moveInput.z;
-
-  // 8-directional keyboard
-  if(G.keys['ArrowUp']||G.keys['KeyW']) mz=-1;
-  if(G.keys['ArrowDown']||G.keys['KeyS']) mz=1;
-  if(G.keys['ArrowLeft']||G.keys['KeyA']) mx=-1;
-  if(G.keys['ArrowRight']||G.keys['KeyD']) mx=1;
-  if(G.keys['ArrowUp']&&G.keys['ArrowLeft']||G.keys['KeyW']&&G.keys['KeyA']){mx=-0.707;mz=-0.707;}
-  if(G.keys['ArrowUp']&&G.keys['ArrowRight']||G.keys['KeyW']&&G.keys['KeyD']){mx=0.707;mz=-0.707;}
-  if(G.keys['ArrowDown']&&G.keys['ArrowLeft']||G.keys['KeyS']&&G.keys['KeyA']){mx=-0.707;mz=0.707;}
-  if(G.keys['ArrowDown']&&G.keys['ArrowRight']||G.keys['KeyS']&&G.keys['KeyD']){mx=0.707;mz=0.707;}
-
-  const len=Math.sqrt(mx*mx+mz*mz);
-  if(len>0.01){
-    mx/=len; mz/=len;
-    G.player.x+=mx*SPEED*dt;
-    G.player.z+=mz*SPEED*dt;
-    G.playerMesh.position.x=G.player.x;
-    G.playerMesh.position.z=G.player.z;
-    G.playerMesh.position.y=0;
-    // Face direction
-    G.playerMesh.rotation.y=Math.atan2(mx,mz);
-    // Bob animation
-    G.playerMesh.position.y=Math.abs(Math.sin(G.frameCount*0.15))*0.1;
-  }
+  if(G.dlgActive)return;
+  var mx=G.joy.ax,mz=G.joy.az;
+  var up=G.keys['ArrowUp']||G.keys['KeyW'];
+  var dn=G.keys['ArrowDown']||G.keys['KeyS'];
+  var lt=G.keys['ArrowLeft']||G.keys['KeyA'];
+  var rt=G.keys['ArrowRight']||G.keys['KeyD'];
+  if(up&&lt){mx=-.707;mz=-.707;}
+  else if(up&&rt){mx=.707;mz=-.707;}
+  else if(dn&&lt){mx=-.707;mz=.707;}
+  else if(dn&&rt){mx=.707;mz=.707;}
+  else if(up)mz=-1;else if(dn)mz=1;
+  else if(lt)mx=-1;else if(rt)mx=1;
+  var len=Math.sqrt(mx*mx+mz*mz);
+  if(len>.01){
+    var nx=mx/len,nz=mz/len;
+    G.px+=nx*SPEED*dt;G.pz+=nz*SPEED*dt;
+    G.playerGroup.position.x=G.px;G.playerGroup.position.z=G.pz;
+    G.playerGroup.position.y=Math.abs(Math.sin(G.frameCount*.18))*.12;
+    G.playerGroup.rotation.y=Math.atan2(nx,nz);
+  }else{G.playerGroup.position.y=0;}
 }
 
 function updateCamera(){
-  const px=G.player.x, pz=G.player.z;
-  const tx=px;
-  const ty=CAM_HEIGHT;
-  const tz=pz+CAM_DIST;
-  G.camera.position.x+=(tx-G.camera.position.x)*0.08;
-  G.camera.position.y+=(ty-G.camera.position.y)*0.08;
-  G.camera.position.z+=(tz-G.camera.position.z)*0.08;
-  G.camera.lookAt(px, 1, pz);
+  var tx=G.px,ty=CAM_H,tz=G.pz+CAM_BACK;
+  G.camera.position.x+=(tx-G.camera.position.x)*.09;
+  G.camera.position.y+=(ty-G.camera.position.y)*.09;
+  G.camera.position.z+=(tz-G.camera.position.z)*.09;
+  G.camera.lookAt(G.px,1.2,G.pz);
 }
 
-// ─── BIRDS ANIMATION ─────────────────────────────────────────────────────
-function updateBirds(t){
-  G.birds.forEach((b,i)=>{
-    if(b.userData.dancing){
-      b.position.y=(b.userData.origY||1)+Math.sin(t*5+i)*0.5;
-      b.rotation.z=Math.sin(t*8+i)*0.4;
-      b.rotation.x=Math.PI/2+Math.sin(t*6+i)*0.3;
-    } else {
-      b.position.y=(b.userData.origY||5)+Math.sin(t*1.5+b.userData.phase)*0.4;
-      b.position.x+=Math.sin(t+b.userData.phase)*0.01;
-      b.rotation.z=Math.sin(t*2+b.userData.phase)*0.2;
-    }
-  });
-}
-
-// ─── WOLF ANIMATION ──────────────────────────────────────────────────────
-function updateWolf(t){
-  if(!G.wolfMesh) return;
-  if(!G.wolfTamed){
-    G.wolfMesh.position.y=Math.abs(Math.sin(t*3))*0.1;
-  } else {
-    // Peaceful wag
-    G.wolfMesh.children.forEach(c=>{
-      if(c.position.z>1){ c.rotation.y=Math.sin(t*8)*0.4; }
-    });
+/* ══════════════════════════════════════════════════════════
+   ENTITY ANIMATIONS
+══════════════════════════════════════════════════════════ */
+function animBirds(t){
+  for(var i=0;i<G.birds.length;i++){
+    var b=G.birds[i];if(!b.userData)continue;
+    var ph=b.userData.phase||0,oy=b.userData.origY||5;
+    if(b.userData.dancing){b.position.y=oy+Math.sin(t*6+ph)*.6;b.rotation.z=Math.sin(t*9+ph)*.45;}
+    else{b.position.y=oy+Math.sin(t*1.4+ph)*.4;b.rotation.z=Math.sin(t*2+ph)*.18;}
   }
 }
-
-// ─── GLOW ANIMATION ──────────────────────────────────────────────────────
-function updateGlows(t){
-  G.scene.traverse(obj=>{
-    if(obj.isLight && obj.userData.glow){
-      obj.intensity=1.5+Math.sin(t*3)*0.5;
-    }
-  });
-}
-
-// ─── MAIN LOOP ────────────────────────────────────────────────────────────
-function mainLoop(ts){
-  G.animId=requestAnimationFrame(mainLoop);
-  const elapsed=ts-G.lastFrame;
-  if(elapsed < G.targetMs) return; // cap to 144fps
-  G.lastFrame=ts;
-  const dt=Math.min(elapsed/1000, 0.05);
-  const t=ts/1000;
-  G.frameCount++;
-
-  if(G.stage==='playing'){
-    updateMovement(dt);
-    updateCamera();
-    updateParticles3D(dt);
-    updateBirds(t);
-    updateWolf(t);
-    updateGlows(t);
-    checkInteractables();
+function animWolf(t){
+  if(!G.wolfGroup)return;
+  if(G.wolfTamed){
+    if(G.wolfTail)G.wolfTail.rotation.y=Math.sin(t*8)*.4;  // direct ref — no children[n]
+    G.wolfGroup.position.y=Math.sin(t*1.5)*.05;
+  }else{
+    G.wolfGroup.position.y=Math.abs(Math.sin(t*2.5))*.12;
+    G.wolfGroup.rotation.y=Math.sin(t*.5)*.3+Math.PI*.5;
   }
-
-  G.renderer.render(G.scene,G.camera);
+}
+function animGlows(t){
+  G.scene.traverse(function(o){if(o.isLight&&o.userData&&o.userData.glow)o.intensity=2+Math.sin(t*3)*.7;});
 }
 
-// ─── INPUT ────────────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════
+   HUD
+══════════════════════════════════════════════════════════ */
+function showHUD(title){
+  document.getElementById('stageBanner').textContent=title;
+  document.getElementById('stageBanner').style.display='block';
+  document.getElementById('objectiveBar').style.display='block';
+  document.getElementById('joystickWrap').style.display='block';
+  document.getElementById('actionBtns').style.display='flex';
+}
+function hideHUD(){
+  var ids=['stageBanner','objectiveBar','stageProgress','joystickWrap','actionBtns'];
+  for(var i=0;i<ids.length;i++)document.getElementById(ids[i]).style.display='none';
+}
+function setObj(t){document.getElementById('objText').textContent=t;}
+function showProgress(t){var el=document.getElementById('stageProgress');el.textContent=t;el.style.display='block';}
+function hideProgress(){document.getElementById('stageProgress').style.display='none';}
+function showFinal(){hideHUD();document.getElementById('dialogueBox').style.display='none';document.getElementById('finalScreen').style.display='flex';}
+
+/* ══════════════════════════════════════════════════════════
+   VIRTUAL JOYSTICK
+══════════════════════════════════════════════════════════ */
+function setupJoystick(){
+  var base=document.getElementById('joystickBase');
+  var knob=document.getElementById('joystickKnob');
+  var touchId=null;
+
+  function maxR(){return base.offsetWidth*.38;}
+  function getCenter(){var r=base.getBoundingClientRect();return{cx:r.left+r.width/2,cy:r.top+r.height/2};}
+
+  function moveKnob(tx,ty){
+    var c=getCenter(),dx=tx-c.cx,dy=ty-c.cy;
+    var dist=Math.sqrt(dx*dx+dy*dy),mr=maxR();
+    var clamped=Math.min(dist,mr),angle=Math.atan2(dy,dx);
+    var kx=Math.cos(angle)*clamped,ky=Math.sin(angle)*clamped;
+    knob.style.transform='translate(calc(-50% + '+kx+'px), calc(-50% + '+ky+'px))';
+    var norm=(clamped/mr)<.08?0:(clamped/mr);
+    G.joy.ax=Math.cos(angle)*norm;
+    G.joy.az=Math.sin(angle)*norm;
+  }
+  function resetKnob(){knob.style.transform='translate(-50%,-50%)';G.joy.ax=0;G.joy.az=0;}
+
+  base.addEventListener('touchstart',function(e){e.preventDefault();if(touchId!==null)return;var t=e.changedTouches[0];touchId=t.identifier;moveKnob(t.clientX,t.clientY);},{passive:false});
+  base.addEventListener('touchmove',function(e){e.preventDefault();for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i];if(t.identifier===touchId){moveKnob(t.clientX,t.clientY);break;}}},{passive:false});
+  function endT(e){for(var i=0;i<e.changedTouches.length;i++){if(e.changedTouches[i].identifier===touchId){touchId=null;resetKnob();break;}}}
+  base.addEventListener('touchend',endT,{passive:false});
+  base.addEventListener('touchcancel',endT,{passive:false});
+  // Mouse fallback
+  var md=false;
+  base.addEventListener('mousedown',function(e){md=true;moveKnob(e.clientX,e.clientY);});
+  document.addEventListener('mousemove',function(e){if(md)moveKnob(e.clientX,e.clientY);});
+  document.addEventListener('mouseup',function(){if(md){md=false;resetKnob();}});
+}
+
+/* ══════════════════════════════════════════════════════════
+   INPUT
+══════════════════════════════════════════════════════════ */
 function setupInput(){
-  document.addEventListener('keydown', e=>{
+  document.addEventListener('keydown',function(e){
     G.keys[e.code]=true;
-    if(e.code==='Space'||e.code==='Enter') handleDialogueContinue();
-    if(e.code==='KeyE'||e.code==='KeyF') handleInteract();
-    if(e.code==='Escape') cutsceneContinue();
-    e.preventDefault();
+    if(e.code==='Space'||e.code==='Enter'){if(G.dlgActive)dlgNext();}
+    if(e.code==='KeyE'||e.code==='KeyF'||e.code==='KeyX')handleAct();
+    if(e.code==='Escape')cutNext();
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.key)!==-1)e.preventDefault();
   });
-  document.addEventListener('keyup', e=>{ G.keys[e.code]=false; });
+  document.addEventListener('keyup',function(e){G.keys[e.code]=false;});
 
-  // Touch D-pad
-  const dirMap={
-    'u':{x:0,z:-1},'d':{x:0,z:1},'l':{x:-1,z:0},'r':{x:1,z:0},
-    'ul':{x:-0.707,z:-0.707},'ur':{x:0.707,z:-0.707},
-    'dl':{x:-0.707,z:0.707},'dr':{x:0.707,z:0.707}
-  };
-  document.querySelectorAll('.dpad-btn[data-dir]').forEach(btn=>{
-    const dir=btn.dataset.dir;
-    ['touchstart','mousedown'].forEach(ev=>{
-      btn.addEventListener(ev,e=>{
-        e.preventDefault();
-        const d=dirMap[dir];
-        if(d){G.moveInput.x=d.x;G.moveInput.z=d.z;}
-        btn.classList.add('pressed');
-      },{passive:false});
-    });
-    ['touchend','mouseup','mouseleave','touchcancel'].forEach(ev=>{
-      btn.addEventListener(ev,e=>{
-        G.moveInput.x=0;G.moveInput.z=0;
-        btn.classList.remove('pressed');
-      });
-    });
-  });
+  var btnAct=document.getElementById('btnAct');
+  btnAct.addEventListener('pointerdown',function(e){e.preventDefault();btnAct.classList.add('pressed');handleAct();});
+  btnAct.addEventListener('pointerup',function(e){e.preventDefault();btnAct.classList.remove('pressed');});
+  btnAct.addEventListener('pointercancel',function(){btnAct.classList.remove('pressed');});
 
-  // Cutscene advance on tap
-  document.getElementById('cutscene').addEventListener('click', cutsceneContinue);
-  document.getElementById('dialogueBox').addEventListener('click', handleDialogueContinue);
+  var btnNext=document.getElementById('btnNext');
+  btnNext.addEventListener('pointerdown',function(e){e.preventDefault();btnNext.classList.add('pressed');if(G.dlgActive)dlgNext();});
+  btnNext.addEventListener('pointerup',function(e){e.preventDefault();btnNext.classList.remove('pressed');});
+  btnNext.addEventListener('pointercancel',function(){btnNext.classList.remove('pressed');});
+
+  document.getElementById('cutscene').addEventListener('pointerup',function(e){e.stopPropagation();cutNext();});
+  document.getElementById('dialogueBox').addEventListener('pointerup',function(){if(G.dlgActive)dlgNext();});
+  document.getElementById('startBtn').addEventListener('pointerup',function(e){e.preventDefault();startGame();});
+
+  setupJoystick();
 }
 
-// ─── GAME START ───────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════
+   MAIN LOOP
+══════════════════════════════════════════════════════════ */
+function mainLoop(ts){
+  requestAnimationFrame(mainLoop);
+  var elapsed=ts-G.lastFrame;
+  if(elapsed<G.targetMs)return;
+  G.lastFrame=ts;
+  var dt=Math.min(elapsed/1000,.05),t=ts/1000;
+  G.frameCount++;
+  if(G.gameStarted&&G.playerGroup&&G.scene&&G.camera){
+    updateMovement(dt);updateCamera();updateParticles(dt);
+    animBirds(t);animWolf(t);animGlows(t);checkNear();
+  }
+  if(G.renderer&&G.scene&&G.camera)G.renderer.render(G.scene,G.camera);
+}
+
+/* ══════════════════════════════════════════════════════════
+   START
+══════════════════════════════════════════════════════════ */
 function startGame(){
+  if(G.gameStarted)return;
+  G.gameStarted=true;
   document.getElementById('titleScreen').style.display='none';
-  G.stage='playing';
-
-  // Init 3D
-  initThree();
-  createPlayer();
-  setupInput();
-
-  // Stage 0: Assisi — show its cutscene first
   loadStage(0);
-
-  // Start loop
-  requestAnimationFrame(ts=>{G.lastFrame=ts; mainLoop(ts);});
 }
 
-// ─── LOADING SEQUENCE ────────────────────────────────────────────────────
-window.addEventListener('load', ()=>{
-  const fill=document.getElementById('loadingFill');
-  let pct=0;
-  const interval=setInterval(()=>{
-    pct+=Math.random()*25;
-    if(pct>=100){pct=100;clearInterval(interval);
-      setTimeout(()=>{
-        document.getElementById('loading').style.display='none';
-        document.getElementById('titleScreen').style.display='flex';
-      },400);
-    }
+window.addEventListener('load',function(){
+  initRenderer();
+  setupInput();
+  requestAnimationFrame(mainLoop);
+  var fill=document.getElementById('loadingFill'),pct=0;
+  var iv=setInterval(function(){
+    pct=Math.min(100,pct+Math.random()*22);
     fill.style.width=pct+'%';
+    if(pct>=100){clearInterval(iv);setTimeout(function(){document.getElementById('loading').style.display='none';document.getElementById('titleScreen').style.display='flex';},350);}
   },200);
 });
-
-// ─── PARTICLE CSS OVERLAY (complementary) ────────────────────────────────
-function spawnCSSParticle(){
-  if(G.stage!=='playing') return;
-  const overlay=document.getElementById('particleOverlay');
-  const p=document.createElement('div');
-  p.className='particle';
-  const size=2+Math.random()*5;
-  const colors=['#ffd700','#ff8c00','#fff5aa','#ffffff','#ffeebb'];
-  p.style.cssText=`
-    width:${size}px;height:${size}px;
-    left:${Math.random()*100}%;
-    bottom:0;
-    background:${colors[Math.floor(Math.random()*colors.length)]};
-    opacity:${0.3+Math.random()*0.4};
-    animation-duration:${4+Math.random()*6}s;
-    animation-delay:${Math.random()*2}s;
-  `;
-  overlay.appendChild(p);
-  setTimeout(()=>p.remove(),10000);
-}
-setInterval(spawnCSSParticle,800);
 </script>
 </body>
 </html>
