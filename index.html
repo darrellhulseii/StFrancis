@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;top:0;left:0;-webkit-tap-highlight-color:transparent;touch-action:none;}
-#gameCanvas{position:fixed;top:0;left:0;width:100%!important;height:100%!important;display:block;image-rendering:pixelated;touch-action:none;}
+#gameCanvas{position:fixed;top:0;left:0;width:100%!important;height:100%!important;display:block;image-rendering:auto;touch-action:none;filter:contrast(1.04) saturate(1.12);}
 /* ── KEYFRAMES ── */
 @keyframes glowPulse{0%,100%{text-shadow:0 0 20px #ffd700,0 0 40px #ff8c00;}50%{text-shadow:0 0 60px #ffd700,0 0 120px #ff8c00,0 0 160px #ffd700;}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-22px);}to{opacity:1;transform:translateY(0);}}
@@ -146,7 +145,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="loading"><div class="lc">✝</div><div class="lt">Loading&hellip;</div><div id="loadingBar"><div id="loadingFill"></div></div></div>
 
 <!-- TITLE -->
-
 <div id="titleScreen">
   <div class="t-stars"></div>
   <div class="t-cross">✝</div>
@@ -157,7 +155,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- MODE SELECT -->
-
 <div id="modeSelect">
   <div class="ms-title">Choose Your Journey</div>
   <div class="ms-sub">Select a path of faith to walk</div>
@@ -186,7 +183,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- SAINT SELECT -->
-
 <div id="saintSelect">
   <div class="ms-title">Choose a Saint</div>
   <div class="ms-sub">Five lives of heroic faith — each a testament to God&rsquo;s grace</div>
@@ -221,11 +217,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- CANVAS -->
-
 <canvas id="gameCanvas"></canvas>
 
 <!-- CUTSCENE -->
-
 <div id="cutscene">
   <div class="cut-art" id="cutArt"></div>
   <div class="cut-title" id="cutTitle"></div>
@@ -234,7 +228,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- HUD -->
-
 <div id="stageBanner"></div>
 <div id="objectiveBar"><div class="obj-title">Objective</div><div class="obj-text" id="objText"></div></div>
 <div id="stageProgress"></div>
@@ -247,7 +240,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="interactPrompt"></div>
 
 <!-- FLIGHT HUD -->
-
 <div id="flightHUD">
   <div class="fhud-label">PRAYERS CAUGHT &nbsp;&#128081;</div>
   <div class="fhud-beads"><div class="fhud-bead" id="bead0"></div><div class="fhud-bead" id="bead1"></div><div class="fhud-bead" id="bead2"></div></div>
@@ -255,22 +247,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- JOYSTICK -->
-
 <div id="joystickWrap"><div id="joystickBase"><div id="joystickKnob">&#10022;</div></div></div>
 
 <!-- ACTION BUTTONS -->
-
 <div id="actionBtns">
   <div class="act-btn" id="btnAct"><span>✝</span><span class="lbl">PRAY</span></div>
   <div class="act-btn" id="btnNext">&#9654;</div>
 </div>
 
 <!-- CROSSHAIR (flight sim) -->
-
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-ring"></div></div>
 
 <!-- EFFECTS -->
-
 <div id="goldenRing"></div>
 <div id="heavenOverlay"></div>
 <div id="heavenMsg"></div>
@@ -278,7 +266,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="particleOverlay"></div>
 
 <!-- FINAL SCREENS -->
-
 <div id="finalFrancis" class="finalScreen">
   <div class="fin-title" style="color:#1a0a2e;">✝ Pax et Bonum ✝<br><span style="font-size:.6em;">Peace and All Good</span></div>
   <div class="fin-quote" style="color:#1a0a2e;">&ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will.&rdquo;<span class="fin-attr" style="color:#3a2000;">&mdash; St. Francis, Canticle of the Sun, 1225</span></div>
@@ -311,7 +298,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- MARATHON PROGRESS HUD -->
-
 <div id="marathonHUD">
   <div id="marathonHUDInner">
     <span id="marathonHUDIcon">✝</span>
@@ -321,7 +307,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════
    FRANCISCAN SAINTS — Full Multi-Mode Game
@@ -348,14 +333,20 @@ var G={
   rosaries:[],groundPeople:[],prayerCount:0,prayerTarget:3,
   goldenRingFired:false,inHeaven:false,
   jesusGroup:null,holyGroup:null,godGroup:null,
-  heavenStage:0, // 0=approaching,1=jesus,2=holy,3=god,4=done
   wingMeshL:null,wingMeshR:null,wingAngle:0,
-  // Anthony
+  // Anthony per-stage flags
   fishSpawned:false,childAppeared:false,
-  // Clare
+  anthonyMuleDone:false,anthonyRaiseDone:false,anthonyPaduaDone:false,
+  // Clare per-stage flags
   saracensFled:false,christmasVision:false,
   // Bonaventure
   bookDone:false,
+  // Padre Pio per-stage flags (one per stage, all reset by clearStage)
+  pioStigDone:false,pioFirstMassDone:false,pioConfessionalDone:false,
+  pioBilocationDone:false,pioHealDone:false,pioCancerDone:false,
+  pioFragranceDone:false,pioAgonyDone:false,
+  // Elizabeth per-stage flags
+  elizRosesDone:false,elizLeperDone:false,
   // Marathon mode
   marathonMode:false,marathonSaintIdx:0,marathonCompleted:[],
   frameCount:0,lastFrame:0,targetMs:1000/144,
@@ -543,6 +534,115 @@ elizabeth_leper_miracle:[
   {s:"Elizabeth",t:"\"This is what I have always said, my love. Whenever we serve the least of these — we serve Christ Himself.\"",a:"cf. Matthew 25:40, St. Elizabeth's practice"},
   {s:"Narrator",t:"Elizabeth of Hungary died November 17, 1231, aged just 24 years. She is patron of the poor, bakers, and the Franciscan Third Order.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289"},
 ],
+/* ── ANTHONY EXTENDED ── */
+anthony_mule_intro:[
+  {s:"Narrator",t:"Bourges, France — 1226. Anthony debated a Cathar nobleman named Bononillo who refused to believe in the Real Presence of Christ in the Eucharist. The nobleman issued a public challenge: he would starve his mule for three days, then bring it before a measure of oats and a monstrance containing the Body of Christ.",a:"Liber Miraculorum, a 13th-century Franciscan collection; confirmed in John Moorman, A History of the Franciscan Order, 1968"},
+  {s:"Bononillo",t:"If your Christ is truly present in that bread — which I do not believe — then let my starving mule, driven mad by hunger, ignore this oats and bow before your monstrance instead. And if he does, I will believe.",a:"Liber Miraculorum, Franciscan sources, 13th century"},
+  {s:"Anthony",t:"\"I accept your challenge. With the permission of my bishop, I will fast for three days and pray. If Christ wills it, He will give testimony to His own Presence.\"",a:"Traditional account, John Moorman, History of the Franciscan Order"},
+  {s:"Objective",t:"Walk to the town square and press PRAY to summon the mule before the Eucharist.",a:""},
+],
+anthony_mule_miracle:[
+  {s:"Narrator",t:"The crowd assembled in the public square. Bononillo's mule — starved for three days, trembling with hunger — was led in. Anthony held up the monstrance. The oats were spread on the ground.",a:"Liber Miraculorum; Servus Gieben, 'Saint Anthony and the Mule', 1976"},
+  {s:"Narrator",t:"The mule stopped. It lowered its head toward the Blessed Sacrament. Its knees buckled. And it knelt.",a:"Liber Miraculorum, 13th century"},
+  {s:"Bononillo",t:"\"I... I believe. I believe. God forgive me.\" He fell weeping to his knees beside his own mule.",a:"Traditional account"},
+  {s:"Anthony",t:"\"Give thanks not to me, but to Christ — who is so humble that He hides under the form of bread, yet so powerful that even mute creatures bear witness to His Presence.\"",a:"St. Anthony of Padua, attributed in hagiographic tradition"},
+  {s:"Narrator",t:"The miracle of the mule is depicted in the Basilica of St. Anthony in Padua, in bronze reliefs by Donatello completed in 1448. Bononillo converted and the event is recorded in 13th-century Franciscan sources.",a:"John Moorman, A History of the Franciscan Order, Oxford, 1968"},
+],
+anthony_raise_intro:[
+  {s:"Narrator",t:"Lisbon, Portugal — c. 1220. Before Anthony became a Franciscan, he was an Augustinian canon. His father, Martino di Bouillon, stood accused of murder: a young man's body had been found near the family home, and Martino faced execution.",a:"Assidua, the earliest biography of St. Anthony, c. 1232; Vergilio Gamboso, ed."},
+  {s:"Narrator",t:"Anthony, then a young friar in Padua, received word of his father's desperate situation. He is reported to have bilocated back to Lisbon — appearing before witnesses even while he remained in Italy — to save his father's life.",a:"Assidua, c. 1232; Mark Higgins, St. Anthony of Padua: His Life, Miracles and Doctrine, 2012"},
+  {s:"Anthony",t:"\"Father, do not fear. God who is truth cannot allow an innocent man to perish. Trust in Him. I will pray — and you will be saved.\"",a:"Traditional account, Assidua"},
+  {s:"Objective",t:"Approach the altar and press PRAY. God will vindicate the innocent.",a:""},
+],
+anthony_raise_miracle:[
+  {s:"Narrator",t:"According to the earliest biographers, Anthony miraculously caused the murdered man's body to rise from the grave and speak before the tribunal — identifying the true killer and exonerating Martino.",a:"Assidua, the first biography of St. Anthony, c. 1232; Gamboso edition"},
+  {s:"Dead Man",t:"\"Martino di Bouillon did not kill me. He is innocent. Set him free.\" The voice came from the earth — and every person present heard it.",a:"Assidua, c. 1232"},
+  {s:"Anthony",t:"\"Christ is the resurrection and the life. He who believes in Him, though he die, yet shall he live. He could not permit an innocent man to be condemned while the truth lay buried in the ground.\"",a:"cf. John 11:25; traditional attribution"},
+  {s:"Narrator",t:"The Assidua, written within a year of Anthony's death by a friar who knew him personally, records this miracle as the reason Anthony's father was released. The testimony of the dead man secured Martino's freedom.",a:"Assidua, c. 1232, Vergilio Gamboso, ed., Editrice Messaggero Padova, 1981"},
+],
+anthony_padua_intro:[
+  {s:"Narrator",t:"Padua, Lent 1231. It was Anthony's last great preaching mission. The entire region streamed into the city. Thirty thousand people — merchants, professors, knights, and barefoot pilgrims — packed every square and church. There was not a building large enough to hold them.",a:"Giovanni da Vincenza, Chronicle of Padua, c. 1236; Moorman, A History of the Franciscan Order"},
+  {s:"Narrator",t:"\"He preached every morning to crowds so vast that they had to use the open fields. People spent the whole night in the streets to secure a place. The butchers closed their stalls. The merchants left their counting-tables. The courts of law suspended their business — for everyone went to hear Anthony.\"",a:"Early Chronicle of Padua, recorded in Moorman, History of the Franciscan Order, Oxford, 1968"},
+  {s:"Anthony",t:"\"Preaching is like holding a lighted torch to illuminate others, but it must first be aflame itself. The preacher who preaches with inflamed love sets the whole world on fire with love of God.\"",a:"St. Anthony of Padua, Sermons for the Liturgical Year, Sunday Sermons, c. 1227–1231"},
+  {s:"Objective",t:"Walk to the open-air pulpit and press PRAY to preach to the vast crowd of Padua.",a:""},
+],
+anthony_padua_miracle:[
+  {s:"Narrator",t:"As Anthony preached, witnesses reported that his voice, though he was a small and unremarkable man, could be heard throughout the entire field — as though carried by some supernatural force. Thousands wept. Long-standing enemies reconciled. Usurers returned stolen money. Prisoners were released.",a:"Giovanni da Vincenza; recorded in Moorman, A History of the Franciscan Order, 1968"},
+  {s:"Anthony",t:"\"If you ask how such great mysteries can be believed, ask for grace, not arguments; ask for longing of the heart, not understanding of the mind. For grace goes before, the heart guides, and reason follows.\"",a:"St. Anthony of Padua, Sermons for the Liturgical Year, Sermon on the Resurrection"},
+  {s:"Narrator",t:"Anthony died in Padua on June 13, 1231, just weeks after these sermons ended. He was 36 years old. He was canonised on May 30, 1232 — just 352 days after his death — the fastest canonisation in Church history.",a:"Bull of Canonisation, Pope Gregory IX, 1232; Mark Higgins, St. Anthony of Padua, 2012"},
+  {s:"Anthony",t:"\"Actions speak louder than words. Let your words teach and your actions speak. We are full of words but empty of actions — and therefore accursed by God.\"",a:"St. Anthony of Padua, Sermons for the Liturgical Year, 'On the Conversion of St. Paul'"},
+],
+/* ── PADRE PIO EXTENDED ── */
+pio_firstmass_intro:[
+  {s:"Narrator",t:"Pietrelcina, Campania — August 10, 1910. Francesco Forgione, now ordained as Padre Pio, prepared to celebrate his first solemn Mass in his home village. He was 23 years old. From his earliest childhood he had experienced mystical phenomena — visions, ecstasies, and battles with demons that left him bruised and bleeding.",a:"Padre Pio: The True Story, C. Bernard Ruffin, Our Sunday Visitor, 1991; revised 2018"},
+  {s:"Narrator",t:"Padre Pio later described his inner life in letters to his spiritual director, Padre Benedetto: 'I see myself surrounded by so many enemies. I feel my soul at the mercy of a thousand assaults, each one worse than the last. Yet I know that the Lord will not abandon me, for I am nothing without Him.'",a:"Padre Pio, Letter to Padre Benedetto, c. 1912, in Letters of Padre Pio, vol. I"},
+  {s:"Pio",t:"\"I have said my first Mass... I cannot find words to tell you what passed between Jesus and me during this solemn meeting. I felt an extraordinary peace, a peace which I do not know how to express. It seemed to me that time had stopped.\"",a:"Padre Pio, letter to his spiritual director, August 1910"},
+  {s:"Objective",t:"Approach the altar in your home chapel. Press PRAY to celebrate your first Mass.",a:""},
+],
+pio_firstmass_miracle:[
+  {s:"Narrator",t:"According to those present, Padre Pio's first Mass lasted far longer than normal — he seemed lost in an ecstasy that none could interrupt. His face was transformed. People who attended later said they had never witnessed such an expression of joy and suffering simultaneously on a human face.",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991"},
+  {s:"Pio",t:"\"My Mass is not finished at the altar. It continues all day. Every moment of my life is, in a sense, a Mass — an offering of everything to God. This is what it means to be a priest: to be consumed by love as Christ was consumed on the Cross.\"",a:"Padre Pio, as recorded by his spiritual director, Agostino of San Marco in Lamis"},
+  {s:"Narrator",t:"Padre Pio celebrated Mass every day for over fifty years. Toward the end of his life, his Masses lasted up to five hours. Thousands came to Foggia simply to attend. He offered every Mass not for himself but, as he said, 'for the whole world, for sinners, and for the souls in purgatory.'",a:"C. Bernard Ruffin, Padre Pio: The True Story; Fr. Alessio Parente, Send Me Your Guardian Angel, 1984"},
+],
+pio_confessional_intro:[
+  {s:"Narrator",t:"San Giovanni Rotondo, 1920s–1960s. Padre Pio's confessional became one of the most sought-after in the world. He heard confessions for fifteen to eighteen hours a day. People waited in line for days — sometimes weeks. He was known to read the souls of penitents, naming sins they had not yet confessed or even remembered.",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991"},
+  {s:"Narrator",t:"One penitent recalled: 'I had prepared my confession very carefully. But before I said a word, he looked at me and said quietly: You have forgotten something. You have not confessed what you did on the twenty-third of October, nineteen forty-two. And he told me what it was. I had deliberately left it out of shame.'",a:"Testimony of a penitent, recorded in Ruffin, Padre Pio: The True Story, ch. 18"},
+  {s:"Penitent",t:"\"Father, I have come a long way. I am not even certain I believe anymore. I came because my wife begged me.\"",a:"Composite of multiple documented testimonies of conversion in the confessional"},
+  {s:"Objective",t:"Approach the confessional. Press PRAY to receive Padre Pio's absolution.",a:""},
+],
+pio_confessional_miracle:[
+  {s:"Pio",t:"\"I see your soul as a doctor sees a body. I see the illness — and I see the remedy. God puts this knowledge in my heart only so that I can help you find your way back to Him. Not to judge you. To free you.\"",a:"Padre Pio, attributed in multiple conversion testimonies; Ruffin, The True Story"},
+  {s:"Narrator",t:"A count who came to mock him left the confessional weeping and converted. An atheist philosopher who came to expose him as a fraud emerged speechless and spent the rest of his life writing in his defense. One woman who had committed a great sin and had not confessed it in forty years left the box and said, 'He already knew.'",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991, ch. 18–19"},
+  {s:"Pio",t:"\"My dearest children, a single soul is worth more than all the riches of this world. Nothing in all of creation is worth the value of a human soul — for the soul is destined for eternal union with God. This is why I am here. This is why I suffer. For souls.\"",a:"Padre Pio, quoted in Fr. Alessio Parente, Send Me Your Guardian Angel, 1984"},
+  {s:"Narrator",t:"Padre Pio heard an estimated five million confessions during his ministry. The Vatican's Positio super virtutibus states that his knowledge of penitents' souls was regarded as a charism of the Holy Spirit — not natural discernment but supernatural illumination.",a:"Positio super virtutibus, Sacred Congregation for the Causes of Saints, 1979"},
+],
+pio_bilocation_intro:[
+  {s:"Narrator",t:"Various dates, 1905–1968. The phenomenon of bilocation — the reported ability to appear in two places simultaneously — was documented in Padre Pio's case by multiple independent witnesses across five decades. A 1905 letter from Bishop Damiani of Uruguay described Padre Pio appearing at his bedside in Montevideo while simultaneously being accounted for at the friary in Pietrelcina, Italy.",a:"C. Bernard Ruffin, Padre Pio: The True Story, ch. 14; Alberto D'Apolito, Padre Pio of Pietrelcina: Memories, Experiences, Testimonials, 1978"},
+  {s:"Narrator",t:"General Luigi Cadorna, commander of the Italian army, testified that during a moment of suicidal despair during World War I, a brown-robed friar appeared in his tent, spoke to him, and convinced him not to take his life. He later identified the friar as Padre Pio — a man he had never met and who was physically hundreds of miles away.",a:"Alberto D'Apolito, Padre Pio of Pietrelcina, 1978; Ruffin, ch. 14"},
+  {s:"Pio",t:"\"I cannot explain these things. I go where God sends me. It does not feel like anything unusual to me — I simply find myself present where the soul has need of me. God is not bound by space.\"",a:"Padre Pio, in conversation, recorded by Alberto D'Apolito, 1978"},
+  {s:"Objective",t:"Kneel at your cell window. Press PRAY to allow God to send you where you are needed.",a:""},
+],
+pio_bilocation_miracle:[
+  {s:"Narrator",t:"A woman in Padua lay dying and desperate. Her family had written to Padre Pio but received no reply. That night, she testified later, a friar in a brown habit appeared at her bedside, placed his wounded hand on her forehead, and whispered: 'Courage. Christ has not abandoned you. You will recover.' She recovered fully.",a:"Testimony compiled in D'Apolito, Padre Pio of Pietrelcina; Ruffin, The True Story, ch. 14"},
+  {s:"Narrator",t:"When her daughter later traveled to San Giovanni Rotondo and described the event, Padre Pio said nothing — but smiled. He neither confirmed nor denied. When pressed, he simply said: 'Pray and do not ask questions about what God does.'",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991"},
+  {s:"Pio",t:"\"Do not weep for those who suffer. Weep only for sinners who refuse God's mercy. Suffering, when united to Christ's Passion, becomes a great grace — it is the most intimate sharing in the life of God that a human being can experience this side of death.\"",a:"Padre Pio, letter to a spiritual daughter, recorded in Letters of Padre Pio, vol. II"},
+],
+pio_cancer_intro:[
+  {s:"Narrator",t:"San Giovanni Rotondo, 1949. Giovanni Savino, a construction worker from the village, had suffered a severe accident: an explosion of dynamite had destroyed his right eye and severely damaged his left. Doctors declared him permanently and totally blind. His family brought him to Padre Pio.",a:"Documented case, Vatican Positio; C. Bernard Ruffin, Padre Pio: The True Story"},
+  {s:"Savino",t:"\"Padre, they say there is nothing more to be done. I cannot see anything. I am in darkness. I have four children.\"",a:"Giovanni Savino testimony, documented in Vatican Positio"},
+  {s:"Pio",t:"He held Savino's face in his wounded hands and prayed silently for a long time. Then he said: \"Do not lose heart. Be ready. Something is about to happen.\"",a:"Giovanni Savino testimony; Ruffin, The True Story"},
+  {s:"Objective",t:"Approach Giovanni by the chapel steps. Press PRAY to lay hands on him.",a:""},
+],
+pio_cancer_miracle:[
+  {s:"Narrator",t:"On the night of January 25, 1949, Giovanni Savino woke from sleep screaming — not in pain, but in shock. His sight had returned. Medical examination confirmed: the destroyed eye had somehow been restored. There was no medical explanation. The Vatican's Positio includes the documentation of multiple physicians.",a:"Vatican Positio super virtutibus, Sacred Congregation for the Causes of Saints, 1979; Ruffin, ch. 15"},
+  {s:"Savino",t:"\"I woke and I could see my wife's face. I could see the window. I could see the crucifix on the wall. I screamed because I thought I was dreaming — but I was not dreaming. My eye had been given back to me.\"",a:"Giovanni Savino, testimony in Vatican Positio"},
+  {s:"Pio",t:"\"Jesus does not need our medicine or our surgery. He needs only our faith. But we must never mistake faith for magic. Faith is not a claim on God — it is surrender to God. It is saying: Whatever You will. And sometimes, what God wills is a miracle.\"",a:"Padre Pio, from conversations recorded by Fr. Alessio Parente"},
+  {s:"Narrator",t:"Padre Pio was known to say: 'I am nothing. I am only a poor friar who prays.' Yet at his canonisation, Pope John Paul II said: 'The holiness of Padre Pio was above all measured by his extraordinary closeness to the cross, which he carried not as a burden but as a gift.'",a:"Pope John Paul II, Homily at Canonisation of Padre Pio, St. Peter's Square, June 16, 2002"},
+],
+pio_fragrance_intro:[
+  {s:"Narrator",t:"Throughout his life, those who encountered Padre Pio — in person, near his cell, or even after receiving a letter from him — reported an inexplicable fragrance: the scent of roses, violets, incense, or fresh tobacco. It appeared and vanished without cause, sometimes preceding him into a room, sometimes lingering after he left.",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991; Alberto D'Apolito, Padre Pio of Pietrelcina"},
+  {s:"Narrator",t:"Investigators sent by the Vatican to assess these phenomena — including the hostile canonical inspector Monsignor Rossi in 1921 — could not explain them. One theologian, Monsignor De Rossi, wrote in his report: 'The fragrance is real. It cannot be attributed to any natural perfume. It appears without any predictable cause and vanishes instantly.'",a:"Canonical investigation report, 1921; summarized in Ruffin, The True Story, ch. 8"},
+  {s:"Soldier",t:"\"I was in the trenches in the First World War. Mud. Death. The smell of gunpowder and rot. And then — suddenly — I smelled roses. Just for a moment. I had never smelled anything so clean in my life. The man next to me smelled it too. We looked at each other. Neither of us spoke.\"",a:"Testimony of a soldier, recorded in D'Apolito, Padre Pio of Pietrelcina, 1978"},
+  {s:"Objective",t:"Stand near Padre Pio's cell window at dawn. Press PRAY to experience the fragrance of grace.",a:""},
+],
+pio_fragrance_miracle:[
+  {s:"Narrator",t:"Padre Pio spoke of the fragrance himself only reluctantly. He called it a 'grace-scent' — a sign that his prayer was being heard by God and transmitted to the person in need. He sometimes told those who were ill: 'When you smell roses tonight, know that I am praying for you.'",a:"Alberto D'Apolito, Padre Pio of Pietrelcina: Memories, Experiences, Testimonials, 1978"},
+  {s:"Pio",t:"\"Prayer is the best weapon we possess. It is the key that opens the heart of God. And God, when He opens His heart, sometimes leaves His fragrance on the threshold — just as a flower, when opened, perfumes the room.\"",a:"Padre Pio, from letters and conversations; D'Apolito, 1978"},
+  {s:"Narrator",t:"Maria Pyle, an American woman who lived near the friary for decades, wrote in her diary: 'Today again the perfume came — at three in the morning. It filled my room for ten minutes and then was gone. Padre says nothing when I ask. He only smiles and says: Go to sleep, Maria.'",a:"Diary of Maria Pyle, c. 1940s; quoted in Ruffin, Padre Pio: The True Story"},
+  {s:"Pio",t:"\"There is no soul who prays sincerely and is not heard. Prayer always reaches God. But God answers in His own time and in His own way — not always as we wish, but always better than we could have imagined.\"",a:"Padre Pio, letter to Raffaelina Cerase, 1914, Letters of Padre Pio, vol. I"},
+],
+pio_agony_intro:[
+  {s:"Narrator",t:"San Giovanni Rotondo, September 22–23, 1968. The day before he died, Padre Pio celebrated what would be his final Mass. It lasted two hours. He could barely stand. His stigmata wounds — which had bled every day for fifty years — had that morning completely healed and disappeared. His skin was clean.",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991, final chapters"},
+  {s:"Narrator",t:"A witness wrote: 'He was so pale. So consumed. As though the fire of God had burned through the wood and only the flame remained. His hands were smooth — the wounds gone. I understood that his work was finished. The offering was complete.'",a:"Testimony of a friar at San Giovanni Rotondo, September 1968; Ruffin, The True Story"},
+  {s:"Pio",t:"\"I see two mothers. One is my own dear mother — Maria Giuseppa. And the other is the Madonna.\" His last coherent words were spoken in confession: 'Jesus... Mary.'",a:"Last words of Padre Pio, September 23, 1968; recorded by attending friars, Ruffin, The True Story"},
+  {s:"Objective",t:"Kneel beside Padre Pio's chair in the sacristy. Press PRAY to be present at the end.",a:""},
+],
+pio_agony_miracle:[
+  {s:"Narrator",t:"Padre Pio died at 2:30 in the morning on September 23, 1968. He was eighty-one years old. He had spent fifty years carrying the wounds of Christ, hearing five million confessions, and building the Casa Sollievo della Sofferenza — the House for the Relief of Suffering — now one of Italy's largest hospitals.",a:"C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991"},
+  {s:"Friar",t:"\"When he died, his face was like marble — perfectly peaceful. The agony was over. His hands, which for fifty years had bled every Friday, were completely healed. The whole friary was full of silence and peace. Someone said: 'He is still praying. He has just changed rooms.'\"",a:"Testimony of a friar; C. Bernard Ruffin, Padre Pio: The True Story"},
+  {s:"Pio",t:"\"After my death, I will do much more than I have done in this life. My real mission will begin when I die. I can do more for you from heaven than I could do for you here on earth.\"",a:"Padre Pio, to his spiritual daughters; recorded in Fr. Alessio Parente, Send Me Your Guardian Angel, 1984"},
+  {s:"Narrator",t:"Over one hundred thousand people attended Padre Pio's funeral. Pope Paul VI later said of him: 'Look at what fame he had! What a worldwide following gathered around him! And why? Because he was a philosopher? Because he was wise? Because he had resources at his disposal? No — because he said Mass humbly, heard confessions from morning until evening, and was — it is not easy to say it — a man of prayer and suffering.'",a:"Pope Paul VI, General Audience, February 20, 1971"},
+],
 }; /* ── END DLG ── */
 
 /* ─── CUTSCENE DATA ─────────────────────────────────────── */
@@ -555,8 +655,11 @@ var CF=[
   {art:'☀',title:'Finale — The Canticle of the Sun',text:'"In the beginning of his conversion Francis had a great tenderness for lepers. He came upon a leper one day and kissed his hand. When Francis looked back, he could see no one at all."\n\n— St. Bonaventure, Major Life of St. Francis, Ch. I, 1263',key:'canticle',intro:'canticle_scene'},
 ];
 var CA=[
-  {art:'🐟',title:'St. Anthony — The Sermon to the Fish',text:'"Anthony turned to the sea and began to speak. Immediately a great multitude of fish came to the bank — great ones and small and middle-sized — and held their heads above the water in great peace."\n\n— The Little Flowers of St. Francis, Ch. XL, 14th century',key:'anthony_fish',intro:'anthony_fish_intro'},
-  {art:'👶',title:'St. Anthony — The Christ Child Vision',text:'"The nobleman saw the blessed Anthony holding in his arms a child of marvellous beauty. The child was lovingly embracing Anthony\'s neck, and Anthony was holding the child with the greatest joy."\n\n— Fra Rigaldo de Reggio, Life of St. Anthony, c. 1232',key:'anthony_child',intro:'anthony_child_intro'},
+  {art:'🐟',title:'St. Anthony — I. The Sermon to the Fish',text:'"Anthony turned to the sea and began to speak. Immediately a great multitude of fish came to the bank — great ones and small and middle-sized — and held their heads above the water in great peace and tranquillity, their mouths above the surface, gazing attentively at Anthony\'s face."\n\n— The Little Flowers of St. Francis, Ch. XL, 14th century',key:'anthony_fish',intro:'anthony_fish_intro'},
+  {art:'👶',title:'St. Anthony — II. The Christ Child Vision',text:'"The nobleman saw the blessed Anthony holding in his arms a child of marvellous beauty. The child was lovingly embracing Anthony\'s neck, and Anthony was holding the child with the greatest joy and delight. The nobleman called his wife, and together they beheld the vision until dawn."\n\n— Fra Rigaldo de Reggio, Life of St. Anthony, c. 1232',key:'anthony_child',intro:'anthony_child_intro'},
+  {art:'🐴',title:'St. Anthony — III. The Miracle of the Mule',text:'"Anthony accepted the challenge of the heretic who denied the Real Presence: that his starving mule, driven by three days of hunger, would choose oats over the Eucharist. Every eye was fixed on the animal. It walked past the oats. It knelt before the monstrance."\n\n— Liber Miraculorum, 13th century; John Moorman, A History of the Franciscan Order, 1968',key:'anthony_mule',intro:'anthony_mule_intro'},
+  {art:'⚖',title:'St. Anthony — IV. The Raising of the Dead',text:'"Anthony\'s father stood accused of murder. A man lay dead in Lisbon. Anthony prayed — and according to witnesses on both sides of the Alps, appeared simultaneously in Italy and in Portugal. The dead man spoke. The innocent man went free."\n\n— Assidua, the first biography of St. Anthony, c. 1232',key:'anthony_raise',intro:'anthony_raise_intro'},
+  {art:'🕊',title:'St. Anthony — V. The Great Lenten Sermons of Padua',text:'"Thirty thousand people came to hear him preach. The courts suspended their hearings. The markets closed. People slept in the squares overnight to secure a place. He was a small, unremarkable man — yet his voice carried across the entire field."\n\n— Chronicle of Padua, c. 1231; John Moorman, A History of the Franciscan Order, Oxford, 1968',key:'anthony_padua',intro:'anthony_padua_intro'},
 ];
 var CC=[
   {art:'🕯',title:'St. Clare — Repelling the Saracens',text:'"Clare had herself carried to the door, and commanded that the pyx containing the Body of Christ be brought. Prostrating herself before the Lord, she prayed. A voice like a child\'s was heard: I will always protect you."\n\n— Acts of the Process of Canonization of St. Clare, 1253',key:'clare_saracen',intro:'clare_saracen_intro'},
@@ -566,8 +669,14 @@ var CB=[
   {art:'📖',title:'St. Bonaventure — The Mystical Vision',text:'"Stirred by the example of our most blessed father Francis, I was seeking this peace with panting soul. Then, struck with wonder at the manner of so high a contemplation, I wrote this book."\n\n— St. Bonaventure, Itinerarium Mentis in Deum, Prologue, 1259',key:'bonaventure',intro:'bona_vision_intro'},
 ];
 var CPio=[
-  {art:'🙏',title:'Padre Pio — The Permanent Stigmata',text:'"On the morning of September 20, 1918, while Padre Pio was making his thanksgiving after Mass, he fell into a prolonged ecstasy. When he came to himself he saw that his hands, feet and side were pierced and bleeding."\n\n— Padre Pio: The True Story, Bernard Ruffin',key:'pio_stigmata',intro:'pio_stigmata_intro'},
-  {art:'👁',title:'Padre Pio — The Healing of the Blind',text:'"Gemma di Giorgi was born without pupils — a fact confirmed by every doctor who examined her. Aged seven, she was brought to Padre Pio. He prayed over her eyes with his wounded hands — and she saw."\n\n— Testimony of Gemma di Giorgi, Vatican deposition, 1995',key:'pio_healing',intro:'pio_healing_intro'},
+  {art:'⛪',title:'Padre Pio — I. The First Solemn Mass',text:'"I cannot find words to tell you what passed between Jesus and me during this solemn meeting. It seemed that time had stopped. I felt a peace so profound, a joy so complete, that I wished never to return from it."\n\n— Padre Pio, letter to his spiritual director, August 10, 1910',key:'pio_firstmass',intro:'pio_firstmass_intro'},
+  {art:'🙏',title:'Padre Pio — II. The Permanent Stigmata',text:'"On the morning of September 20, 1918, while Padre Pio was making his thanksgiving after Mass, he fell into a prolonged ecstasy. When he came to himself, he saw that his hands, feet, and side were pierced and bleeding — the five wounds of the Passion of Christ, which would remain visible and painful for the next fifty years."\n\n— C. Bernard Ruffin, Padre Pio: The True Story, Our Sunday Visitor, 1991',key:'pio_stigmata',intro:'pio_stigmata_intro'},
+  {art:'🕯',title:'Padre Pio — III. The Ministry of the Confessional',text:'"He heard confessions for fifteen to eighteen hours a day. He was known to name sins that penitents had not yet spoken — sins hidden in shame for decades. One by one, they came away weeping. One by one, they came away free."\n\n— C. Bernard Ruffin, Padre Pio: The True Story; Vatican Positio super virtutibus, 1979',key:'pio_confessional',intro:'pio_confessional_intro'},
+  {art:'✈',title:'Padre Pio — IV. The Gift of Bilocation',text:'"General Luigi Cadorna testified that a Franciscan friar appeared in his command tent during the darkest night of the Great War and turned him from the brink of suicide. He later identified this friar as Padre Pio — a man he had never met, who was physically hundreds of miles away."\n\n— Alberto D\'Apolito, Padre Pio of Pietrelcina: Memories, Experiences, Testimonials, 1978',key:'pio_bilocation',intro:'pio_bilocation_intro'},
+  {art:'👁',title:'Padre Pio — V. The Healing of the Blind',text:'"Gemma di Giorgi was born without pupils — confirmed by every physician who examined her. He prayed over her eyes with his wounded hands. She saw. The Vatican\'s formal inquiry could offer no medical explanation."\n\n— Testimony of Gemma di Giorgi, Vatican deposition, 1995',key:'pio_healing',intro:'pio_healing_intro'},
+  {art:'✋',title:'Padre Pio — VI. The Restoration of Sight',text:'"Giovanni Savino was declared permanently and totally blind after a dynamite explosion destroyed his right eye. He was brought to Padre Pio. On the night of January 25, 1949, he woke screaming — not in pain, but in awe. His eye had been restored. Multiple physicians confirmed what they could not explain."\n\n— Vatican Positio super virtutibus, 1979; C. Bernard Ruffin, Padre Pio: The True Story',key:'pio_cancer',intro:'pio_cancer_intro'},
+  {art:'🌹',title:'Padre Pio — VII. The Fragrance of Grace',text:'"Those who received his letters, those who stood near his confessional, those who had never met him but prayed to him in distant countries — all reported the same thing: an inexplicable fragrance of roses, violets, or incense, appearing without cause and vanishing without explanation."\n\n— Alberto D\'Apolito, Padre Pio of Pietrelcina, 1978; Ruffin, The True Story',key:'pio_fragrance',intro:'pio_fragrance_intro'},
+  {art:'🕊',title:'Padre Pio — VIII. The Holy Death',text:'"The day before he died, his stigmata wounds — which had bled every day for fifty years — were found to be completely healed. His skin was clean and smooth. Those who witnessed it understood: the offering was complete. The sacrifice was finished. He died on September 23, 1968, whispering the names of Jesus and Mary."\n\n— C. Bernard Ruffin, Padre Pio: The True Story, final chapters',key:'pio_agony',intro:'pio_agony_intro'},
 ];
 var CEliz=[
   {art:'🌹',title:'St. Elizabeth — The Miracle of the Roses',text:'"Elizabeth had been secretly distributing food to the poor. Her husband Ludwig stopped her at the castle gate and demanded to see what she carried. When he opened her cloak, he found only roses — beautiful, fragrant roses in the dead of winter."\n\n— Life of St. Elizabeth, Dietrich von Apolda, c. 1289',key:'elizabeth_roses',intro:'elizabeth_roses_intro'},
@@ -579,12 +688,21 @@ var CEliz=[
 ═══════════════════════════════════════════════════════════ */
 function initRenderer(){
   var cv=document.getElementById('gameCanvas');
-  G.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
-  G.renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  try{
+    G.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'high-performance',precision:'highp',logarithmicDepthBuffer:false});
+  }catch(e){
+    try{G.renderer=new THREE.WebGLRenderer({canvas:cv,antialias:false});}
+    catch(e2){console.error('WebGL not supported:',e2);return;}
+  }
+  G.renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   G.renderer.shadowMap.enabled=true;
   G.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  G.renderer.outputEncoding=THREE.sRGBEncoding;
+  G.renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  G.renderer.toneMappingExposure=1.15;
+  G.renderer.physicallyCorrectLights=true;
   G.scene=new THREE.Scene();
-  G.camera=new THREE.PerspectiveCamera(68,1,0.1,350);
+  G.camera=new THREE.PerspectiveCamera(62,1,0.1,400);
   doResize();
   try{new ResizeObserver(doResize).observe(document.body);}catch(e){}
   window.addEventListener('resize',doResize);
@@ -611,22 +729,33 @@ function clearStage(){
   G.wolfGroup=null;G.wolfTail=null;G.wolfEyes=[];G.wolfTamed=false;
   G.birdsDone=false;G.stigmataDone=false;G.fishSpawned=false;
   G.childAppeared=false;G.saracensFled=false;G.christmasVision=false;G.bookDone=false;
+  G.anthonyMuleDone=false;G.anthonyRaiseDone=false;G.anthonyPaduaDone=false;
+  G.pioStigDone=false;G.pioFirstMassDone=false;G.pioConfessionalDone=false;
+  G.pioBilocationDone=false;G.pioHealDone=false;G.pioCancerDone=false;
+  G.pioFragranceDone=false;G.pioAgonyDone=false;
+  G.elizRosesDone=false;G.elizLeperDone=false;
   G.nearTarget=null;G.rosaries=[];G.groundPeople=[];
-  G.jesusGroup=null;G.holyGroup=null;G.godGroup=null;G.inHeaven=false;G.heavenStage=0;
+  G.jesusGroup=null;G.holyGroup=null;G.godGroup=null;G.inHeaven=false;
 }
-function mkMat(c,ec,ei){var m=new THREE.MeshLambertMaterial({color:c});if(ec!=null){m.emissive=new THREE.Color(ec);m.emissiveIntensity=ei||0;}return m;}
+function mkMat(c,ec,ei){var m=new THREE.MeshLambertMaterial({color:c});if(ec!=null){m.emissive=new THREE.Color(ec);m.emissiveIntensity=ei||0.6;}return m;}
+function mkMatStd(c,rough,metal){return new THREE.MeshStandardMaterial({color:c,roughness:rough||0.85,metalness:metal||0.05});}
 function mkBox(w,h,d,c,x,y,z){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return addS(m);}
 function mkCone(r,h,s,c,x,y,z){var m=new THREE.Mesh(new THREE.ConeGeometry(r,h,s),mkMat(c));m.position.set(x,y,z);m.castShadow=true;return addS(m);}
 function mkSph(r,ws,hs,c,x,y,z){var m=new THREE.Mesh(new THREE.SphereGeometry(r,ws,hs),mkMat(c));m.position.set(x,y,z);m.castShadow=true;return addS(m);}
-function mkGnd(c,w,d){var m=new THREE.Mesh(new THREE.PlaneGeometry(w||90,d||90,4,4),mkMat(c));m.rotation.x=-Math.PI/2;m.receiveShadow=true;return addS(m);}
+function mkGnd(c,w,d){var m=new THREE.Mesh(new THREE.PlaneGeometry(w||90,d||90,16,16),mkMat(c));m.rotation.x=-Math.PI/2;m.receiveShadow=true;return addS(m);}
 function mkAmb(c,i){return addS(new THREE.AmbientLight(c,i));}
-function mkDir(c,i,px,py,pz){var l=new THREE.DirectionalLight(c,i);l.position.set(px,py,pz);l.castShadow=true;l.shadow.mapSize.set(1024,1024);return addS(l);}
+function mkDir(c,i,px,py,pz){var l=new THREE.DirectionalLight(c,i);l.position.set(px,py,pz);l.castShadow=true;l.shadow.mapSize.set(2048,2048);l.shadow.camera.near=0.5;l.shadow.camera.far=250;l.shadow.camera.left=-50;l.shadow.camera.right=50;l.shadow.camera.top=50;l.shadow.camera.bottom=-50;l.shadow.bias=-0.0003;return addS(l);}
 function mkFog(c,n,f){G.scene.background=new THREE.Color(c);G.scene.fog=new THREE.Fog(c,n,f);}
+function mkHemi(sky,gnd,i){return addS(new THREE.HemisphereLight(sky,gnd,i||0.35));}
 function mkNPC(c,x,y,z){
   var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.1,6),mkMat(c));body.position.y=.55;
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));head.position.y=1.32;
-  g.add(body,head);g.position.set(x,y,z);g.castShadow=true;return addS(g);
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.3,.44,1.15,8),mkMat(c));body.position.y=.575;body.castShadow=true;
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.28,10,8),mkMat(0xDEB887));head.position.y=1.36;head.castShadow=true;
+  var armL=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,.65,6),mkMat(c));armL.position.set(-.42,.85,.0);armL.rotation.z=.32;armL.castShadow=true;
+  var armR=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,.65,6),mkMat(c));armR.position.set(.42,.85,.0);armR.rotation.z=-.32;armR.castShadow=true;
+  g.add(body,head,armL,armR);
+  g.userData.armL=armL;g.userData.armR=armR;
+  g.position.set(x,y,z);g.castShadow=true;return addS(g);
 }
 function mkGlowBox(w,h,d,c,ec,ei,x,y,z){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(c,ec,ei));m.position.set(x,y,z);return addS(m);}
 
@@ -636,12 +765,14 @@ function mkGlowBox(w,h,d,c,ec,ei,x,y,z){var m=new THREE.Mesh(new THREE.BoxGeomet
 function createPlayer(){
   if(G.playerGroup)G.scene.remove(G.playerGroup);
   var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(.34,.5,1.25,6),mkMat(0x6B4226));body.position.y=.625;g.add(body);
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.29,6,5),mkMat(0xDEB887));head.position.y=1.55;g.add(head);
-  var hood=new THREE.Mesh(new THREE.SphereGeometry(.3,6,3,0,Math.PI*2,0,Math.PI*.5),mkMat(0x5a3318));hood.position.y=1.65;g.add(hood);
-  var belt=new THREE.Mesh(new THREE.TorusGeometry(.38,.045,4,8),mkMat(0xF5DEB3));belt.rotation.x=Math.PI/2;belt.position.y=.55;g.add(belt);
-  var haloMat=new THREE.MeshLambertMaterial({color:0xFFD700,emissive:new THREE.Color(0xFFD700),emissiveIntensity:.6});
-  var halo=new THREE.Mesh(new THREE.TorusGeometry(.38,.04,4,14),haloMat);halo.position.y=1.93;g.add(halo);
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.34,.52,1.28,9),mkMat(0x6B4226));body.position.y=.64;body.castShadow=true;body.receiveShadow=true;g.add(body);
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.29,12,10),mkMat(0xDEB887));head.position.y=1.56;head.castShadow=true;g.add(head);
+  var hood=new THREE.Mesh(new THREE.SphereGeometry(.31,10,5,0,Math.PI*2,0,Math.PI*.5),mkMat(0x5a3318));hood.position.y=1.67;hood.castShadow=true;g.add(hood);
+  var belt=new THREE.Mesh(new THREE.TorusGeometry(.38,.048,6,16),mkMat(0xF5DEB3));belt.rotation.x=Math.PI/2;belt.position.y=.56;g.add(belt);
+  var haloMat=new THREE.MeshLambertMaterial({color:0xFFD700,emissive:new THREE.Color(0xFFD700),emissiveIntensity:.9,transparent:true,opacity:.85});
+  var halo=new THREE.Mesh(new THREE.TorusGeometry(.38,.042,6,24),haloMat);halo.position.y=1.95;g.add(halo);
+  // Halo glow light
+  var haloLight=new THREE.PointLight(0xffd700,.6,3.5);haloLight.position.y=1.95;g.add(haloLight);
   G.playerGroup=g;G.scene.add(g);setPos(0,0);
 }
 function setPos(x,z){G.px=x;G.pz=z;if(G.playerGroup)G.playerGroup.position.set(x,0,z);}
@@ -702,11 +833,20 @@ function loadSaintStage(cuts,idx,doneFn){
     clearStage();createPlayer();
     if(cut.key==='anthony_fish')bAnthonyFish();
     else if(cut.key==='anthony_child')bAnthonyChild();
+    else if(cut.key==='anthony_mule')bAnthonyMule();
+    else if(cut.key==='anthony_raise')bAnthonyRaise();
+    else if(cut.key==='anthony_padua')bAnthonyPadua();
     else if(cut.key==='clare_saracen')bClareSaracen();
     else if(cut.key==='clare_christmas')bClareChristmas();
     else if(cut.key==='bonaventure')bBonaventure();
     else if(cut.key==='pio_stigmata')bPioStigmata();
+    else if(cut.key==='pio_firstmass')bPioFirstMass();
+    else if(cut.key==='pio_confessional')bPioConfessional();
+    else if(cut.key==='pio_bilocation')bPioBilocation();
     else if(cut.key==='pio_healing')bPioHealing();
+    else if(cut.key==='pio_cancer')bPioCancer();
+    else if(cut.key==='pio_fragrance')bPioFragrance();
+    else if(cut.key==='pio_agony')bPioAgony();
     else if(cut.key==='elizabeth_roses')bElizRoses();
     else if(cut.key==='elizabeth_leper')bElizLeper();
     showHUD(cut.title);
@@ -718,28 +858,52 @@ function loadSaintStage(cuts,idx,doneFn){
    ── FRANCIS STAGES ──
 ═══════════════════════════════════════════════════════════ */
 function bAssisi(){
-  mkFog(0x87ceeb,35,100);mkAmb(0xfff5cc,.55);mkDir(0xffeedd,1.2,15,30,10);mkGnd(0x5a8a3a,90,90);
-  for(var i=0;i<5;i++){var a=(i/5)*Math.PI*2,r=28+Math.random()*8,hh=5+Math.random()*6;mkSph(r,6,4,0x3d7a3a,Math.cos(a)*r,hh-r+2,Math.sin(a)*r-5);}
-  mkBox(8,6,6,0xd4c4a0,-12,3,-15);mkBox(8,1.5,6,0x8b3a3a,-12,7,-15);
-  mkBox(6,8,5,0xd4c4a0,-5,4,-18);mkBox(6,1.5,5,0x8b3a3a,-5,8.9,-18);
-  mkBox(3,12,3,0xc0b090,6,6,-16);mkBox(3,1.5,3,0x7a2020,6,13,-16);
-  mkBox(10,8,2,0xd4c4a0,0,4,-22);mkBox(4,4,2,0xd4c4a0,0,10,-22);mkBox(2,2,2,0xffdd88,0,13,-22);
-  mkBox(4,.1,20,0xbbaa88,0,.05,-12);
-  for(var j=0;j<8;j++){var a2=(j/8)*Math.PI*2,tx=Math.cos(a2)*18,tz=Math.sin(a2)*14-5;mkBox(.6,4,.6,0x8B4513,tx,2,tz);mkCone(2.5,5,5,0x2d6b2d,tx,7,tz);}
+  mkFog(0x87ceeb,40,120);
+  mkAmb(0xfff8e0,.65);mkHemi(0x88bbff,0x3a7a3a,.4);mkDir(0xfff0cc,1.4,15,35,10);
+  // Second fill light from opposite side
+  var fill=new THREE.DirectionalLight(0x88bbff,.4);fill.position.set(-10,20,-5);addS(fill);
+  mkGnd(0x5a8a3a,110,110);
+  // Rolling hills
+  for(var i=0;i<7;i++){var a=(i/7)*Math.PI*2,r=32+Math.random()*10,hh=6+Math.random()*8;mkSph(r,8,6,0x3d7a3a,Math.cos(a)*r,hh-r+2,Math.sin(a)*r-5);}
+  // Assisi buildings
+  mkBox(9,6,6,0xd4c4a0,-12,3,-15);mkBox(9,1.8,6,0x8b3a3a,-12,7.2,-15);
+  mkBox(7,9,5,0xd4c4a0,-5,4.5,-18);mkBox(7,1.8,5,0x8b3a3a,-5,10.2,-18);
+  mkBox(3.5,14,3.5,0xc0b090,6,7,-16);mkBox(3.5,1.8,3.5,0x7a2020,6,14.8,-16);
+  mkBox(12,9,2,0xd4c4a0,0,4.5,-22);mkBox(5,5,2,0xd4c4a0,0,11,-22);mkBox(2.5,2.5,2,0xffdd88,0,14.5,-22);
+  // Windows on buildings
+  for(var w=0;w<4;w++){mkBox(1.2,1.5,.3,0x88aacc,-12+w*2.5,4.5,-11.9);}
+  // Stone path
+  mkBox(4,.1,22,0xbbaa88,0,.02,-11);
+  // Trees
+  for(var j=0;j<10;j++){var a2=(j/10)*Math.PI*2,tx=Math.cos(a2)*20,tz=Math.sin(a2)*15-5;mkBox(.65,4.5,.65,0x6B3A2A,tx,2.25,tz);mkSph(3,8,6,0x2d6b2d,tx,8,tz);}
+  // Ambient point lights on buildings
+  var bl=new THREE.PointLight(0xffeedd,1.2,25);bl.position.set(0,12,-18);addS(bl);
   var comp=mkNPC(0xb06030,5,0,3);comp.userData.prompt='Talk to Companion';comp.userData.dlgKey='assisi_welcome';
   G.interactables.push(comp);
-  G.interactables.push({zone:true,x:0,z:-21,r:3.2,prompt:'Enter San Damiano Chapel',action:'dlgAdv',dlgKey:'voice_of_god'});
+  G.interactables.push({zone:true,x:0,z:-21,r:3.5,prompt:'Enter San Damiano Chapel',action:'dlgAdv',dlgKey:'voice_of_god'});
   setPos(0,2);setObj('Walk to the San Damiano Chapel to the north.');hideProgress();
 }
 
 function bSanDamiano(){
-  mkFog(0x7ba3cc,30,90);mkAmb(0xfff2dd,.5);mkDir(0xffeedd,1.1,12,28,8);mkGnd(0x8B7355,80,80);
-  mkBox(14,.5,10,0xbbaa80,0,.25,0);mkBox(14,4,.8,0xc8b89a,0,2,-5);mkBox(.8,6,10,0xc8b89a,-7,3,0);
-  mkBox(3,1.5,1.5,0xf0e8d0,0,.75,-4.2);
-  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.5});
-  var cv=new THREE.Mesh(new THREE.BoxGeometry(.2,2,.2),cm);cv.position.set(0,2.5,-4.2);addS(cv);
-  var ch=new THREE.Mesh(new THREE.BoxGeometry(.8,.2,.2),cm);ch.position.set(0,3.2,-4.2);addS(ch);
-  for(var i=0;i<8;i++)mkBox(.5+Math.random(),.4,.5+Math.random(),0x998877,(Math.random()-.5)*12,.3,(Math.random()-.5)*8);
+  mkFog(0x7ba3cc,32,95);mkAmb(0xfff2dd,.55);mkHemi(0x88aacc,0x556644,.35);mkDir(0xffeedd,1.15,12,28,8);mkGnd(0x8B7355,85,85);
+  // Chapel floor and walls
+  mkBox(14,.5,10,0xbbaa80,0,.28,0);mkBox(14,4,.8,0xc8b89a,0,2,-5);
+  mkBox(.8,6,10,0xc8b89a,-7,3,0);mkBox(.8,6,10,0xc8b89a,7,3,0);
+  // Cross on altar
+  mkBox(3,1.5,1.5,0xf0e8d0,0,.78,-4.2);
+  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.8});
+  var cv=new THREE.Mesh(new THREE.BoxGeometry(.22,2.2,.22),cm);cv.position.set(0,2.6,-4.2);addS(cv);
+  var ch=new THREE.Mesh(new THREE.BoxGeometry(.9,.22,.22),cm);ch.position.set(0,3.3,-4.2);addS(ch);
+  // Candles with point lights
+  for(var c=0;c<3;c++){
+    var cx=c*2-2;
+    mkBox(.14,.7,.14,0xeeeebb,cx,.75,-3.5);
+    var cl=new THREE.PointLight(0xffcc88,1.1,8);cl.position.set(cx,1.8,-3.5);cl.userData.glow=true;addS(cl);
+  }
+  // Rubble and debris  
+  for(var i=0;i<10;i++)mkBox(.5+Math.random()*.3,.35+Math.random()*.2,.5+Math.random()*.3,0x998877,(Math.random()-.5)*13,.28,(Math.random()-.5)*8);
+  // Repair pieces
+  G.fixedPieces=0;
   addPiece(0xa09070,.8,3,10,7,4.5,0,'Upper Wall',0xd4c4a0);
   addPiece(0x998866,6,.8,.8,0,6.2,-5,'Fallen Arch',0xc0a870);
   addPiece(0x7788aa,2.5,2.5,.3,0,4,-5,'Window',0x4488cc);
@@ -770,7 +934,7 @@ function doRepair(piece){
 }
 
 function bBirds(){
-  mkFog(0x5b9fd4,35,100);mkAmb(0xfff8ee,.6);mkDir(0xffeedd,1.3,18,32,10);mkGnd(0x4a9040,90,90);
+  mkFog(0x5b9fd4,35,100);mkAmb(0xfff8ee,.6);mkHemi(0x5599cc,0x3a7a3a,.4);mkDir(0xffeedd,1.3,18,32,10);mkGnd(0x4a9040,90,90);
   for(var i=0;i<5;i++){var tx=(i-2)*4.5;mkBox(.5,5,.5,0x5D3A1A,tx,2.5,-15);mkCone(2.5+i*.3,6,5,0x2E8B2E,tx,9,-15);}
   for(var j=0;j<5;j++)mkSph(7+j*3,6,4,0x3a7a3a,(j-2)*18,-4,-32);
   var fc=[0xff6688,0xffee44,0xff9944,0xee44ff,0x44aaff];
@@ -787,7 +951,7 @@ function bBirds(){
 }
 
 function bWolf(){
-  mkFog(0x556688,25,85);mkAmb(0xaabbcc,.5);mkDir(0xddeeff,.9,-10,25,8);mkGnd(0x4a5a40,90,90);
+  mkFog(0x556688,25,85);mkAmb(0xaabbcc,.5);mkHemi(0x334455,0x1a2a1a,.3);mkDir(0xddeeff,.9,-10,25,8);mkGnd(0x4a5a40,90,90);
   for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2,r=26+Math.random()*8,tx=Math.cos(a)*r,tz=Math.sin(a)*r;mkBox(.8,9+Math.random()*4,.8,0x3a2510,tx,4.5,tz);mkCone(3+Math.random()*2,9,5,0x1a4a1a,tx,12,tz);}
   mkBox(2,8,1,0xc0a880,-4,4,-18);mkBox(2,8,1,0xc0a880,4,4,-18);mkBox(10,2,1,0xc0a880,0,9,-18);
   for(var j=0;j<10;j++)mkBox(1+Math.random(),.6,1+Math.random(),0x888877,(Math.random()-.5)*20,.5,(Math.random()-.5)*14);
@@ -820,7 +984,7 @@ function doWolfMiracle(){
 
 function bLaVerna(){
   G.scene.background=new THREE.Color(0x1a2255);G.scene.fog=new THREE.Fog(0x1a2255,20,80);
-  mkAmb(0x334488,.4);mkDir(0x8899cc,.7,-5,20,5);mkGnd(0x5a4a3a,80,80);
+  mkAmb(0x334488,.4);mkHemi(0x112244,0x1a0a0a,.25);mkDir(0x8899cc,.7,-5,20,5);mkGnd(0x5a4a3a,80,80);
   var rc=[0x6a5a4a,0x5a4a3a,0x4a3a2a,0x7a6a5a,0x8a7a6a];
   for(var i=0;i<5;i++){var s=5+i*3.5;var mm=new THREE.Mesh(new THREE.ConeGeometry(s,s*1.5,5),new THREE.MeshLambertMaterial({color:rc[i]}));mm.position.set((i-2)*1.5,s*.75-1,-20-i*3);addS(mm);}
   for(var j=0;j<8;j++)mkBox(3,.3,1.5,0x8a7a6a,0,j*.8,-j*2.4-2);
@@ -838,7 +1002,7 @@ function bLaVerna(){
 
 function bCanticle(){
   G.scene.background=new THREE.Color(0xff9030);G.scene.fog=new THREE.Fog(0xff7020,25,90);
-  mkAmb(0xffddaa,.9);mkDir(0xff8844,1.6,-25,18,8);mkGnd(0x8a6a40,90,90);
+  mkAmb(0xffddaa,.9);mkHemi(0xff8844,0x5a3a1a,.3);mkDir(0xff8844,1.6,-25,18,8);mkGnd(0x8a6a40,90,90);
   mkBox(12,8,2,0xd4c090,0,4,-20);mkBox(5,4,2,0xd4c090,0,10,-20);mkBox(2.5,2.5,2,0xffee88,0,13.2,-20);
   var cm3=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffdd00),emissiveIntensity:.5});
   addS(new THREE.Mesh(new THREE.BoxGeometry(.2,3,.2),cm3)).position.set(0,15.5,-20);
@@ -848,7 +1012,7 @@ function bCanticle(){
   for(var j=0;j<4;j++){var tx=(j-1.5)*9;mkBox(.5,4.5,.5,0x5D3A1A,tx,2.25,3);mkCone(2.8,6,6,0x2d6b2d,tx,8,3);}
   for(var b=0;b<12;b++){var bm=new THREE.Mesh(new THREE.ConeGeometry(.28,.18,4),new THREE.MeshLambertMaterial({color:0x88aacc}));bm.position.set((Math.random()-.5)*20,8+Math.random()*6,(Math.random()-.5)*16);bm.userData={phase:Math.random()*Math.PI*2,origY:bm.position.y};addS(bm);G.birds.push(bm);}
   var sunD=new THREE.Mesh(new THREE.CircleGeometry(9,16),new THREE.MeshBasicMaterial({color:0xffcc00,side:THREE.DoubleSide}));sunD.position.set(-45,28,-55);sunD.rotation.y=.45;addS(sunD);
-  var clare=mkNPC(0x6688cc,5,0,1);clare.userData={prompt:'Speak with Sister Clare',dlgKey:'canticle_scene'};G.interactables.push(clare);
+  var clare=mkNPC(0x6688cc,5,0,1);clare.userData.prompt='Speak with Sister Clare';clare.userData.dlgKey='canticle_scene';G.interactables.push(clare);
   G.interactables.push({zone:true,x:0,z:-19,r:4,prompt:'Enter chapel and sing the Canticle',action:'francisEnd'});
   setPos(0,7);setObj('Approach the chapel and sing the Canticle of the Sun');hideProgress();
 }
@@ -857,7 +1021,7 @@ function bCanticle(){
    ── ANTHONY STAGES ──
 ═══════════════════════════════════════════════════════════ */
 function bAnthonyFish(){
-  mkFog(0x4488bb,30,90);mkAmb(0xaaccff,.55);mkDir(0x88aaff,1.1,10,25,5);mkGnd(0x4a9040,90,90);
+  mkFog(0x4488bb,30,90);mkAmb(0xaaccff,.55);mkHemi(0x4488bb,0x2a5a3a,.35);mkDir(0x88aaff,1.1,10,25,5);mkGnd(0x4a9040,90,90);
   // Shore
   var waterMat=new THREE.MeshLambertMaterial({color:0x2255aa,emissive:new THREE.Color(0x002244),emissiveIntensity:.3});
   var water=new THREE.Mesh(new THREE.PlaneGeometry(60,30,8,8),waterMat);water.rotation.x=-Math.PI/2;water.position.set(0,-.08,-22);addS(water);
@@ -871,14 +1035,14 @@ function bAnthonyFish(){
     fm.position.set((Math.random()-.5)*16,-.8,-12+(Math.random()-.5)*8);fm.rotation.z=Math.PI/2;
     fm.userData={origY:-.8,phase:Math.random()*Math.PI*2,risen:false};addS(fm);G.birds.push(fm);// reusing birds array for fish
   }
-  var npc=mkNPC(0x884422,4,0,4);npc.userData={prompt:'Speak with Anthony',dlgKey:'anthony_fish_intro'};G.interactables.push(npc);
+  var npc=mkNPC(0x884422,4,0,4);npc.userData.prompt='Speak with Anthony';npc.userData.dlgKey='anthony_fish_intro';G.interactables.push(npc);
   G.interactables.push({zone:true,x:0,z:-10,r:4,prompt:'Call to the fish',action:'anthonyFish'});
   setPos(0,5);setObj('Walk to the shore and call to the fish');hideProgress();
 }
 
 function bAnthonyChild(){
   // Small stone cell
-  mkFog(0x1a1030,15,50);mkAmb(0x4433aa,.4);mkDir(0x8877cc,.6,5,15,5);mkGnd(0x5a4a3a,30,30);
+  mkFog(0x1a1030,15,50);mkAmb(0x4433aa,.4);mkHemi(0x221144,0x0a0a18,.2);mkDir(0x8877cc,.6,5,15,5);mkGnd(0x5a4a3a,30,30);
   // Walls
   mkBox(10,.5,10,0x9988aa,0,.25,0); // floor nicer
   mkBox(.5,5,10,0x8877aa,-5,2.5,0);mkBox(.5,5,10,0x8877aa,5,2.5,0);
@@ -900,13 +1064,13 @@ function bAnthonyChild(){
    ── CLARE STAGES ──
 ═══════════════════════════════════════════════════════════ */
 function bClareSaracen(){
-  mkFog(0x556677,25,80);mkAmb(0x8899aa,.5);mkDir(0xaabbcc,.85,-8,20,5);mkGnd(0x7a7060,80,80);
+  mkFog(0x556677,25,80);mkAmb(0x8899aa,.5);mkHemi(0x556677,0x2a3a2a,.3);mkDir(0xaabbcc,.85,-8,20,5);mkGnd(0x7a7060,80,80);
   // Monastery walls
   mkBox(30,6,.8,0xc8b89a,0,3,-18);mkBox(.8,6,20,0xc8b89a,-15,3,-8);mkBox(.8,6,20,0xc8b89a,15,3,-8);
   // Gate
   mkBox(3,6,.8,0xc8b89a,-5,3,-18);mkBox(3,6,.8,0xc8b89a,5,3,-18);mkBox(10,1.5,.8,0x8a7a6a,0,6.75,-18);
   // Enemy soldiers (threatening, red-dressed)
-  for(var i=0;i<10;i++){var sx=(i-4.5)*4,sz=-24;var sm=mkNPC(0x992222,sx,0,sz);sm.userData={};} // soldiers
+  for(var i=0;i<10;i++){var sx=(i-4.5)*4,sz=-24;mkNPC(0x992222,sx,0,sz);} // soldiers
   for(var j=0;j<8;j++){mkBox(1+Math.random(),.8,1+Math.random(),0x888877,(Math.random()-.5)*24,0.4,(Math.random()-.5)*14+(-4));}
   // Monstrance (Clare's weapon — glowing golden)
   var pyxGeo=new THREE.CylinderGeometry(.4,.3,.8,8);
@@ -918,7 +1082,7 @@ function bClareSaracen(){
 }
 
 function bClareChristmas(){
-  mkFog(0x080818,12,40);mkAmb(0x112244,.35);mkDir(0x4466aa,.5,3,12,3);mkGnd(0x4a3a2a,30,30);
+  mkFog(0x080818,12,40);mkAmb(0x112244,.35);mkHemi(0x080818,0x050505,.15);mkDir(0x4466aa,.5,3,12,3);mkGnd(0x4a3a2a,30,30);
   // Sickroom walls
   mkBox(14,.5,10,0x9988aa,0,.25,0);mkBox(.5,5,10,0x9988aa,-7,2.5,0);mkBox(.5,5,10,0x9988aa,7,2.5,0);mkBox(14,5,.5,0x9988aa,0,2.5,-5);
   // Bed
@@ -938,7 +1102,7 @@ function bClareChristmas(){
 ═══════════════════════════════════════════════════════════ */
 function bBonaventure(){
   G.scene.background=new THREE.Color(0x1a2255);G.scene.fog=new THREE.Fog(0x1a2255,20,80);
-  mkAmb(0x334488,.4);mkDir(0x8899cc,.7,-5,20,5);mkGnd(0x5a4a3a,80,80);
+  mkAmb(0x334488,.4);mkHemi(0x112244,0x0a0a18,.2);mkDir(0x8899cc,.7,-5,20,5);mkGnd(0x5a4a3a,80,80);
   // Reuse La Verna layout
   var rc=[0x6a5a4a,0x5a4a3a,0x4a3a2a,0x7a6a5a,0x8a7a6a];
   for(var i=0;i<5;i++){var s=5+i*3.5;var mm=new THREE.Mesh(new THREE.ConeGeometry(s,s*1.5,5),new THREE.MeshLambertMaterial({color:rc[i]}));mm.position.set((i-2)*1.5,s*.75-1,-20-i*3);addS(mm);}
@@ -960,7 +1124,7 @@ function bBonaventure(){
 ═══════════════════════════════════════════════════════════ */
 function bPioStigmata(){
   G.scene.background=new THREE.Color(0x1a1030);G.scene.fog=new THREE.Fog(0x1a1030,15,55);
-  mkAmb(0x4433aa,.4);mkDir(0x8877cc,.7,5,18,3);mkGnd(0x5a4a3a,60,60);
+  mkAmb(0x4433aa,.4);mkHemi(0x221133,0x0a0510,.15);mkDir(0x8877cc,.7,5,18,3);mkGnd(0x5a4a3a,60,60);
   // Chapel interior
   mkBox(20,.5,14,0xbbaa90,0,.25,0);
   mkBox(.6,6,14,0xc8b89a,-10,3,0);mkBox(.6,6,14,0xc8b89a,10,3,0);
@@ -989,7 +1153,7 @@ function bPioStigmata(){
 }
 
 function bPioHealing(){
-  mkFog(0x7ba3cc,25,80);mkAmb(0xfff5cc,.55);mkDir(0xffeedd,1.1,12,22,8);mkGnd(0xbbaa88,60,60);
+  mkFog(0x7ba3cc,25,80);mkAmb(0xfff5cc,.55);mkHemi(0x88aacc,0x3a5a3a,.35);mkDir(0xffeedd,1.1,12,22,8);mkGnd(0xbbaa88,60,60);
   // Church courtyard
   mkBox(14,5,.8,0xd4c4a0,0,2.5,-18);mkBox(6,3,.8,0xd4c4a0,0,7,-18);
   mkBox(.8,8,20,0xd4c4a0,-7,4,0);mkBox(.8,8,20,0xd4c4a0,7,4,0);
@@ -1008,7 +1172,7 @@ function bPioHealing(){
   gemma.add(gbody,ghead);gemma.position.set(-2,0,-8);gemma.userData={prompt:'Bless Gemma',action:'pioHealing'};
   addS(gemma);G.interactables.push(gemma);
   // Grandmother
-  var gran=mkNPC(0x888866,-3,0,-6);gran.userData={prompt:'Speak with grandmother',dlgKey:'pio_healing_intro'};G.interactables.push(gran);
+  var gran=mkNPC(0x888866,-3,0,-6);gran.userData.prompt='Speak with grandmother';gran.userData.dlgKey='pio_healing_intro';G.interactables.push(gran);
   setPos(0,6);setObj('Find young Gemma and bless her in Christ\'s name');hideProgress();
 }
 
@@ -1016,7 +1180,7 @@ function bPioHealing(){
    ── ELIZABETH OF HUNGARY STAGES ──
 ═══════════════════════════════════════════════════════════ */
 function bElizRoses(){
-  mkFog(0x8899bb,30,90);mkAmb(0xddeeff,.5);mkDir(0xddeeff,1.0,10,24,8);mkGnd(0xffffff,90,90); // snow
+  mkFog(0x8899bb,30,90);mkAmb(0xddeeff,.5);mkHemi(0x8899bb,0x3a5a3a,.35);mkDir(0xddeeff,1.0,10,24,8);mkGnd(0xffffff,90,90); // snow
   // Castle walls
   mkBox(24,8,.8,0xc8c0b0,0,4,-22);mkBox(.8,8,24,0xc8c0b0,-12,4,0);mkBox(.8,8,24,0xc8c0b0,12,4,0);
   // Towers
@@ -1031,16 +1195,16 @@ function bElizRoses(){
   for(var t=0;t<5;t++){var tx=(t-2)*8;mkBox(.4,4,.4,0x5a3a1a,tx,2,-12);mkBox(.3,3,.3,0x4a2a0a,tx-1,4,-11);mkBox(.3,3,.3,0x4a2a0a,tx+.8,5,-13);}
   // Poor folk (receiving end)
   var pCols=[0x556677,0x665544,0x447766];
-  for(var p=0;p<5;p++){var ph=mkNPC(pCols[p%3],(p-2)*5,0,-14);ph.userData={};}
+  for(var p=0;p<5;p++){mkNPC(pCols[p%3],(p-2)*5,0,-14);}
   // Ludwig (husband - blocking)
   var ludwig=mkNPC(0x884422,0,0,-18);
-  ludwig.userData={prompt:'Ludwig blocks your way — PRAY',action:'elizRoses'};
+  ludwig.userData.prompt='Ludwig blocks your way — PRAY';ludwig.userData.action='elizRoses';
   G.interactables.push(ludwig);
   setPos(0,5);setObj('Carry your gift south to the gate. Face Ludwig and pray.');hideProgress();
 }
 
 function bElizLeper(){
-  mkFog(0x1a1020,12,38);mkAmb(0x223344,.4);mkDir(0x556688,.65,3,14,3);mkGnd(0x5a4a3a,30,30);
+  mkFog(0x1a1020,12,38);mkAmb(0x223344,.4);mkHemi(0x1a1020,0x050508,.15);mkDir(0x556688,.65,3,14,3);mkGnd(0x5a4a3a,30,30);
   // Bedchamber
   mkBox(14,.5,12,0x9988aa,0,.25,0);mkBox(.5,5,12,0x9988aa,-7,2.5,0);mkBox(.5,5,12,0x9988aa,7,2.5,0);mkBox(14,5,.5,0x9988aa,0,2.5,-6);
   // Ornate bed (marital — rich fabrics)
@@ -1054,22 +1218,346 @@ function bElizLeper(){
   var leper=new THREE.Group();
   var lbody=new THREE.Mesh(new THREE.BoxGeometry(4,.5,2),mkMat(0xccccbb));lbody.position.set(0,1.75,1.5);
   var lhead=new THREE.Mesh(new THREE.SphereGeometry(.28,6,5),mkMat(0xaa9988));lhead.position.set(-1.5,2.2,1.5);
-  leper.add(lbody,lhead);addS(leper);
-  leper.userData={prompt:'Tend to the sick man',action:'elizLeper'};
-  G.interactables.push(leper);
+  leper.add(lbody,lhead);
+  leper.userData.prompt='Tend to the sick man';leper.userData.action='elizLeper';
+  addS(leper);G.interactables.push(leper);
   // Candle
   mkBox(.12,.7,.12,0xeeeebb,3,.75,3);var cl=new THREE.PointLight(0xffddaa,.9,8);cl.position.set(3,1.7,3);cl.userData.glow=true;addS(cl);
   setPos(0,4);setObj('Approach the sick man and care for him in the name of Christ');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ── FLIGHT SIMULATOR ──
+   ── ANTHONY EXTENDED STAGES ──
 ═══════════════════════════════════════════════════════════ */
+function bAnthonyMule(){
+  // Bourges town square — Romanesque buildings, crowd, public debate platform
+  mkFog(0x9999bb,28,85);mkAmb(0xfff0dd,.6);mkHemi(0x99aacc,0x554433,.35);mkDir(0xffeedd,1.2,12,28,8);mkGnd(0x8b7355,70,70);
+  // Town square cobblestones
+  for(var i=0;i<6;i++)for(var j=0;j<6;j++)mkBox(3,.08,3,i+j%2===0?0x9a8870:0x8a7860,(i-2.5)*3.2,.02,(j-2.5)*3.2-5);
+  // Buildings surrounding the square
+  mkBox(16,9,2,0xc8b090,0,4.5,-22);mkBox(16,3,2,0x8b4513,0,9.5,-22); // city hall back wall + roof band
+  mkBox(2,9,14,0xd4c4a0,-14,4.5,-15);mkBox(2,9,14,0xd4c4a0,14,4.5,-15); // side buildings
+  for(var w=0;w<3;w++){mkBox(2.5,3.5,0.3,0x2244aa,-4+(w*4),3.5,-22);} // windows blue
+  // Stone pulpit / debate platform
+  mkBox(5,1,5,0x887766,0,.5,-12);mkBox(5,.3,5,0x998877,0,1.1,-12); // platform + top
+  mkBox(.4,4,.4,0x776655,-2,3,-10);mkBox(.4,4,.4,0x776655,2,3,-10); // railing posts
+  mkBox(4.4,.3,.2,0x776655,0,4.9,-10); // railing bar
+  // Crowd of townspeople witnessing
+  var crowdCols=[0x445566,0x886644,0x664422,0x226644,0x554433,0x334455,0x775544,0x447755];
+  for(var c=0;c<20;c++){
+    var cx=(Math.random()-.5)*22,cz=-3+Math.random()*-10;
+    mkNPC(crowdCols[c%8],cx,0,cz);
+  }
+  // Heretic Bononillo — standing confrontationally on left
+  var bon=mkNPC(0x333355,-5,0,-12);
+  bon.userData.prompt='Listen to the heretic\'s challenge';bon.userData.dlgKey='anthony_mule_intro';
+  G.interactables.push(bon);
+  // The mule (simplified — elongated box body, 4 leg boxes, head)
+  var muleGrp=new THREE.Group();tagObj(muleGrp);
+  var mbody=new THREE.Mesh(new THREE.BoxGeometry(2,.9,3.5),mkMat(0x887755));mbody.position.set(0,.9,0);
+  var mhead=new THREE.Mesh(new THREE.BoxGeometry(.55,.55,.9),mkMat(0x776644));mhead.position.set(0,1.5,1.9);
+  var mear1=new THREE.Mesh(new THREE.BoxGeometry(.12,.4,.12),mkMat(0x887755));mear1.position.set(-.15,1.95,1.95);
+  var mear2=mear1.clone();mear2.position.set(.15,1.95,1.95);
+  var legs=[-0.6,0.6];legs.forEach(function(lx){
+    [-1,1].forEach(function(lz){
+      var leg=new THREE.Mesh(new THREE.BoxGeometry(.28,.8,.28),mkMat(0x776644));leg.position.set(lx,.4,lz);muleGrp.add(leg);
+    });
+  });
+  muleGrp.add(mbody,mhead,mear1,mear2);muleGrp.position.set(4,0,-14);
+  G.scene.add(muleGrp);
+  // Oat pile (yellow-green flat box)
+  mkBox(1.5,.15,1,0xcc9922,6,.07,-14);
+  // Monstrance zone (glowing gold cross at pulpit)
+  var monst=mkGlowBox(.3,1.6,.3,0xffd700,0xffd700,1.4,0,1.6,-12);
+  monst.userData={prompt:'Hold up the Monstrance — PRAY',action:'anthonyMule'};
+  G.interactables.push(monst);
+  setPos(0,6);setObj('Hold up the Blessed Sacrament before the heretic\'s mule');hideProgress();
+}
+
+function bAnthonyRaise(){
+  // Lisbon — Augustinian cloister courtyard with grave plot
+  mkFog(0x7799aa,25,80);mkAmb(0xaaccdd,.55);mkHemi(0x8899aa,0x334433,.3);mkDir(0x99bbcc,.9,8,22,6);mkGnd(0x5a7a60,70,70);
+  // Cloister pillars (simple round pillars in a square)
+  for(var p=0;p<8;p++){
+    var pa=p*(Math.PI*2/8);var pr=9;
+    mkBox(.6,5,.6,0xd4c4a0,Math.cos(pa)*pr,.5*5,Math.sin(pa)*pr-8);
+    mkCone(.6,.4,6,0xc4b490,Math.cos(pa)*pr,5.4,Math.sin(pa)*pr-8);
+  }
+  // Cloister inner garden
+  for(var g=0;g<12;g++){mkBox(.3,.8,.3,0x228833,(Math.random()-.5)*10,.4,-4+(Math.random()-.5)*10);}
+  mkBox(3,.15,3,0x338844,0,.05,-6); // garden patch
+  // The grave mound with a simple wooden cross
+  mkBox(2,.35,3.5,0x6b5a40,0,.17,-18); // grave mound
+  mkBox(.15,1.4,.15,0x5a3a1a,0,1.05,-18); // cross vertical
+  mkBox(.9,.15,.15,0x5a3a1a,0,1.65,-18); // cross horizontal
+  // The tribunal bench — stone table and judge figures
+  mkBox(5,.8,1.5,0xaaaaaa,-10,2,-14); // bench
+  var judge1=mkNPC(0x223355,-9,0,-14);var judge2=mkNPC(0x223355,-11,0,-14);
+  // Martino (father, accused) — kneeling
+  var martino=new THREE.Group();tagObj(martino);
+  var mbody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,1,6),mkMat(0x886644));mbody.position.y=.5;
+  var mhead=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));mhead.position.y=1.18;
+  martino.add(mbody,mhead);martino.position.set(0,0,-14);martino.rotation.x=.3; // kneeling lean
+  G.scene.add(martino);
+  martino.userData={prompt:'Speak with Martino',dlgKey:'anthony_raise_intro'};
+  G.interactables.push(martino);
+  // Prayer zone at the grave
+  G.interactables.push({zone:true,x:0,z:-18,r:3,prompt:'Pray at the grave — PRAY',action:'anthonyRaise'});
+  setPos(0,5);setObj('Walk to the grave and call upon God to vindicate the innocent');hideProgress();
+}
+
+function bAnthonyPadua(){
+  // Padua — vast open-air field, pulpit, 30,000 crowd
+  mkFog(0x88aacc,35,100);mkAmb(0xffeedd,.55);mkHemi(0x88aacc,0x3a5a3a,.4);mkDir(0xffd0aa,1.2,18,30,12);mkGnd(0x5a8040,100,100);
+  // Rolling hills in distance
+  for(var h=0;h<8;h++){mkSph(12+h*3,6,4,0x3a6a30,(h-3.5)*22,h%3===0?-8:-10,-45);}
+  // Padua cathedral silhouette in the far back
+  mkBox(14,14,6,0xd4c4a0,0,7,-55);mkBox(14,3,6,0x8b3a1a,0,17,-55);
+  for(var tw=0;tw<2;tw++)mkBox(4,18,4,0xd0c0a0,(tw===0?-10:10),9,-55);
+  for(var tw2=0;tw2<2;tw2++)mkBox(4,3,4,0x8b3a1a,(tw2===0?-10:10),20,-55);
+  // Open-air elevated wooden pulpit on left
+  mkBox(3.5,4,3.5,0x8b6340,-10,2,0); // pulpit body
+  mkBox(4.5,.4,4.5,0x9b7350,-10,4.2,0); // pulpit top ledge
+  mkBox(.2,4,.2,0x6b4320,-9.4,2,-1.2);mkBox(.2,4,.2,0x6b4320,-10.6,2,-1.2); // front posts
+  mkBox(.2,4,.2,0x6b4320,-9.4,2,1.2);mkBox(.2,4,.2,0x6b4320,-10.6,2,1.2); // back posts
+  // Vast crowd — hundreds of cone-NPC stand-ins spanning the field
+  var ccols=[0x556677,0x665544,0x774433,0x557733,0x446688,0x775533,0x447766,0x666644];
+  for(var n=0;n<60;n++){
+    var nx=(Math.random()-.5)*45,nz=6+Math.random()*28;
+    var npc=new THREE.Mesh(new THREE.ConeGeometry(.35+Math.random()*.1,.85+Math.random()*.2,5),mkMat(ccols[n%8]));
+    npc.position.set(nx,.42,nz);addS(npc);
+  }
+  // Church market stalls that are closed — simple flat overturned tables
+  for(var st=0;st<4;st++){mkBox(2.5,.12,1.2,0x8b6340,-14+(st*4.5),.06,-6);}
+  // Anthony NPC on pulpit
+  var anthony=new THREE.Group();tagObj(anthony);
+  var abody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.1,6),mkMat(0x4a3a22));abody.position.y=4.55+.55;
+  var ahead=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));ahead.position.y=4.55+1.32;
+  anthony.add(abody,ahead);anthony.position.set(-10,0,0);
+  G.scene.add(anthony);
+  // Preaching zone — player approaches pulpit steps
+  G.interactables.push({zone:true,x:-10,z:2,r:4,prompt:'Ascend to the pulpit — PRAY',action:'anthonyPadua'});
+  // A few merchant figures for color
+  var mcolors=[0x884422,0x446633,0x663322];
+  for(var mm=0;mm<6;mm++)mkNPC(mcolors[mm%3],-4+(mm*3.5),0,4);
+  setPos(0,7);setObj('Walk to the pulpit and preach to the thirty thousand');hideProgress();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ── PADRE PIO EXTENDED STAGES ──
+═══════════════════════════════════════════════════════════ */
+function bPioFirstMass(){
+  // Pietrelcina — small village chapel, stone interior, morning light
+  mkFog(0x332211,12,40);mkAmb(0xfff0cc,.5);mkHemi(0x221108,0x0a0505,.2);mkDir(0xffeecc,.9,6,18,4);mkGnd(0x5a4a38,28,28);
+  // Stone chapel walls
+  mkBox(12,.5,10,0xaa9988,0,.25,0);mkBox(.5,7,10,0xaa9988,-6,3.5,0);mkBox(.5,7,10,0xaa9988,6,3.5,0);
+  mkBox(12,7,.5,0xaa9988,0,3.5,-5);mkBox(12,7,.5,0x998877,0,3.5,5);
+  // Barrel vault ceiling hints
+  for(var vb=0;vb<4;vb++)mkBox(13,.3,.4,0x998877,0,7,-3+(vb*2));
+  // Altar
+  mkBox(4,.9,1.5,0xffffff,0,.45,-4);mkBox(4,.15,1.5,0xeeeeff,0,1.0,-4);
+  // Altar crucifix
+  mkBox(.12,2.2,.12,0x6b4320,0,2.2,-4.65);mkBox(.9,.12,.12,0x6b4320,0,3.1,-4.65);
+  var corpus=new THREE.Mesh(new THREE.SphereGeometry(.16,6,5),mkMat(0xDEB887));corpus.position.set(0,3.1,-4.75);addS(corpus);
+  // Candles on altar
+  for(var ca2=0;ca2<3;ca2++){
+    mkBox(.08,.6,.08,0xffffee,-1+(ca2*.9),.75,-3.4);
+    var cf2=new THREE.Mesh(new THREE.SphereGeometry(.04,4,3),mkMat(0xffdd44,0xffaa00,.9));cf2.position.set(-1+(ca2*.9),1.4,-3.4);addS(cf2);
+    var pcl=new THREE.PointLight(0xffddaa,.5,4);pcl.position.set(-1+(ca2*.9),1.6,-3.4);addS(pcl);
+  }
+  // Pews
+  for(var pw=0;pw<3;pw++){mkBox(3.5,.4,1.2,0x8b5a2a,(pw%2===0?-2.2:2.2),.2,-1+(pw*.8));}
+  // A few village congregation NPCs
+  var vcols=[0x778866,0x665544,0x886644];
+  for(var vn=0;vn<5;vn++)mkNPC(vcols[vn%3],(vn%2===0?-2.5:2.5),0,1+(vn*.7));
+  // Prayer zone at the altar rail
+  var altZone={zone:true,x:0,z:-3,r:2.5,prompt:'Approach the altar — PRAY',action:'pioFirstMass'};
+  G.interactables.push(altZone);
+  // Golden morning light from side window
+  var winL=new THREE.PointLight(0xffeecc,1.5,14);winL.position.set(5.5,5,0);addS(winL);
+  setPos(0,4);setObj('Approach the altar for your first solemn Mass');hideProgress();
+}
+
+function bPioConfessional(){
+  // San Giovanni Rotondo — the famous confessional corridor
+  mkFog(0x1a1015,10,35);mkAmb(0x333344,.5);mkHemi(0x111118,0x080508,.15);mkDir(0x8899aa,.65,5,16,3);mkGnd(0x4a3a30,30,30);
+  // Church corridor walls — narrow and intimate
+  mkBox(8,.5,16,0x6a5a4a,0,.25,0);mkBox(.5,6,16,0x6a5a4a,-4,3,0);mkBox(.5,6,16,0x6a5a4a,4,3,0);
+  mkBox(8,6,.5,0x6a5a4a,0,3,-8);mkBox(8,6,.5,0x5a4a3a,0,3,8);
+  // The wooden confessional box — distinctive dark wood structure
+  mkBox(1.8,5,1.4,0x4a2a0a,-2,2.5,-6); // confessional left panel
+  mkBox(1.8,5,1.4,0x4a2a0a,0,2.5,-6);  // center
+  mkBox(1.8,5,1.4,0x4a2a0a,2,2.5,-6);  // right panel
+  mkBox(5.6,.4,1.4,0x3a1a00,0,5.2,-6); // top
+  // Dark screen panel (mesh-like — darker box)
+  mkBox(.08,3,1,0x1a0800,1.0,3.5,-6.7); // screen divider
+  // Kneeler outside confessional
+  mkBox(2,.3,.6,0x8b6340,2,0.15,-5.5);
+  // Long queue of waiting penitents — people in a line
+  var pcols=[0x556677,0x774433,0x446633,0x665544,0x557755,0x443355,0x776644,0x445566];
+  for(var qn=0;qn<10;qn++)mkNPC(pcols[qn%8],3.2,0,-6+(qn*1.3));
+  // Candlelight along the walls
+  for(var wc=0;wc<4;wc++){
+    mkBox(.1,.5,.1,0xffffcc,-3.5,.5+(wc==0?.1:0),-5+(wc*2.5));
+    var wl=new THREE.PointLight(0xffcc88,.6,6);wl.position.set(-3.5,1.4,-5+(wc*2.5));addS(wl);
+  }
+  // Penitent kneeling zone
+  G.interactables.push({zone:true,x:2,z:-5.5,r:2,prompt:'Kneel at the confessional — PRAY',action:'pioConfessional'});
+  // Pio figure visible inside confessional (glimpse through screen)
+  var pioSilhouette=mkNPC(0x2a1a08,-0.1,0,-6.8);
+  setPos(0,4);setObj('Join the queue and approach Padre Pio\'s confessional');hideProgress();
+}
+
+function bPioBilocation(){
+  // WWI command tent — nighttime, urgent atmosphere
+  mkFog(0x050810,8,28);mkAmb(0x112233,.4);mkHemi(0x050810,0x030304,.12);mkDir(0x3355aa,.5,4,14,2);mkGnd(0x3a3220,25,25);
+  // Tent walls — canvas-coloured flat panels leaning inward
+  mkBox(10,.2,8,0x5a5040,0,.1,0);
+  mkBox(10,5,.3,0x4a4030,0,2.5,-4);mkBox(10,5,.3,0x3a3020,0,2.5,4);
+  mkBox(.3,5,8,0x4a4030,-5,2.5,0);mkBox(.3,5,8,0x4a4030,5,2.5,0);
+  // Tent ridge peak
+  mkBox(.2,1.5,.2,0x6a5a40,0,5.8,0);
+  mkBox(10.4,.2,.2,0x5a4a30,0,5.5,-3.8);mkBox(10.4,.2,.2,0x5a4a30,0,5.5,3.8);
+  // Field desk and military map table
+  mkBox(3,.7,1.8,0x5a4020,0,.35,-2);
+  mkBox(3,.06,1.8,0x7a6040,0,.72,-2); // map/papers surface
+  mkBox(.5,.2,2,0x4a3010,-0.8,.75,-1.4);mkBox(1,.2,.8,0x4a3010,.6,.75,-2.4); // map papers
+  // Oil lamp — warm glow
+  mkBox(.2,.5,.2,0xaa8833,0,1.05,-2);
+  var lamp=new THREE.PointLight(0xff9944,1.8,10);lamp.position.set(0,1.8,-2);addS(lamp);
+  // General's chair
+  mkBox(1.2,.6,.9,0x5a3a10,-1.5,.3,-2);mkBox(.2,2,.9,0x4a2a00,-2.1,1.3,-2);
+  // General Cadorna figure — seated, head in hands
+  var gen=new THREE.Group();tagObj(gen);
+  var gbody=new THREE.Mesh(new THREE.CylinderGeometry(.32,.44,1.1,6),mkMat(0x223355));gbody.position.y=1.55+.55;
+  var ghead=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));ghead.position.y=1.55+1.32;
+  gen.add(gbody,ghead);gen.position.set(-1.5,0,-2);
+  G.scene.add(gen);
+  gen.userData={prompt:'Speak with the General',dlgKey:'pio_bilocation_intro'};
+  G.interactables.push(gen);
+  // Stars visible through tent flap
+  for(var st3=0;st3<12;st3++){
+    var sm=new THREE.Mesh(new THREE.SphereGeometry(.06,4,3),mkMat(0xffffff,0xffffff,1));
+    sm.position.set((Math.random()-.5)*12,4.5+Math.random()*1.5,(Math.random()-.5)*8);addS(sm);
+  }
+  // Kneeling zone for Pio's prayer
+  G.interactables.push({zone:true,x:2,z:1,r:2.5,prompt:'Kneel and pray — PRAY',action:'pioBilocation'});
+  setPos(0,4);setObj('Find General Cadorna and intercede for his soul');hideProgress();
+}
+
+function bPioCancer(){
+  // Chapel steps outside Santa Maria delle Grazie, Foggia — bright morning
+  mkFog(0x88aacc,28,90);mkAmb(0xffeedd,.6);mkHemi(0x88aacc,0x3a5a3a,.35);mkDir(0xffeecc,1.2,12,26,8);mkGnd(0x9a8a70,60,60);
+  // Church façade
+  mkBox(14,12,2,0xd4c4a0,0,6,-20);mkBox(14,3,2,0x8b3a1a,0,14,-20); // main wall + band
+  for(var cw=0;cw<2;cw++)mkBox(4,15,3,0xd0c0a0,(cw===0?-9:9),7.5,-20); // towers
+  for(var cw2=0;cw2<2;cw2++)mkBox(4,2,3,0x8b3a1a,(cw2===0?-9:9),16.5,-20);
+  // Church door arch
+  mkBox(4,6,.5,0x6b4820,0,3,-19); // dark door
+  mkBox(4.4,.5,.5,0xd0c0a0,0,6.3,-19); // arch top
+  // Steps leading up
+  for(var s=0;s<4;s++)mkBox(6+s*0.5,.28,1,0xbbaa95,0,s*.28,-18+(s*.8));
+  // Pilgrim crowd — a dozen NPCs
+  var pilgCols=[0x556677,0x778844,0x665533,0x447766,0x886644,0x334455,0x775544,0x447744];
+  for(var pl=0;pl<14;pl++){mkNPC(pilgCols[pl%8],-6+pl*1.0,0,-12+(Math.random()*4));}
+  // Giovanni Savino — sitting on the steps, head covered, cane
+  var savino=new THREE.Group();tagObj(savino);
+  var sbody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1,6),mkMat(0x445566));sbody.position.y=.5;
+  var shead=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));shead.position.y=1.18;
+  // Eye bandage suggestion — grey strip
+  var sbandage=new THREE.Mesh(new THREE.BoxGeometry(.55,.12,.3),mkMat(0xddddcc));sbandage.position.set(0,1.24,.12);
+  savino.add(sbody,shead,sbandage);savino.position.set(2,0,-16);
+  G.scene.add(savino);
+  savino.userData={prompt:'Speak with Giovanni Savino',dlgKey:'pio_cancer_intro'};
+  G.interactables.push(savino);
+  G.interactables.push({zone:true,x:2,z:-16,r:2.5,prompt:'Lay hands on him — PRAY',action:'pioCancer'});
+  // A few olive trees
+  for(var ot=0;ot<4;ot++){mkBox(.4,3.5,.4,0x5a3a1a,-10+(ot*4),1.75,-8);mkSph(2.5,6,4,0x4a7030,-10+(ot*4),5,-8);}
+  setPos(0,5);setObj('Find Giovanni Savino and pray over his wounded eyes');hideProgress();
+}
+
+function bPioFragrance(){
+  // Pre-dawn cloister garden of the Capuchin friary — stars, silent, Pio at prayer
+  mkFog(0x040810,9,30);mkAmb(0x223344,.4);mkHemi(0x040810,0x020204,.1);mkDir(0x4466aa,.4,3,12,2);mkGnd(0x2a3020,30,30);
+  // Cloister pillars around the open garden
+  for(var cp=0;cp<12;cp++){
+    var ang=cp*(Math.PI*2/12),rr=10;
+    mkBox(.5,6,.5,0x8a7a68,Math.cos(ang)*rr,3,Math.sin(ang)*rr-5);
+    mkBox(.7,.5,.7,0x9a8a78,Math.cos(ang)*rr,6.3,Math.sin(ang)*rr-5);
+  }
+  // Connecting arches between pillars (flat spanning boxes)
+  for(var ca3=0;ca3<12;ca3++){
+    var a1=ca3*(Math.PI*2/12),a2=(ca3+1)*(Math.PI*2/12);
+    var mx=(Math.cos(a1)+Math.cos(a2))/2*10,mz=(Math.sin(a1)+Math.sin(a2))/2*10-5;
+    mkBox(5.5,.5,.4,0x8a7a68,mx,6.1,mz);
+  }
+  // Central garden — low hedge maze shapes
+  mkBox(4,.4,4,0x2a5a22,0,.2,-5);
+  for(var hg=0;hg<8;hg++){mkBox(.3,1,.3,0x338833,(Math.random()-.5)*4,.5,-3+(Math.random()*-4));}
+  // Stone well in garden center
+  mkBox(1.2,1,1.2,0x888877,0,.5,-5);mkBox(1.4,.25,1.4,0x999988,0,1.12,-5);
+  mkBox(.1,1.5,.1,0x6b4320,0,1.8,-5);mkBox(.8,.1,.2,0x6b4320,0,2.6,-5);
+  // Stars — lots of them
+  for(var s3=0;s3<30;s3++){
+    var sm2=new THREE.Mesh(new THREE.SphereGeometry(.05+(Math.random()*.04),4,3),mkMat(0xffffff,0xffffff,1));
+    sm2.position.set((Math.random()-.5)*26,8+Math.random()*4,(Math.random()-.5)*26-5);addS(sm2);
+  }
+  // Padre Pio kneeling in prayer at a stone ledge — pre-dawn
+  var pioFig=new THREE.Group();tagObj(pioFig);
+  var pibody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,.9,6),mkMat(0x2a1a08));pibody.position.y=.45;
+  var pihead=new THREE.Mesh(new THREE.SphereGeometry(.25,6,5),mkMat(0xDEB887));pihead.position.y=1.1;
+  pioFig.add(pibody,pihead);pioFig.position.set(-1,0,-7);pioFig.rotation.x=-.2;
+  G.scene.add(pioFig);
+  // Stone prayer ledge
+  mkBox(2,.5,1,0x888877,-1,.25,-8);
+  // The fragrance zone — a subtle golden cloud of particles around the garden center
+  var fragZone={zone:true,x:0,z:-5,r:5,prompt:'Stand in the garden at dawn — PRAY',action:'pioFragrance'};
+  G.interactables.push(fragZone);
+  // Maria Pyle's window light (faint warm glow from building)
+  var mpyl=new THREE.PointLight(0xffcc77,.8,12);mpyl.position.set(8,4,2);addS(mpyl);
+  setPos(0,4);setObj('Enter the cloister garden and experience the fragrance of grace');hideProgress();
+}
+
+function bPioAgony(){
+  // San Giovanni Rotondo — the sacristy, September 22 1968, just before dawn
+  mkFog(0x080508,8,28);mkAmb(0x1a0a10,.45);mkHemi(0x080508,0x030203,.12);mkDir(0x4433aa,.4,2,12,2);mkGnd(0x3a2a2a,22,22);
+  // Sacristy walls
+  mkBox(10,.4,8,0x5a4040,0,.2,0);mkBox(.4,7,8,0x5a4040,-5,3.5,0);mkBox(.4,7,8,0x5a4040,5,3.5,0);
+  mkBox(10,7,.4,0x5a4040,0,3.5,-4);mkBox(10,7,.4,0x4a3030,0,3.5,4);
+  // Sacristy crucifix — large, central
+  mkBox(.18,3.5,.18,0x4a2a00,0,4,-3.7);mkBox(1.6,.18,.18,0x4a2a00,0,5.8,-3.7);
+  var crpFig=new THREE.Mesh(new THREE.SphereGeometry(.18,6,5),mkMat(0xDEB887,0xffffff,.2));crpFig.position.set(0,5.8,-3.8);addS(crpFig);
+  // Red votive lamps (sanctuary lights)
+  for(var rv=0;rv<3;rv++){
+    var rvc=new THREE.PointLight(0xff2200,.5,8);rvc.position.set(-2+(rv*2),4,-3.5);addS(rvc);
+    mkBox(.15,.4,.15,0x660000,-2+(rv*2),3.7,-3.5);
+  }
+  // Padre Pio's chair — simple wooden armchair
+  mkBox(1.2,.7,1,0x5a3510,-1,.35,-1); // seat
+  mkBox(.2,2.5,1,0x4a2a00,-1.7,1.65,-1); // left arm rest back
+  mkBox(1.2,.25,.9,0x5a3510,-1,1.05,-.55); // arm rests
+  // Pio himself — elderly, seated, face peaceful
+  var pioFig2=new THREE.Group();tagObj(pioFig2);
+  var pb2=new THREE.Mesh(new THREE.CylinderGeometry(.33,.44,1,6),mkMat(0x2a1a08));pb2.position.y=.85+.5;
+  var ph2=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));ph2.position.y=.85+1.2;
+  pioFig2.add(pb2,ph2);pioFig2.position.set(-1,0,-1);
+  G.scene.add(pioFig2);
+  pioFig2.userData={prompt:'Sit with Padre Pio',dlgKey:'pio_agony_intro'};
+  G.interactables.push(pioFig2);
+  // Attending friars (2)
+  mkNPC(0x2a1a08,-3,0,0);mkNPC(0x2a1a08,1.5,0,.5);
+  // Prayer zone — be present
+  G.interactables.push({zone:true,x:-1,z:-1,r:2,prompt:'Kneel beside Padre Pio — PRAY',action:'pioAgony'});
+  // The cleaned hands detail — a white glow at Pio's hands position
+  var handGlow=new THREE.PointLight(0xffffff,.3,3);handGlow.position.set(-1.3,1.3,-1);addS(handGlow);
+  setPos(2,4);setObj('Sit with Padre Pio on his last night on earth');hideProgress();
+}
+
 function startFlightSim(){
   clearStage();
   createFlyPlayer();
   buildFlightWorld();
-  G.prayerCount=0;G.goldenRingFired=false;G.inHeaven=false;G.heavenStage=0;
+  G.prayerCount=0;G.goldenRingFired=false;G.inHeaven=false;
   updateFlightHUD();
   document.getElementById('flightHUD').style.display='block';
   document.getElementById('crosshair').style.display='block';
@@ -1080,7 +1568,7 @@ function startFlightSim(){
 }
 
 function buildFlightWorld(){
-  mkFog(0x5599cc,60,220);mkAmb(0xfff5cc,.55);mkDir(0xffeedd,1.1,20,40,10);mkGnd(0x4a8a3a,200,200);
+  mkFog(0x5599cc,60,250);mkAmb(0xfff5cc,.6);mkHemi(0x5599cc,0x3a7a3a,.45);mkDir(0xffeedd,1.2,20,45,10);mkGnd(0x4a8a3a,240,240);
   // Distant hills
   for(var i=0;i<8;i++){var a=(i/8)*Math.PI*2;mkSph(18+Math.random()*10,6,4,0x3a7a3a,Math.cos(a)*80,10+Math.random()*8,Math.sin(a)*80-30);}
   // Village buildings
@@ -1211,27 +1699,58 @@ function buildHeavenScene(){
   document.getElementById('crosshair').style.display='none';
   clearStage();
   if(G.flyGroup){G.scene.remove(G.flyGroup);G.flyGroup=null;}
-  createPlayer();G.gameMode='heaven';G.inHeaven=true;G.heavenStage=0;
-  // Heaven environment
-  G.scene.background=new THREE.Color(0xfff9cc);G.scene.fog=new THREE.Fog(0xfff5aa,30,100);
-  mkAmb(0xffffff,0.9);mkDir(0xfff8cc,1.4,5,30,5);
-  // Golden ground
-  var groundM=new THREE.Mesh(new THREE.PlaneGeometry(200,200,8,8),mkMat(0xfff5cc));groundM.rotation.x=-Math.PI/2;groundM.receiveShadow=true;addS(groundM);
-  // Clouds
-  for(var c=0;c<20;c++){var cg2=new THREE.Mesh(new THREE.SphereGeometry(6+Math.random()*5,5,4),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.7}));cg2.position.set((Math.random()-.5)*100,5+Math.random()*20,(Math.random()-.5)*80-10);addS(cg2);}
-  // Path of golden light on ground
-  mkGlowBox(4,.05,80,0xffd700,0xffaa00,.4, 0,.04,-20);
+  createPlayer();G.gameMode='heaven';G.inHeaven=true;
+  // Heaven environment — luminous gold and ivory
+  G.scene.background=new THREE.Color(0xfff5cc);
+  G.scene.fog=new THREE.FogExp2(0xfff8dd,.012);
+  mkAmb(0xffffff,1.1);
+  mkHemi(0xfff5cc,0xffeeaa,.5);
+  mkDir(0xfff8cc,1.6,5,35,5);
+  // Second rim light for depth
+  var rim=new THREE.DirectionalLight(0xaaddff,.5);rim.position.set(-15,20,-10);addS(rim);
+  // Golden ground — subdivided for visual richness
+  var groundM=new THREE.Mesh(new THREE.PlaneGeometry(250,250,24,24),
+    new THREE.MeshLambertMaterial({color:0xfff5aa,emissive:new THREE.Color(0xffeeaa),emissiveIntensity:.1}));
+  groundM.rotation.x=-Math.PI/2;groundM.receiveShadow=true;addS(groundM);
+  // Glowing ground grid — subtle golden veins
+  for(var gx=-5;gx<=5;gx+=2){mkGlowBox(.05,.02,80,0xffd700,0xffaa00,.2,gx*8,.01,-20);}
+  // Path of golden light — central approach
+  mkGlowBox(6,.06,90,0xffd700,0xffc200,.55,0,.02,-22);
+  // Clouds — layered, translucent
+  for(var c=0;c<32;c++){
+    var cc=new THREE.Mesh(
+      new THREE.SphereGeometry(5+Math.random()*7,6,4),
+      new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.55+Math.random()*.25}));
+    cc.scale.set(1,.35+Math.random()*.3,1);
+    cc.position.set((Math.random()-.5)*140,3+Math.random()*28,(Math.random()-.5)*100-10);
+    addS(cc);
+  }
+  // Floating light pillars lining the path
+  for(var p=0;p<6;p++){
+    var px2=p%2===0?-8:8,pz2=-10-Math.floor(p/2)*18;
+    var pillarMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.6,transparent:true,opacity:.3});
+    var pillarM=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,14,6),pillarMat);pillarM.position.set(px2,.0,pz2);addS(pillarM);
+    var pLight=new THREE.PointLight(0xffeeaa,.8,14);pLight.position.set(px2,7,pz2);pLight.userData.glow=true;addS(pLight);
+  }
+  // Subtle star-points floating in sky
+  for(var s2=0;s2<40;s2++){
+    var stMat=new THREE.MeshBasicMaterial({color:0xffd700,transparent:true,opacity:.6+Math.random()*.4});
+    var st=new THREE.Mesh(new THREE.SphereGeometry(.12,4,3),stMat);
+    st.position.set((Math.random()-.5)*100,12+Math.random()*25,(Math.random()-.5)*80-10);addS(st);
+  }
   // ─ JESUS FIGURE ─
   G.jesusGroup=buildJesusFigure(0,0,-25);
   // ─ HOLY SPIRIT DOVE ─
-  G.holyGroup=buildDoveFigure(0,12,-50);
+  G.holyGroup=buildDoveFigure(0,12,-52);
   // ─ GOD THE FATHER ─
-  G.godGroup=buildGodFather(0,0,-80);
-  // Trigger zones
-  G.interactables.push({zone:true,x:0,z:-23,r:4,prompt:'Approach Jesus',action:'meetJesus'});
+  G.godGroup=buildGodFather(0,0,-85);
+  // Trigger zone
+  G.interactables.push({zone:true,x:0,z:-23,r:5,prompt:'Approach Jesus',action:'meetJesus'});
   setPos(0,5);G.camera.position.set(0,8,14);
-  showHUD('✝ Heaven — Walk Toward the Light');setObj('Walk toward Jesus');hideProgress();
-  showHeavenMsg('You have entered Heaven',2500);
+  showHUD('✝ Heaven — Walk Toward the Light');
+  setObj('Walk toward Jesus, who stands in the golden light');
+  hideProgress();
+  showHeavenMsg('You have entered Heaven',2800);
 }
 
 function buildJesusFigure(x,y,z){
@@ -1332,6 +1851,9 @@ function handleAct(){
   // Anthony
   if(action==='anthonyFish'){doAnthonyFish();return;}
   if(action==='anthonyChild'){doAnthonyChild();return;}
+  if(action==='anthonyMule'){doAnthonyMule();return;}
+  if(action==='anthonyRaise'){doAnthonyRaise();return;}
+  if(action==='anthonyPadua'){doAnthonyPadua();return;}
   // Clare
   if(action==='clareSaracen'){doClareSaracen();return;}
   if(action==='clareChristmas'){doClareChristmas();return;}
@@ -1339,7 +1861,13 @@ function handleAct(){
   if(action==='bonaVision'){doBonaVision();return;}
   // Padre Pio
   if(action==='pioStigmata'){doPioStigmata();return;}
+  if(action==='pioFirstMass'){doPioFirstMass();return;}
+  if(action==='pioConfessional'){doPioConfessional();return;}
+  if(action==='pioBilocation'){doPioBilocation();return;}
   if(action==='pioHealing'){doPioHealing();return;}
+  if(action==='pioCancer'){doPioCancer();return;}
+  if(action==='pioFragrance'){doPioFragrance();return;}
+  if(action==='pioAgony'){doPioAgony();return;}
   // Elizabeth
   if(action==='elizRoses'){doElizRoses();return;}
   if(action==='elizLeper'){doElizLeper();return;}
@@ -1413,21 +1941,98 @@ function doBonaVision(){
   showDlg(DLG.bona_vision_miracle,function(){showSaintEnd('bonaventure');});
 }
 function doPioStigmata(){
-  if(G.bookDone)return;G.bookDone=true;
+  if(G.pioStigDone)return;G.pioStigDone=true;
   var idx=G.interactables.findIndex(function(o){return o.action==='pioStigmata';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(true);spawnParts(G.playerGroup.position.clone(),0xffffff,80);spawnParts(G.playerGroup.position.clone(),0xff4400,60);
   showDlg(DLG.pio_stigmata_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
 }
+function doPioFirstMass(){
+  if(G.pioFirstMassDone)return;G.pioFirstMassDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioFirstMass';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  spawnParts(G.playerGroup.position.clone(),0xffffcc,60);spawnParts(G.playerGroup.position.clone(),0xffd700,40);
+  var glow2=new THREE.PointLight(0xffeeaa,3,14);glow2.position.set(0,3,-4);addS(glow2);
+  showDlg(DLG.pio_firstmass_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
+}
+function doPioConfessional(){
+  if(G.pioConfessionalDone)return;G.pioConfessionalDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioConfessional';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  var confGlow=new THREE.PointLight(0xffddaa,2.5,12);confGlow.position.set(0,3,-6);addS(confGlow);
+  spawnParts(G.playerGroup.position.clone(),0xffd700,40);spawnParts(G.playerGroup.position.clone(),0xffffff,30);
+  showDlg(DLG.pio_confessional_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
+}
+function doPioBilocation(){
+  if(G.pioBilocationDone)return;G.pioBilocationDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioBilocation';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  spawnParts(G.playerGroup.position.clone(),0xaaddff,50);spawnParts(G.playerGroup.position.clone(),0xffffff,35);
+  var biGlow=new THREE.PointLight(0xaaddff,2.5,14);biGlow.position.set(2,3,1);addS(biGlow);
+  showDlg(DLG.pio_bilocation_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
+}
 function doPioHealing(){
-  if(G.fishSpawned)return;G.fishSpawned=true;
+  if(G.pioHealDone)return;G.pioHealDone=true;
   var idx=G.interactables.findIndex(function(o){return o.action==='pioHealing';});if(idx!==-1)G.interactables.splice(idx,1);
-  // Gemma illuminated
   var glow=new THREE.PointLight(0xffffcc,3.5,9);glow.position.set(-2,3,-8);addS(glow);
   flashMiracle(false);spawnParts(new THREE.Vector3(-2,1.5,-8),0xffffff,55);spawnParts(new THREE.Vector3(-2,1.5,-8),0xffd700,35);
   showDlg(DLG.pio_healing_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
 }
+function doPioCancer(){
+  if(G.pioCancerDone)return;G.pioCancerDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioCancer';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(true);
+  var eyeGlow=new THREE.PointLight(0xffffff,4,10);eyeGlow.position.set(2,2.5,-16);addS(eyeGlow);
+  spawnParts(new THREE.Vector3(2,1.8,-16),0xffffff,80);spawnParts(new THREE.Vector3(2,1.8,-16),0xffd700,50);
+  showDlg(DLG.pio_cancer_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
+}
+function doPioFragrance(){
+  if(G.pioFragranceDone)return;G.pioFragranceDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioFragrance';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  // Spawn rose-coloured particles as the fragrance
+  spawnParts(new THREE.Vector3(0,2,-5),0xffaacc,55);spawnParts(new THREE.Vector3(0,2,-5),0xffffff,35);
+  spawnParts(new THREE.Vector3(0,2,-5),0xff88aa,30);
+  var roseGlow=new THREE.PointLight(0xffaacc,2,12);roseGlow.position.set(0,3,-5);addS(roseGlow);
+  showDlg(DLG.pio_fragrance_miracle,function(){advSaint(CPio,function(){showSaintEnd('pio');});});
+}
+function doPioAgony(){
+  if(G.pioAgonyDone)return;G.pioAgonyDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioAgony';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(true);
+  // The white light of the clean hands — healing of stigmata
+  var deathGlow=new THREE.PointLight(0xffffff,5,20);deathGlow.position.set(-1,2,-1);addS(deathGlow);
+  spawnParts(new THREE.Vector3(-1,1.5,-1),0xffffff,100);spawnParts(new THREE.Vector3(-1,1.5,-1),0xffd700,60);
+  showDlg(DLG.pio_agony_miracle,function(){showSaintEnd('pio');});
+}
+// Anthony extended handlers
+function doAnthonyMule(){
+  if(G.anthonyMuleDone)return;G.anthonyMuleDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.action==='anthonyMule';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  spawnParts(G.playerGroup.position.clone(),0xffd700,50);spawnParts(G.playerGroup.position.clone(),0xffffff,35);
+  var mGlow=new THREE.PointLight(0xffd700,3,15);mGlow.position.set(0,3,-12);addS(mGlow);
+  showDlg(DLG.anthony_mule_miracle,function(){advSaint(CA,function(){showSaintEnd('anthony');});});
+}
+function doAnthonyRaise(){
+  if(G.anthonyRaiseDone)return;G.anthonyRaiseDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='anthonyRaise';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(true);
+  // Earth glows where the grave is
+  var graveGlow=new THREE.PointLight(0xffffff,4,12);graveGlow.position.set(0,1,-18);addS(graveGlow);
+  spawnParts(new THREE.Vector3(0,1,-18),0xffffff,70);spawnParts(new THREE.Vector3(0,1,-18),0xffd700,45);
+  showDlg(DLG.anthony_raise_miracle,function(){advSaint(CA,function(){showSaintEnd('anthony');});});
+}
+function doAnthonyPadua(){
+  if(G.anthonyPaduaDone)return;G.anthonyPaduaDone=true;
+  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='anthonyPadua';});if(idx!==-1)G.interactables.splice(idx,1);
+  flashMiracle(false);
+  spawnParts(G.playerGroup.position.clone(),0xffd700,60);spawnParts(G.playerGroup.position.clone(),0xffeecc,40);
+  spawnParts(G.playerGroup.position.clone(),0xffffff,30);
+  var pGlow=new THREE.PointLight(0xffeecc,2.5,18);pGlow.position.set(-10,5,0);addS(pGlow);
+  showDlg(DLG.anthony_padua_miracle,function(){showSaintEnd('anthony');});
+}
 function doElizRoses(){
-  if(G.saracensFled)return;G.saracensFled=true;
+  if(G.elizRosesDone)return;G.elizRosesDone=true;
   var idx=G.interactables.findIndex(function(o){return o.action==='elizRoses';});if(idx!==-1)G.interactables.splice(idx,1);
   // Spawn roses (red and white)
   for(var i=0;i<18;i++){
@@ -1439,7 +2044,7 @@ function doElizRoses(){
   showDlg(DLG.elizabeth_roses_miracle,function(){advSaint(CEliz,function(){showSaintEnd('elizabeth');});});
 }
 function doElizLeper(){
-  if(G.christmasVision)return;G.christmasVision=true;
+  if(G.elizLeperDone)return;G.elizLeperDone=true;
   var idx=G.interactables.findIndex(function(o){return o.action==='elizLeper';});if(idx!==-1)G.interactables.splice(idx,1);
   // Christ vision flash — white and gold
   var vis=new THREE.PointLight(0xffffcc,5,20);vis.position.set(-1.5,3,1.5);addS(vis);
@@ -1449,28 +2054,27 @@ function doElizLeper(){
 
 function doMeetJesus(){
   var idx=G.interactables.findIndex(function(o){return o.action==='meetJesus';});if(idx!==-1)G.interactables.splice(idx,1);
-  G.heavenStage=1;flashMiracle(true);
+  flashMiracle(true);
   spawnParts(G.playerGroup.position.clone(),0xffffff,60);spawnParts(G.playerGroup.position.clone(),0xffd700,40);
   showDlg(DLG.heaven_jesus,function(){
-    G.heavenStage=2;setObj('Walk toward the Holy Spirit — the golden dove of light');
+    setObj('Walk toward the Holy Spirit — the golden dove of light');
     G.interactables.push({zone:true,x:0,z:-48,r:5,prompt:'Approach the Holy Spirit',action:'meetHoly'});
     showHeavenMsg('Walk to the Holy Spirit',2000);
   });
 }
 function doMeetHoly(){
   var idx=G.interactables.findIndex(function(o){return o.action==='meetHoly';});if(idx!==-1)G.interactables.splice(idx,1);
-  G.heavenStage=2;flashMiracle(false);spawnParts(G.playerGroup.position.clone(),0xffffaa,80);
-  // Dove descends
+  flashMiracle(false);spawnParts(G.playerGroup.position.clone(),0xffffaa,80);
   if(G.holyGroup)G.holyGroup.userData.descending=true;
   showDlg(DLG.heaven_spirit,function(){
-    G.heavenStage=3;setObj('Walk toward God the Father — the great Pillar of Light');
+    setObj('Walk toward God the Father — the great Pillar of Light');
     G.interactables.push({zone:true,x:0,z:-76,r:6,prompt:'Approach God the Father',action:'meetGod'});
     showHeavenMsg('Walk to God the Father',2000);
   });
 }
 function doMeetGod(){
   var idx=G.interactables.findIndex(function(o){return o.action==='meetGod';});if(idx!==-1)G.interactables.splice(idx,1);
-  G.heavenStage=4;flashMiracle(true);
+  flashMiracle(true);
   spawnParts(G.playerGroup.position.clone(),0xffffff,100);spawnParts(G.playerGroup.position.clone(),0xffd700,80);
   spawnParts(G.playerGroup.position.clone(),0xffffcc,60);
   showDlg(DLG.heaven_father,function(){setTimeout(showHeavenEnd,500);});
@@ -1518,22 +2122,36 @@ function flashMiracle(white){
 function spawnParts(pos,color,count){
   color=color||0xffd700;count=count||20;
   for(var i=0;i<count;i++){
-    var m=new THREE.Mesh(new THREE.SphereGeometry(.07+Math.random()*.05,4,4),new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:1}));
-    m.position.copy(pos);
-    m.userData={vel:new THREE.Vector3((Math.random()-.5)*.18,Math.random()*.18+.05,(Math.random()-.5)*.18),life:1+Math.random()*.5};
+    var size=.06+Math.random()*.1;
+    var geo=Math.random()<.4?new THREE.BoxGeometry(size,size,size):new THREE.SphereGeometry(size,4,3);
+    var mat=new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:.95});
+    var m=new THREE.Mesh(geo,mat);
+    m.position.copy(pos).addScalar((Math.random()-.5)*.5);
+    var speed=.14+Math.random()*.18;
+    var angle=Math.random()*Math.PI*2,vx=Math.cos(angle)*speed,vz=Math.sin(angle)*speed;
+    m.userData={
+      vel:new THREE.Vector3(vx*(0.5+Math.random()),(.08+Math.random()*.22),vz*(0.5+Math.random())),
+      life:1.2+Math.random()*.8,
+      spin:new THREE.Vector3((Math.random()-.5)*.12,(Math.random()-.5)*.12,(Math.random()-.5)*.12)
+    };
     tagObj(m);G.scene.add(m);G.particles3D.push(m);
   }
 }
 function updateParts(dt){
   for(var i=G.particles3D.length-1;i>=0;i--){
-    var p=G.particles3D[i];p.userData.life-=dt*.85;p.position.addScaledVector(p.userData.vel,1);p.userData.vel.y-=.002;
-    if(p.material)p.material.opacity=Math.max(0,p.userData.life);
+    var p=G.particles3D[i];
+    p.userData.life-=dt*.9;
+    p.position.addScaledVector(p.userData.vel,dt*60);
+    p.userData.vel.y-=3.8*dt;
+    if(p.userData.spin){p.rotation.x+=p.userData.spin.x;p.rotation.y+=p.userData.spin.y;p.rotation.z+=p.userData.spin.z;}
+    if(p.material)p.material.opacity=Math.max(0,p.userData.life*.85);
     if(p.userData.life<=0){G.scene.remove(p);G.particles3D.splice(i,1);}
   }
 }
 setInterval(function(){
   if(!G.gameMode||G.gameMode==='none')return;
   var ov=document.getElementById('particleOverlay');
+  if(!ov)return;
   var p=document.createElement('div');p.className='cssPart';
   var sz=2+Math.random()*4,dur=5+Math.random()*6;
   var cs=['#ffd700','#ff8c00','#fff5aa','#ffffff','#ffeebb'];
@@ -1725,10 +2343,7 @@ function marathonNextSaint(){
   var s=MARATHON_ORDER[G.marathonSaintIdx];
   updateMarathonHUD();
   G.gameMode='saint';G.saintMode=s.key;
-  loadSaintStage(s.cuts,0,function(){
-    G.marathonCompleted.push(s.key);
-    marathonNextSaint();
-  });
+  loadSaintStage(s.cuts,0,function(){showSaintEnd(s.key);});
 }
 
 function showMarathonEnd(){
@@ -1873,16 +2488,18 @@ function mainLoop(ts){
   var elapsed=ts-G.lastFrame;
   if(elapsed<G.targetMs)return;
   G.lastFrame=ts;var dt=Math.min(elapsed/1000,.05),t=ts/1000;G.frameCount++;
-  if(G.gameMode==='flight'&&!G.inHeaven){
-    updateFlight(dt,t);updateRosaries(dt);animCelebrate(dt);
-  }else if(G.playerGroup&&G.scene&&G.camera&&G.gameMode!=='none'){
-    updateMovement(dt);updateCamera();
-  }
-  updateParts(dt);
-  if(G.gameMode!=='none'){animBirds(t);animWolf(t);animGlows(t);}
-  if(G.inHeaven)animHeaven(t);
-  if((G.gameMode!=='flight'||G.inHeaven)&&G.playerGroup)checkNear();
-  if(G.renderer&&G.scene&&G.camera)G.renderer.render(G.scene,G.camera);
+  try{
+    if(G.gameMode==='flight'&&!G.inHeaven){
+      updateFlight(dt,t);updateRosaries(dt);animCelebrate(dt);
+    }else if(G.playerGroup&&G.scene&&G.camera&&G.gameMode!=='none'){
+      updateMovement(dt);updateCamera();
+    }
+    updateParts(dt);
+    if(G.gameMode!=='none'){animBirds(t);animWolf(t);animGlows(t);}
+    if(G.inHeaven)animHeaven(t);
+    if((G.gameMode!=='flight'||G.inHeaven)&&G.playerGroup)checkNear();
+    if(G.renderer&&G.scene&&G.camera)G.renderer.render(G.scene,G.camera);
+  }catch(e){/* absorb transient frame errors */}
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1898,6 +2515,5 @@ window.addEventListener('load',function(){
   },200);
 });
 </script>
-
 </body>
 </html>
