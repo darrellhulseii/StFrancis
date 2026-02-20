@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -120,6 +121,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 .ch-v{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(255,215,0,.75);transform:translateX(-50%);}
 .ch-ring{position:absolute;top:50%;left:50%;width:14px;height:14px;border:2px solid rgba(255,215,0,.9);border-radius:50%;transform:translate(-50%,-50%);transition:transform .15s,border-color .15s;}
 #crosshair.locked .ch-ring{border-color:#44ff88;transform:translate(-50%,-50%) scale(1.9);}
+/* ── MARATHON CARD ── */
+.ms-card-marathon{border-color:#ffd700!important;background:linear-gradient(135deg,rgba(30,15,0,.85),rgba(60,30,0,.85))!important;position:relative;overflow:hidden;}
+.ms-card-marathon::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 30%,rgba(255,215,0,.08) 50%,transparent 70%);animation:marathonShimmer 2.5s ease-in-out infinite;}
+@keyframes marathonShimmer{0%,100%{transform:translateX(-100%);}50%{transform:translateX(100%);}}
+.ms-card-marathon .ms-name{color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.6);}
+/* ── MARATHON PROGRESS HUD ── */
+#marathonHUD{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:25;display:none;pointer-events:none;}
+#marathonHUDInner{background:linear-gradient(to bottom,rgba(0,0,0,.92),rgba(10,5,20,.88));border:2px solid #8B6914;border-top:none;border-radius:0 0 10px 10px;padding:6px 18px 8px;text-align:center;font-family:'Cinzel',serif;}
+#marathonHUDIcon{font-size:clamp(11px,2.2vw,16px);color:#ffd700;}
+#marathonHUDText{color:#ffd700;font-size:clamp(7px,1.4vw,11px);letter-spacing:2px;text-transform:uppercase;margin-left:6px;}
+#marathonHUDDots{display:flex;gap:5px;justify-content:center;margin-top:4px;}
+.mhud-dot{width:clamp(7px,1.6vw,11px);height:clamp(7px,1.6vw,11px);border-radius:50%;border:2px solid #8B6914;background:transparent;transition:all .5s;}
+.mhud-dot.done{background:#ffd700;border-color:#ffd700;box-shadow:0 0 6px #ffd700;}
+.mhud-dot.active{background:rgba(255,215,0,.35);border-color:#ffd700;animation:btnGlow 1.2s ease-in-out infinite;}
+/* ── MARATHON FINAL ── */
+#finalMarathon{background:radial-gradient(ellipse at center,#fff9e0 0%,#ffd700 20%,#ff8c00 45%,#8B1a00 70%,#1a0a2e 100%);}
+.marathon-saints-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
+.msl-saint{font-family:'Cinzel',serif;font-size:clamp(7px,1.4vw,11px);color:#1a0a2e;background:rgba(255,255,255,.6);border:2px solid rgba(26,10,46,.4);border-radius:20px;padding:3px 10px;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -127,6 +146,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="loading"><div class="lc">✝</div><div class="lt">Loading&hellip;</div><div id="loadingBar"><div id="loadingFill"></div></div></div>
 
 <!-- TITLE -->
+
 <div id="titleScreen">
   <div class="t-stars"></div>
   <div class="t-cross">✝</div>
@@ -137,6 +157,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- MODE SELECT -->
+
 <div id="modeSelect">
   <div class="ms-title">Choose Your Journey</div>
   <div class="ms-sub">Select a path of faith to walk</div>
@@ -149,17 +170,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
     <div class="ms-card" id="cardSaints">
       <div class="ms-icon">📿</div>
       <div class="ms-name">Franciscan<br>Saints</div>
-      <div class="ms-desc">Play as St. Anthony of Padua, St. Clare of Assisi, or St. Bonaventure and live their miracles.</div>
+      <div class="ms-desc">Play as St. Anthony, St. Clare, St. Bonaventure, Padre Pio, or St. Elizabeth and live their miracles.</div>
+    </div>
+    <div class="ms-card ms-card-marathon" id="cardMarathon">
+      <div class="ms-icon">✝</div>
+      <div class="ms-name">All Franciscans<br><span style="font-size:.8em;letter-spacing:1px;">Marathon Mode</span></div>
+      <div class="ms-desc">Play through all six saints in one continuous journey — Francis, Anthony, Clare, Bonaventure, Padre Pio, and Elizabeth.</div>
     </div>
     <div class="ms-card" id="cardFlight">
       <div class="ms-icon">🕊</div>
       <div class="ms-name">Flight of Faith</div>
-      <div class="ms-desc">Fly as St. Francis and shoot rosaries into waiting hands. Catch 3 prayers to enter Heaven and meet Jesus, the Holy Spirit, and God the Father.</div>
+      <div class="ms-desc">Fly as St. Francis and shoot rosaries into waiting hands. Catch prayers to enter Heaven and meet the Trinity.</div>
     </div>
   </div>
 </div>
 
 <!-- SAINT SELECT -->
+
 <div id="saintSelect">
   <div class="ms-title">Choose a Saint</div>
   <div class="ms-sub">Five lives of heroic faith — each a testament to God&rsquo;s grace</div>
@@ -179,10 +206,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
       <div class="ms-name">St. Bonaventure</div>
       <div class="ms-desc">1221&ndash;1274 &bull; Receive the mystical vision on La Verna and write the Itinerarium Mentis in Deum.</div>
     </div>
-  </div>
     <div class="ms-card" id="cardPio">
       <div class="ms-icon">🙏</div>
-      <div class="ms-name">St. Padre Pio</div>
+      <div class="ms-name">Bl. Padre Pio</div>
       <div class="ms-desc">1887&ndash;1968 &bull; Receive the permanent Stigmata at San Giovanni Rotondo, then heal the blind in the name of Christ.</div>
     </div>
     <div class="ms-card" id="cardElizabeth">
@@ -195,9 +221,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- CANVAS -->
+
 <canvas id="gameCanvas"></canvas>
 
 <!-- CUTSCENE -->
+
 <div id="cutscene">
   <div class="cut-art" id="cutArt"></div>
   <div class="cut-title" id="cutTitle"></div>
@@ -206,6 +234,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- HUD -->
+
 <div id="stageBanner"></div>
 <div id="objectiveBar"><div class="obj-title">Objective</div><div class="obj-text" id="objText"></div></div>
 <div id="stageProgress"></div>
@@ -218,6 +247,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="interactPrompt"></div>
 
 <!-- FLIGHT HUD -->
+
 <div id="flightHUD">
   <div class="fhud-label">PRAYERS CAUGHT &nbsp;&#128081;</div>
   <div class="fhud-beads"><div class="fhud-bead" id="bead0"></div><div class="fhud-bead" id="bead1"></div><div class="fhud-bead" id="bead2"></div></div>
@@ -225,18 +255,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- JOYSTICK -->
+
 <div id="joystickWrap"><div id="joystickBase"><div id="joystickKnob">&#10022;</div></div></div>
 
 <!-- ACTION BUTTONS -->
+
 <div id="actionBtns">
   <div class="act-btn" id="btnAct"><span>✝</span><span class="lbl">PRAY</span></div>
   <div class="act-btn" id="btnNext">&#9654;</div>
 </div>
 
 <!-- CROSSHAIR (flight sim) -->
+
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-ring"></div></div>
 
 <!-- EFFECTS -->
+
 <div id="goldenRing"></div>
 <div id="heavenOverlay"></div>
 <div id="heavenMsg"></div>
@@ -244,6 +278,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="particleOverlay"></div>
 
 <!-- FINAL SCREENS -->
+
 <div id="finalFrancis" class="finalScreen">
   <div class="fin-title" style="color:#1a0a2e;">✝ Pax et Bonum ✝<br><span style="font-size:.6em;">Peace and All Good</span></div>
   <div class="fin-quote" style="color:#1a0a2e;">&ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will.&rdquo;<span class="fin-attr" style="color:#3a2000;">&mdash; St. Francis, Canticle of the Sun, 1225</span></div>
@@ -262,7 +297,31 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
   <button class="fin-btn" id="btnHeavenMenu" style="background:#1a0a2e;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
 </div>
 
+<div id="finalMarathon" class="finalScreen">
+  <div class="fin-title" style="color:#ffd700;text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;">✝ The Great Cloud of Witnesses ✝</div>
+  <div class="fin-quote" style="color:#1a0a2e;" id="marathonFinalQuote">
+    <div class="marathon-saints-list" id="marathonSaintsList"></div>
+    <br>
+    &ldquo;Therefore, since we are surrounded by such a great cloud of witnesses, let us throw off everything that hinders and the sin that so easily entangles. And let us run with perseverance the race marked out for us, fixing our eyes on Jesus.&rdquo;
+    <span class="fin-attr" style="color:#3a2000;">&mdash; Hebrews 12:1&ndash;2</span>
+    <br><br>
+    You have walked with six souls who gave everything to God. Their lives were different, their gifts distinct — but their love was the same.
+  </div>
+  <button class="fin-btn" id="btnMarathonMenu" style="background:#1a0a2e;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
+</div>
+
+<!-- MARATHON PROGRESS HUD -->
+
+<div id="marathonHUD">
+  <div id="marathonHUDInner">
+    <span id="marathonHUDIcon">✝</span>
+    <span id="marathonHUDText">All Franciscans</span>
+    <div id="marathonHUDDots"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
    FRANCISCAN SAINTS — Full Multi-Mode Game
@@ -277,7 +336,7 @@ var G={
   gameMode:'none', // 'francis'|'saint'|'flight'
   saintMode:'anthony', // 'anthony'|'clare'|'bonaventure'
   stageIndex:0,
-  dlqQueue:[],dlgIdx:0,dlgCb:null,dlgActive:false,
+  dlgQueue:[],dlgIdx:0,dlgCb:null,dlgActive:false,
   cutCb:null,
   interactables:[],nearTarget:null,
   churchPieces:[],fixedPieces:0,totalPieces:5,
@@ -297,6 +356,8 @@ var G={
   saracensFled:false,christmasVision:false,
   // Bonaventure
   bookDone:false,
+  // Marathon mode
+  marathonMode:false,marathonSaintIdx:0,marathonCompleted:[],
   frameCount:0,lastFrame:0,targetMs:1000/144,
 };
 
@@ -629,22 +690,6 @@ function loadFrancisStage(idx){
   });
 }
 function advFrancis(){G.dlgActive=false;elHide('dialogueBox');loadFrancisStage(G.stageIndex+1);}
-
-function loadSaintStage(cuts,idx,doneFn){
-  G.stageIndex=idx;var cut=cuts[idx];
-  if(!cut){doneFn();return;}
-  hideHUD();G.dlgActive=false;elHide('dialogueBox');elHide('interactPrompt');
-  showCutscene(cut,function(){
-    clearStage();createPlayer();
-    if(cut.key==='anthony_fish')bAnthonyFish();
-    else if(cut.key==='anthony_child')bAnthonyChild();
-    else if(cut.key==='clare_saracen')bClareSaracen();
-    else if(cut.key==='clare_christmas')bClareChristmas();
-    else if(cut.key==='bonaventure')bBonaventure();
-    showHUD(cut.title);
-    if(cut.intro&&DLG[cut.intro])showDlg(DLG[cut.intro]);
-  });
-}
 
 function advSaint(cuts,doneFn){G.dlgActive=false;elHide('dialogueBox');loadSaintStage(cuts,G.stageIndex+1,doneFn);}
 
@@ -1436,17 +1481,17 @@ function doMeetGod(){
 ═══════════════════════════════════════════════════════════ */
 function showDlg(lines,cb){
   if(!lines||!lines.length){if(cb)cb();return;}
-  G.dlqQueue=lines;G.dlgIdx=0;G.dlgCb=cb||null;G.dlgActive=true;
+  G.dlgQueue=lines;G.dlgIdx=0;G.dlgCb=cb||null;G.dlgActive=true;
   renderDlg();document.getElementById('dialogueBox').style.display='block';
 }
 function renderDlg(){
-  if(G.dlgIdx>=G.dlqQueue.length){closeDlg();return;}
-  var d=G.dlqQueue[G.dlgIdx];
+  if(G.dlgIdx>=G.dlgQueue.length){closeDlg();return;}
+  var d=G.dlgQueue[G.dlgIdx];
   document.getElementById('dlgSpeaker').textContent=d.s||'';
   document.getElementById('dlgText').textContent=d.t||'';
   document.getElementById('dlgAttr').textContent=d.a||'';
 }
-function dlgNext(){if(!G.dlgActive)return;G.dlgIdx++;if(G.dlgIdx>=G.dlqQueue.length)closeDlg();else renderDlg();}
+function dlgNext(){if(!G.dlgActive)return;G.dlgIdx++;if(G.dlgIdx>=G.dlgQueue.length)closeDlg();else renderDlg();}
 function closeDlg(){G.dlgActive=false;document.getElementById('dialogueBox').style.display='none';var cb=G.dlgCb;G.dlgCb=null;if(cb)cb();}
 
 /* ═══════════════════════════════════════════════════════════
@@ -1620,15 +1665,111 @@ function hideHUD(){
 function setObj(t){var e=document.getElementById('objText');if(e)e.textContent=t;}
 function showProgress(t){var el=document.getElementById('stageProgress');if(el){el.textContent=t;el.style.display='block';}}
 function hideProgress(){elHide('stageProgress');}
-function showFrancisEnd(){hideHUD();elHide('dialogueBox');elShow('finalFrancis','flex');}
+/* ─── MARATHON MODE ──────────────────────────────────────── */
+var MARATHON_ORDER=[
+  {cuts:null,     key:'francis',      label:'St. Francis of Assisi', icon:'⛪'},
+  {cuts:null,     key:'anthony',      label:'St. Anthony of Padua',  icon:'🐟'},
+  {cuts:null,     key:'clare',        label:'St. Clare of Assisi',   icon:'🕯'},
+  {cuts:null,     key:'bonaventure',  label:'St. Bonaventure',       icon:'📖'},
+  {cuts:null,     key:'pio',          label:'Padre Pio',             icon:'🙏'},
+  {cuts:null,     key:'elizabeth',    label:'St. Elizabeth of Hungary',icon:'🌹'},
+];
+// Cuts set after arrays are defined (called once at init)
+function initMarathonOrder(){
+  MARATHON_ORDER[1].cuts=CA;MARATHON_ORDER[2].cuts=CC;
+  MARATHON_ORDER[3].cuts=CB;MARATHON_ORDER[4].cuts=CPio;MARATHON_ORDER[5].cuts=CEliz;
+}
+
+function startMarathonMode(){
+  elHide('modeSelect');
+  G.marathonMode=true;G.marathonSaintIdx=0;G.marathonCompleted=[];
+  initMarathonOrder();
+  buildMarathonHUD();
+  G.gameMode='francis';
+  loadFrancisStage(0);
+}
+
+function buildMarathonHUD(){
+  var dots=document.getElementById('marathonHUDDots');
+  if(!dots)return;
+  dots.innerHTML='';
+  MARATHON_ORDER.forEach(function(s,i){
+    var d=document.createElement('div');
+    d.className='mhud-dot'+(i===0?' active':'');
+    d.title=s.label;
+    d.id='mdot'+i;
+    dots.appendChild(d);
+  });
+  document.getElementById('marathonHUD').style.display='block';
+  updateMarathonHUD();
+}
+
+function updateMarathonHUD(){
+  var cur=G.marathonSaintIdx;
+  var curS=MARATHON_ORDER[cur];
+  if(!curS)return;
+  document.getElementById('marathonHUDIcon').textContent=curS.icon;
+  document.getElementById('marathonHUDText').textContent=curS.label+' ('+(cur+1)+'/'+MARATHON_ORDER.length+')';
+  MARATHON_ORDER.forEach(function(s,i){
+    var d=document.getElementById('mdot'+i);
+    if(!d)return;
+    if(i<cur)d.className='mhud-dot done';
+    else if(i===cur)d.className='mhud-dot active';
+    else d.className='mhud-dot';
+  });
+}
+
+function marathonNextSaint(){
+  G.marathonSaintIdx++;
+  if(G.marathonSaintIdx>=MARATHON_ORDER.length){showMarathonEnd();return;}
+  var s=MARATHON_ORDER[G.marathonSaintIdx];
+  updateMarathonHUD();
+  G.gameMode='saint';G.saintMode=s.key;
+  loadSaintStage(s.cuts,0,function(){
+    G.marathonCompleted.push(s.key);
+    marathonNextSaint();
+  });
+}
+
+function showMarathonEnd(){
+  hideHUD();elHide('dialogueBox');
+  document.getElementById('marathonHUD').style.display='none';
+  // Build saint badge list
+  var list=document.getElementById('marathonSaintsList');
+  if(list){
+    list.innerHTML='';
+    MARATHON_ORDER.forEach(function(s){
+      var sp=document.createElement('span');
+      sp.className='msl-saint';
+      sp.textContent=s.icon+' '+s.label;
+      list.appendChild(sp);
+    });
+  }
+  elShow('finalMarathon','flex');
+}
+
+function showFrancisEnd(){
+  if(G.marathonMode){
+    G.marathonCompleted.push('francis');
+    marathonNextSaint();
+    return;
+  }
+  hideHUD();elHide('dialogueBox');elShow('finalFrancis','flex');
+}
+
 function showSaintEnd(saintKey){
+  if(G.marathonMode){
+    G.marathonCompleted.push(saintKey);
+    marathonNextSaint();
+    return;
+  }
   hideHUD();elHide('dialogueBox');
   var quotes={
     anthony:'"Actions speak louder than words; let your words teach and your actions speak. Wherever we are, whatever we do, we should think of God."\n— St. Anthony of Padua\n\nSt. Anthony was canonised on May 30, 1232 — less than one year after his death. He is the patron saint of lost things, the poor, and expectant mothers.',
     clare:'"We become what we love and who we love shapes what we become. Go forth in peace, for you have followed the good road."\n— St. Clare of Assisi\n\nSt. Clare was canonised on August 15, 1255. She is the patron saint of television, goldsmiths, and the blind.',
     bonaventure:'"The soul, the image of God, journeys back to its origin when it is illumined by the light of knowledge and inflamed by love."\n— St. Bonaventure, Itinerarium, 1259\n\nSt. Bonaventure was declared a Doctor of the Church in 1587. He is known as the Seraphic Doctor.',
     pio:'"Pray, hope, and don\'t worry. Worry is useless. God is merciful and will hear your prayer. Suffering is a gift. In it is hidden the mercy of God."\n— Padre Pio of Pietrelcina\n\nPadre Pio bore the stigmata visibly for 50 years (1918–1968). He was canonised by Pope John Paul II on June 16, 2002. His grave at San Giovanni Rotondo draws millions of pilgrims each year.',
-    elizabeth:'"It is not fitting, when one is in God\'s service, to have a gloomy face or a chilling look.\nFill your hearts with joy and love for Him!\n— St. Elizabeth of Hungary\n\nSt. Elizabeth died November 17, 1231, aged just 24. She was canonised only four years later, on May 27, 1235, by Pope Gregory IX. She is patron of the poor, bakers, and the Franciscan Third Order.',
+    elizabeth:'"It is not fitting, when one is in God\'s service, to have a gloomy face or a chilling look.\nFill your hearts with joy and love for Him!"\n— St. Elizabeth of Hungary\n\nSt. Elizabeth died November 17, 1231, aged just 24. She was canonised only four years later, on May 27, 1235, by Pope Gregory IX. She is patron of the poor, bakers, and the Franciscan Third Order.',
   };
   var titles={anthony:'✝ Doctor Evangelicus ✝\nSt. Anthony of Padua',clare:'✝ A Life of Radical Poverty ✝\nSt. Clare of Assisi',bonaventure:'✝ The Seraphic Doctor ✝\nSt. Bonaventure',pio:'✝ A Living Stigmatic ✝\nPadre Pio of Pietrelcina',elizabeth:'✝ A Princess of the Poor ✝\nSt. Elizabeth of Hungary'};
   document.getElementById('saintFinalTitle').textContent=titles[saintKey]||'✝ A Life of Grace ✝';
@@ -1638,11 +1779,14 @@ function showSaintEnd(saintKey){
 function showHeavenEnd(){hideHUD();elHide('dialogueBox');elHide('heavenMsg');elShow('finalHeaven','flex');}
 
 function goToMenu(){
-  ['finalFrancis','finalSaint','finalHeaven','modeSelect','saintSelect','cutscene'].forEach(function(id){elHide(id);});
+  ['finalFrancis','finalSaint','finalHeaven','finalMarathon','modeSelect','saintSelect','cutscene'].forEach(function(id){elHide(id);});
   clearStage();if(G.playerGroup){G.scene.remove(G.playerGroup);G.playerGroup=null;}
   if(G.flyGroup){G.scene.remove(G.flyGroup);G.flyGroup=null;}
   G.gameMode='none';G.stageIndex=0;hideHUD();elHide('flightHUD');elHide('dialogueBox');elHide('interactPrompt');
   elHide('goldenRing');elHide('heavenMsg');elHide('miracleFlash');
+  // Reset marathon
+  G.marathonMode=false;G.marathonSaintIdx=0;G.marathonCompleted=[];
+  document.getElementById('marathonHUD').style.display='none';
   elShow('modeSelect','flex');
 }
 
@@ -1695,6 +1839,7 @@ function setupInput(){
   // Mode select cards
   document.getElementById('cardFrancis').addEventListener('pointerup',function(e){e.stopPropagation();startFrancisMode();});
   document.getElementById('cardSaints').addEventListener('pointerup',function(e){e.stopPropagation();showSaintSelect();});
+  document.getElementById('cardMarathon').addEventListener('pointerup',function(e){e.stopPropagation();startMarathonMode();});
   document.getElementById('cardFlight').addEventListener('pointerup',function(e){e.stopPropagation();startFlightMode();});
   document.getElementById('cardAnthony').addEventListener('pointerup',function(e){e.stopPropagation();startAnthonyMode();});
   document.getElementById('cardClare').addEventListener('pointerup',function(e){e.stopPropagation();startClareMode();});
@@ -1705,6 +1850,7 @@ function setupInput(){
   document.getElementById('btnFrancisMenu').addEventListener('pointerup',goToMenu);
   document.getElementById('btnSaintMenu').addEventListener('pointerup',goToMenu);
   document.getElementById('btnHeavenMenu').addEventListener('pointerup',goToMenu);
+  document.getElementById('btnMarathonMenu').addEventListener('pointerup',goToMenu);
   setupJoystick();
 }
 
@@ -1752,5 +1898,6 @@ window.addEventListener('load',function(){
   },200);
 });
 </script>
+
 </body>
 </html>
