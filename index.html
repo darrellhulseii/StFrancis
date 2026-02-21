@@ -1,225 +1,312 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Franciscan Saints — A Journey of Faith</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;top:0;left:0;-webkit-tap-highlight-color:transparent;touch-action:none;}
-#gameCanvas{position:fixed;top:0;left:0;width:100%!important;height:100%!important;display:block;image-rendering:auto;touch-action:none;filter:contrast(1.04) saturate(1.12);}
+#gameCanvas{position:fixed;top:0;left:0;width:100%!important;height:100%!important;display:block;image-rendering:auto;touch-action:none;filter:contrast(1.06) saturate(1.22) brightness(1.02);}
+
 /* ── KEYFRAMES ── */
-@keyframes glowPulse{0%,100%{text-shadow:0 0 20px #ffd700,0 0 40px #ff8c00;}50%{text-shadow:0 0 60px #ffd700,0 0 120px #ff8c00,0 0 160px #ffd700;}}
-@keyframes fadeDown{from{opacity:0;transform:translateY(-22px);}to{opacity:1;transform:translateY(0);}}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
-@keyframes btnGlow{0%,100%{box-shadow:0 0 18px rgba(255,215,0,.35);}50%{box-shadow:0 0 50px rgba(255,215,0,.95);}}
-@keyframes floatUp{from{transform:translateY(0) scale(1);opacity:.85;}to{transform:translateY(-115vh) scale(.25);opacity:0;}}
-@keyframes miracleAnim{0%{opacity:0;transform:scale(.3);}40%{opacity:1;transform:scale(1.05);}100%{opacity:0;transform:scale(1.8);}}
-@keyframes goldenRingAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(0);}100%{opacity:0;transform:translate(-50%,-50%) scale(10);}}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 20px #ffd700,0 0 40px #ff8c00;}50%{text-shadow:0 0 80px #ffd700,0 0 140px #ff8c00,0 0 200px rgba(255,215,0,.4);}}
+@keyframes crossSpin{0%{transform:rotate(0deg) scale(1);}50%{transform:rotate(180deg) scale(1.12);}100%{transform:rotate(360deg) scale(1);}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
+@keyframes btnGlow{0%,100%{box-shadow:0 0 18px rgba(255,215,0,.3);}50%{box-shadow:0 0 60px rgba(255,215,0,1),0 0 100px rgba(255,140,0,.4);}}
+@keyframes floatUp{from{transform:translateY(0) scale(1);opacity:.85;}to{transform:translateY(-120vh) scale(.2);opacity:0;}}
+@keyframes miracleAnim{0%{opacity:0;transform:scale(.2);}40%{opacity:1;transform:scale(1.08);}100%{opacity:0;transform:scale(2);}}
+@keyframes goldenRingAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(0);}100%{opacity:0;transform:translate(-50%,-50%) scale(12);}}
 @keyframes heavenFadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes roseFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-@keyframes wingFlap{0%,100%{transform:rotate(-20deg);}50%{transform:rotate(15deg);}}
-@keyframes doveCircle{from{transform:rotate(0deg) translateX(120px) rotate(0deg);}to{transform:rotate(360deg) translateX(120px) rotate(-360deg);}}
+@keyframes starTwinkle{0%,100%{opacity:.3;}50%{opacity:1;}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px);}to{opacity:1;transform:translateX(0);}}
+@keyframes dlgIn{from{opacity:0;transform:translateX(-50%) translateY(18px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes promptPulse{0%,100%{border-color:rgba(255,215,0,.6);box-shadow:0 0 10px rgba(255,215,0,.2);}50%{border-color:#ffd700;box-shadow:0 0 25px rgba(255,215,0,.7);}}
+@keyframes tutFadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes cardHover{0%{transform:translateY(0);}100%{transform:translateY(-6px);}}
+@keyframes shineSwipe{0%{left:-100%;}100%{left:200%;}}
+
 /* ── LOADING ── */
-#loading{position:fixed;inset:0;z-index:999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:'Cinzel',serif;color:#ffd700;}
-.lc{font-size:clamp(36px,10vw,76px);animation:glowPulse 1.4s ease-in-out infinite;}
-.lt{font-size:clamp(11px,2.8vw,20px);letter-spacing:4px;text-transform:uppercase;}
-#loadingBar{width:min(280px,68vw);height:5px;background:#1a0a2e;border:2px solid #8B6914;border-radius:3px;overflow:hidden;}
-#loadingFill{height:100%;background:linear-gradient(to right,#8B6914,#ffd700);width:0%;transition:width .22s;}
+#loading{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 50% 60%,#0a0520 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:‘Cinzel’,serif;color:#ffd700;}
+.lc{font-size:clamp(44px,12vw,88px);animation:glowPulse 1.5s ease-in-out infinite;}
+.lt{font-size:clamp(10px,2.5vw,17px);letter-spacing:6px;text-transform:uppercase;color:#c8a84a;animation:fadeUp 1s ease-out .4s both;}
+#loadingBar{width:min(300px,72vw);height:6px;background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.3);border-radius:4px;overflow:hidden;margin-top:4px;}
+#loadingFill{height:100%;background:linear-gradient(to right,#6a4800,#ffd700,#ffaa00);width:0%;transition:width .25s ease-out;box-shadow:0 0 12px #ffd700;}
+
 /* ── TITLE ── */
-#titleScreen{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at center,#1a0a2e 0%,#06000f 70%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;overflow:hidden;padding:clamp(10px,3vw,24px);}
-.t-stars{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 10% 15%,#fff 100%,transparent),radial-gradient(1px 1px at 80% 7%,#fff 100%,transparent),radial-gradient(1px 1px at 45% 63%,#fff 100%,transparent),radial-gradient(1px 1px at 7% 80%,#fff 100%,transparent),radial-gradient(1px 1px at 90% 55%,#fff 100%,transparent),radial-gradient(2px 2px at 55% 50%,#ffd700 100%,transparent),radial-gradient(2px 2px at 22% 72%,#ffd700 100%,transparent),radial-gradient(1px 1px at 65% 88%,#fff 100%,transparent);}
-.t-cross{font-size:clamp(42px,12vw,96px);color:#ffd700;animation:glowPulse 2s ease-in-out infinite;line-height:1.1;}
-.t-main{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,4.2vw,42px);color:#ffd700;text-align:center;letter-spacing:3px;line-height:1.35;text-shadow:3px 3px 0 #5a3c00,6px 6px 10px rgba(0,0,0,.8);animation:fadeDown 1.2s ease-out both;margin-top:6px;}
-.t-sub{font-size:clamp(7px,1.9vw,15px);color:#d4af37;letter-spacing:5px;margin-top:6px;animation:fadeDown 1.2s ease-out .3s both;}
-.t-bio{max-width:min(640px,88vw);margin-top:14px;padding:12px 18px;background:rgba(0,0,0,.65);border:2px solid #8B6914;border-radius:4px;color:#e8d5a0;font-style:italic;font-size:clamp(7px,1.6vw,12px);line-height:1.75;text-align:center;animation:fadeDown 1.2s ease-out .6s both;}
-.t-bio-attr{color:#ffd700;font-style:normal;font-size:.85em;margin-top:4px;display:block;}
-.start-btn{margin-top:16px;padding:clamp(8px,1.6vh,14px) clamp(22px,4.5vw,48px);background:linear-gradient(135deg,#6a4c00,#ffd700,#6a4c00);border:3px solid #ffd700;color:#1a0a2e;font-family:'Cinzel',serif;font-size:clamp(9px,1.9vw,15px);font-weight:700;letter-spacing:4px;text-transform:uppercase;cursor:pointer;border-radius:4px;animation:fadeDown 1.2s ease-out .9s both,btnGlow 2s ease-in-out 2.5s infinite;transition:transform .1s;}
-.start-btn:hover{transform:scale(1.05);}.start-btn:active{transform:scale(.94);}
+#titleScreen{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 45%,#180830 0%,#07000f 60%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;overflow:hidden;padding:clamp(12px,3vw,28px);}
+.t-stars{position:absolute;inset:0;pointer-events:none;}
+.t-star{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(–d,3s) ease-in-out var(–delay,0s) infinite;}
+.t-cross{font-size:clamp(52px,14vw,110px);color:#ffd700;animation:glowPulse 2.2s ease-in-out infinite;line-height:1.1;margin-bottom:4px;}
+.t-main{font-family:‘Cinzel Decorative’,serif;font-size:clamp(16px,4.5vw,48px);color:#ffd700;text-align:center;letter-spacing:2px;line-height:1.3;text-shadow:3px 3px 0 #4a2c00,6px 6px 14px rgba(0,0,0,.9);animation:fadeDown 1.3s ease-out both;}
+.t-sub{font-size:clamp(8px,2vw,16px);color:#c8a84a;letter-spacing:5px;margin-top:8px;animation:fadeDown 1.3s ease-out .25s both;}
+.t-divider{width:min(260px,60vw);height:1px;background:linear-gradient(to right,transparent,#ffd700,transparent);margin:14px 0;animation:fadeDown 1.3s ease-out .4s both;}
+.t-bio{max-width:min(620px,86vw);padding:14px 20px;background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(0,0,0,.7));border:1px solid rgba(255,215,0,.25);border-radius:6px;color:#e8d5a0;font-family:‘EB Garamond’,serif;font-style:italic;font-size:clamp(9px,1.8vw,14px);line-height:1.85;text-align:center;animation:fadeDown 1.3s ease-out .55s both;}
+.t-bio-attr{color:#ffd700;font-style:normal;font-size:.82em;margin-top:6px;display:block;letter-spacing:1px;}
+.t-controls-hint{font-size:clamp(7px,1.4vw,10px);color:rgba(200,168,74,.6);letter-spacing:3px;margin-top:10px;animation:fadeDown 1.3s ease-out .7s both;}
+.start-btn{margin-top:18px;padding:clamp(10px,1.8vh,16px) clamp(28px,5vw,58px);background:linear-gradient(135deg,#3a2000,#8B6914,#ffd700,#8B6914,#3a2000);background-size:200% auto;border:2px solid #ffd700;color:#0a0008;font-family:‘Cinzel Decorative’,serif;font-size:clamp(10px,2vw,16px);font-weight:700;letter-spacing:5px;text-transform:uppercase;cursor:pointer;border-radius:4px;animation:fadeDown 1.3s ease-out .85s both,btnGlow 2.5s ease-in-out 2s infinite;transition:transform .12s,background-position .4s;position:relative;overflow:hidden;}
+.start-btn::after{content:’’;position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,.3),transparent);animation:shineSwipe 3s ease-in-out 3s infinite;}
+.start-btn:hover{transform:scale(1.04);background-position:right center;}.start-btn:active{transform:scale(.93);}
+
+/* ── CONTROLS TUTORIAL ── */
+#tutorialOverlay{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;animation:tutFadeIn .4s ease-out;}
+.tut-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(14px,3.5vw,30px);color:#ffd700;letter-spacing:4px;text-align:center;margin-bottom:clamp(16px,4vh,32px);text-shadow:0 0 20px #ffd700;}
+.tut-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2.5vw,22px);max-width:min(700px,88vw);}
+.tut-row{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:clamp(10px,2vw,18px);display:flex;align-items:center;gap:12px;}
+.tut-key{font-size:clamp(18px,4vw,32px);min-width:48px;text-align:center;color:#ffd700;}
+.tut-desc{color:#e8d5a0;font-family:‘EB Garamond’,serif;font-size:clamp(9px,1.7vw,14px);line-height:1.5;}
+.tut-desc strong{color:#ffd700;font-family:‘Cinzel’,serif;font-size:.88em;}
+.tut-close{margin-top:clamp(18px,4vh,32px);padding:10px 36px;background:transparent;border:2px solid #ffd700;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(9px,1.8vw,13px);letter-spacing:4px;cursor:pointer;border-radius:4px;transition:background .2s,color .2s;}
+.tut-close:hover{background:#ffd700;color:#000;}
+
 /* ── MODE SELECT ── */
-#modeSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at center,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(10px,3vw,24px);overflow-y:auto;}
-.ms-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,3.5vw,32px);color:#ffd700;letter-spacing:3px;text-align:center;text-shadow:0 0 20px #ffd700;margin-bottom:6px;}
-.ms-sub{color:#d4af37;font-size:clamp(8px,1.7vw,13px);letter-spacing:3px;text-align:center;margin-bottom:clamp(14px,3vh,24px);}
-.ms-cards{display:flex;flex-wrap:wrap;gap:clamp(8px,2vw,16px);justify-content:center;max-width:900px;}
-.ms-card{width:clamp(160px,28vw,240px);background:rgba(0,0,0,.7);border:2px solid #8B6914;border-radius:8px;padding:clamp(12px,2.5vw,22px);cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;text-align:center;pointer-events:all;}
-.ms-card:hover{border-color:#ffd700;transform:translateY(-4px);box-shadow:0 8px 30px rgba(255,215,0,.3);}
-.ms-card:active{transform:scale(.96);}
-.ms-icon{font-size:clamp(28px,7vw,54px);margin-bottom:8px;line-height:1;}
-.ms-name{font-family:'Cinzel Decorative',serif;color:#ffd700;font-size:clamp(9px,1.9vw,15px);letter-spacing:1px;line-height:1.3;margin-bottom:6px;}
-.ms-desc{color:#c8a86a;font-size:clamp(7px,1.4vw,11px);line-height:1.55;font-style:italic;}
-.ms-back{margin-top:clamp(12px,2.5vh,20px);color:#8B6914;font-size:clamp(8px,1.5vw,12px);letter-spacing:2px;cursor:pointer;text-transform:uppercase;border-bottom:1px solid #8B6914;padding-bottom:2px;}
-.ms-back:hover{color:#ffd700;border-color:#ffd700;}
+#modeSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
+.ms-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(15px,3.8vw,36px);color:#ffd700;letter-spacing:3px;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.5);margin-bottom:4px;}
+.ms-sub{color:#8a7040;font-size:clamp(8px,1.7vw,12px);letter-spacing:4px;text-align:center;margin-bottom:clamp(16px,3.5vh,28px);}
+.ms-divider{width:min(180px,50vw);height:1px;background:linear-gradient(to right,transparent,rgba(255,215,0,.4),transparent);margin:8px auto 20px;}
+.ms-cards{display:flex;flex-wrap:wrap;gap:clamp(8px,2vw,16px);justify-content:center;max-width:980px;}
+.ms-card{width:clamp(155px,27vw,230px);background:linear-gradient(160deg,rgba(255,215,0,.05),rgba(0,0,0,.8));border:1.5px solid rgba(139,105,20,.6);border-radius:10px;padding:clamp(14px,2.8vw,24px);cursor:pointer;transition:border-color .25s,transform .18s,box-shadow .25s;text-align:center;pointer-events:all;position:relative;overflow:hidden;}
+.ms-card::before{content:’’;position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,215,0,.08),transparent 60%);opacity:0;transition:opacity .25s;}
+.ms-card:hover{border-color:#ffd700;transform:translateY(-6px);box-shadow:0 12px 40px rgba(255,215,0,.25);}
+.ms-card:hover::before{opacity:1;}
+.ms-card:active{transform:scale(.94);}
+.ms-card-marathon{border-color:rgba(255,140,0,.5);}
+.ms-card-marathon:hover{border-color:#ff8c00;box-shadow:0 12px 40px rgba(255,140,0,.3);}
+.ms-icon{font-size:clamp(30px,7.5vw,58px);margin-bottom:10px;line-height:1;display:block;}
+.ms-name{font-family:‘Cinzel Decorative’,serif;color:#ffd700;font-size:clamp(9px,2vw,15px);letter-spacing:1px;line-height:1.4;margin-bottom:8px;}
+.ms-desc{color:#a89060;font-size:clamp(7px,1.4vw,11px);line-height:1.65;font-family:‘EB Garamond’,serif;font-style:italic;}
+.ms-stages{color:rgba(200,168,74,.6);font-size:clamp(6px,1.1vw,9px);letter-spacing:2px;text-transform:uppercase;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,215,0,.1);}
+.ms-back{margin-top:clamp(14px,3vh,24px);color:#6a5030;font-size:clamp(8px,1.5vw,12px);letter-spacing:3px;cursor:pointer;text-transform:uppercase;padding-bottom:2px;transition:color .2s;}
+.ms-back:hover{color:#ffd700;}
+.tut-link{color:rgba(200,168,74,.5);font-size:clamp(7px,1.3vw,10px);letter-spacing:3px;cursor:pointer;margin-top:12px;text-transform:uppercase;transition:color .2s;}
+.tut-link:hover{color:#ffd700;}
+
 /* ── SAINT SELECT ── */
-#saintSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at center,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(10px,3vw,24px);overflow-y:auto;}
+#saintSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
+.ss-subtitle{color:#8a7040;font-size:clamp(7px,1.5vw,11px);letter-spacing:3px;text-align:center;margin-bottom:clamp(6px,1.5vh,12px);max-width:min(560px,86vw);font-family:‘EB Garamond’,serif;font-style:italic;line-height:1.6;}
+.ms-card-dates{color:rgba(200,168,74,.55);font-size:clamp(6px,1.1vw,9px);letter-spacing:1px;margin-top:4px;font-family:‘Cinzel’,serif;}
+
 /* ── CUTSCENE ── */
-#cutscene{position:fixed;inset:0;z-index:90;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;padding:clamp(10px,2.5vw,22px);gap:9px;}
-.cut-art{font-size:clamp(52px,15vw,130px);text-align:center;line-height:1;}
-.cut-title{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,3vw,28px);color:#ffd700;letter-spacing:3px;text-transform:uppercase;text-align:center;text-shadow:0 0 20px #ffd700;}
-.cut-text{max-width:min(660px,88vw);font-family:'Cinzel',serif;font-size:clamp(8px,1.8vw,13px);color:#e8d5a0;line-height:1.85;font-style:italic;text-align:center;padding:13px 17px;background:rgba(0,0,0,.6);border:1px solid #8B6914;border-radius:4px;white-space:pre-line;}
-.cut-continue{color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(8px,1.6vw,12px);letter-spacing:2px;animation:blink 1s ease-in-out infinite;padding:8px 24px;border:2px solid #8B6914;border-radius:4px;background:rgba(0,0,0,.5);cursor:pointer;text-align:center;}
+#cutscene{position:fixed;inset:0;z-index:90;background:radial-gradient(ellipse at center,#0a0015 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;padding:clamp(12px,3vw,28px);gap:12px;}
+.cut-art{font-size:clamp(58px,16vw,140px);text-align:center;line-height:1;filter:drop-shadow(0 0 20px rgba(255,215,0,.6));}
+.cut-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(12px,3.2vw,30px);color:#ffd700;letter-spacing:3px;text-transform:uppercase;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.7);max-width:min(700px,90vw);}
+.cut-divider{width:min(200px,55vw);height:1px;background:linear-gradient(to right,transparent,rgba(255,215,0,.5),transparent);}
+.cut-text{max-width:min(680px,88vw);font-family:‘EB Garamond’,serif;font-size:clamp(9px,2vw,15px);color:#e8d5a0;line-height:2;font-style:italic;text-align:center;padding:16px 22px;background:rgba(0,0,0,.55);border:1px solid rgba(255,215,0,.2);border-radius:6px;white-space:pre-line;}
+.cut-continue{color:rgba(255,215,0,.7);font-family:‘Cinzel’,serif;font-size:clamp(8px,1.6vw,11px);letter-spacing:3px;animation:blink 1.2s ease-in-out infinite;padding:8px 28px;border:1px solid rgba(255,215,0,.25);border-radius:30px;background:rgba(255,215,0,.04);cursor:pointer;text-align:center;}
+
 /* ── HUD ── */
-#stageBanner{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:9px 18px;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);color:#ffd700;font-family:'Cinzel Decorative',serif;font-size:clamp(7px,1.9vw,14px);letter-spacing:3px;text-shadow:2px 2px 4px #000;pointer-events:none;display:none;text-transform:uppercase;}
-#objectiveBar{position:fixed;top:42px;left:9px;z-index:20;background:rgba(0,0,0,.8);border:2px solid #8B6914;border-radius:4px;padding:6px 11px;font-family:'Cinzel',serif;pointer-events:none;display:none;max-width:min(230px,39vw);}
-#objectiveBar .obj-title{color:#d4af37;font-size:clamp(5px,1.2vw,9px);letter-spacing:2px;text-transform:uppercase;}
-#objectiveBar .obj-text{color:#e8d5a0;font-size:clamp(6px,1.4vw,10px);margin-top:3px;line-height:1.5;}
-#stageProgress{position:fixed;top:42px;right:9px;z-index:20;background:rgba(0,0,0,.8);border:2px solid #8B6914;border-radius:4px;padding:6px 11px;text-align:right;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(6px,1.4vw,10px);pointer-events:none;display:none;}
+#stageBanner{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:10px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 70%,transparent 100%);color:#ffd700;font-family:‘Cinzel Decorative’,serif;font-size:clamp(8px,2vw,15px);letter-spacing:3px;text-shadow:2px 2px 6px #000,0 0 20px rgba(255,215,0,.3);pointer-events:none;display:none;text-transform:uppercase;}
+#objectiveBar{position:fixed;top:48px;left:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;font-family:‘Cinzel’,serif;pointer-events:none;display:none;max-width:min(240px,40vw);backdrop-filter:blur(4px);}
+#objectiveBar .obj-title{color:#8a6a20;font-size:clamp(5px,1.1vw,8px);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
+#objectiveBar .obj-text{color:#e8d5a0;font-size:clamp(7px,1.4vw,11px);line-height:1.6;font-family:‘EB Garamond’,serif;}
+#stageProgress{position:fixed;top:48px;right:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;text-align:right;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(7px,1.4vw,11px);pointer-events:none;display:none;backdrop-filter:blur(4px);}
+/* ── MINIMAP ── */
+#minimap{position:fixed;bottom:clamp(80px,14vh,110px);right:clamp(12px,2.5vw,18px);z-index:22;width:clamp(68px,13vw,88px);height:clamp(68px,13vw,88px);border-radius:50%;border:1.5px solid rgba(255,215,0,.35);background:rgba(0,0,0,.7);display:none;overflow:hidden;pointer-events:none;backdrop-filter:blur(2px);}
+#minimapCanvas{width:100%;height:100%;}
+
 /* ── DIALOGUE ── */
-#dialogueBox{position:fixed;bottom:clamp(76px,13vh,115px);left:50%;transform:translateX(-50%);width:min(800px,93vw);z-index:30;background:rgba(6,3,18,.97);border:3px solid #8B6914;border-radius:6px;padding:12px 16px;font-family:'Cinzel',serif;pointer-events:all;display:none;box-shadow:0 0 28px rgba(139,105,20,.5),inset 0 0 18px rgba(0,0,0,.5);}
-#dialogueBox .dlg-speaker{color:#ffd700;font-size:clamp(7px,1.5vw,12px);font-weight:700;margin-bottom:4px;letter-spacing:2px;}
-#dialogueBox .dlg-text{color:#e8d5a0;font-size:clamp(8px,1.6vw,13px);line-height:1.72;font-style:italic;}
-#dialogueBox .dlg-attr{color:#b8922a;font-size:clamp(6px,1.1vw,10px);margin-top:5px;font-style:normal;text-align:right;}
-#dialogueBox .dlg-hint{color:#444;font-size:clamp(6px,1.1vw,9px);margin-top:5px;text-align:center;animation:blink 1s ease-in-out infinite;}
+#dialogueBox{position:fixed;bottom:clamp(80px,14vh,120px);left:50%;transform:translateX(-50%);width:min(820px,93vw);z-index:30;background:linear-gradient(160deg,rgba(4,2,14,.98),rgba(8,3,22,.98));border:2px solid rgba(139,105,20,.7);border-radius:8px;padding:14px 18px 12px;font-family:‘Cinzel’,serif;pointer-events:all;display:none;box-shadow:0 0 40px rgba(0,0,0,.8),0 0 20px rgba(139,105,20,.2),inset 0 1px 0 rgba(255,215,0,.08);animation:dlgIn .3s ease-out;}
+.dlg-speaker-wrap{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.dlg-speaker-dot{width:8px;height:8px;border-radius:50%;background:#ffd700;box-shadow:0 0 8px #ffd700;flex-shrink:0;}
+#dialogueBox .dlg-speaker{color:#ffd700;font-size:clamp(8px,1.6vw,13px);font-weight:700;letter-spacing:3px;text-transform:uppercase;}
+#dialogueBox .dlg-text{color:#f0e5c8;font-size:clamp(9px,1.7vw,14px);line-height:1.8;font-family:‘EB Garamond’,serif;font-style:italic;}
+#dialogueBox .dlg-attr{color:#7a6030;font-size:clamp(6px,1.1vw,10px);margin-top:7px;font-style:normal;text-align:right;border-top:1px solid rgba(139,105,20,.3);padding-top:5px;font-family:‘Cinzel’,serif;letter-spacing:1px;}
+#dialogueBox .dlg-hint{color:rgba(90,70,30,.8);font-size:clamp(6px,1.1vw,9px);margin-top:5px;text-align:center;animation:blink 1.2s ease-in-out infinite;letter-spacing:2px;}
+
 /* ── INTERACT PROMPT ── */
-#interactPrompt{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.86);border:2px solid #ffd700;border-radius:4px;padding:7px 15px;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(7px,1.7vw,12px);display:none;z-index:25;pointer-events:none;text-align:center;animation:blink 1s ease-in-out infinite;}
-/* ── JOYSTICK ── */
-#joystickWrap{position:fixed;bottom:clamp(14px,2.8vh,26px);left:clamp(14px,2.8vw,26px);width:clamp(96px,21vw,124px);height:clamp(96px,21vw,124px);display:none;z-index:40;pointer-events:all;user-select:none;-webkit-user-select:none;touch-action:none;}
-#joystickBase{width:100%;height:100%;border-radius:50%;background:rgba(0,0,0,.52);border:3px solid rgba(255,215,0,.42);position:relative;}
-#joystickKnob{position:absolute;width:38%;height:38%;border-radius:50%;background:radial-gradient(circle at 33% 33%,rgba(255,215,0,.92),rgba(160,100,0,.82));border:2px solid rgba(255,215,0,.9);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:rgba(100,50,0,.8);font-size:clamp(9px,2.5vw,14px);font-weight:bold;}
-/* ── ACTION BUTTONS ── */
-#actionBtns{position:fixed;bottom:clamp(14px,2.8vh,26px);right:clamp(14px,2.8vw,26px);display:none;z-index:40;flex-direction:column;align-items:flex-end;gap:9px;pointer-events:all;}
-.act-btn{width:clamp(50px,12vw,65px);height:clamp(50px,12vw,65px);border-radius:50%;border:3px solid rgba(255,215,0,.88);background:rgba(18,8,38,.88);color:#ffd700;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;user-select:none;font-family:'Cinzel',serif;line-height:1.2;touch-action:manipulation;box-shadow:0 0 12px rgba(255,215,0,.28);transition:transform .08s,background .08s;}
-.act-btn:active,.act-btn.pressed{background:rgba(139,105,20,.78);transform:scale(.9);}
-#btnAct{font-size:clamp(15px,3.5vw,20px);animation:btnGlow 2s ease-in-out 1s infinite;}
-#btnAct .lbl{font-size:clamp(5px,1.2vw,8px);letter-spacing:1px;margin-top:1px;}
-#btnNext{font-size:clamp(14px,3.5vw,18px);}
+#interactPrompt{position:fixed;top:50%;left:50%;transform:translate(-50%,-200%);background:rgba(0,0,0,.9);border:2px solid rgba(255,215,0,.85);border-radius:32px;padding:9px 22px;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(8px,1.8vw,13px);display:none;z-index:25;pointer-events:none;text-align:center;animation:promptPulse 1.8s ease-in-out infinite;letter-spacing:2px;backdrop-filter:blur(4px);}
+
 /* ── FLIGHT HUD ── */
-#flightHUD{position:fixed;top:clamp(48px,9vh,70px);left:50%;transform:translateX(-50%);display:none;z-index:22;text-align:center;pointer-events:none;font-family:'Cinzel',serif;}
-.fhud-label{color:#ffd700;font-size:clamp(9px,2vw,15px);letter-spacing:3px;text-shadow:0 0 10px #ffd700;}
-.fhud-beads{display:flex;gap:clamp(6px,1.5vw,10px);justify-content:center;margin-top:5px;}
-.fhud-bead{width:clamp(14px,3.5vw,22px);height:clamp(14px,3.5vw,22px);border-radius:50%;background:rgba(80,60,0,.3);border:2px solid rgba(255,215,0,.4);transition:all .4s;}
-.fhud-bead.lit{background:#ffd700;box-shadow:0 0 14px #ffd700,0 0 28px #ff8c00;}
-.fhud-speed{color:#aaa;font-size:clamp(7px,1.4vw,10px);margin-top:4px;letter-spacing:2px;}
-/* ── GOLDEN RING ── */
-#goldenRing{position:fixed;top:50%;left:50%;width:clamp(80px,18vw,120px);height:clamp(80px,18vw,120px);border-radius:50%;border:4px solid #ffd700;box-shadow:0 0 30px #ffd700,0 0 60px #ff8c00,inset 0 0 30px rgba(255,215,0,.2);pointer-events:none;z-index:55;display:none;}
-#goldenRing.fire{display:block;animation:goldenRingAnim 1.8s ease-out forwards;}
-/* ── HEAVEN OVERLAY ── */
-#heavenOverlay{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at center,rgba(255,255,255,.95) 0%,rgba(255,215,0,.7) 40%,transparent 70%);pointer-events:none;display:none;}
-#heavenOverlay.fade{display:block;animation:miracleAnim 1.4s ease-out forwards;}
-/* ── HEAVEN MESSAGE ── */
-#heavenMsg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:55;font-family:'Cinzel Decorative',serif;font-size:clamp(14px,3.5vw,32px);color:#ffd700;text-shadow:0 0 30px #ffd700,0 0 60px #fff;text-align:center;pointer-events:none;display:none;letter-spacing:3px;line-height:1.4;padding:0 20px;}
-/* ── MIRACLE FLASH ── */
-#miracleFlash{position:fixed;inset:0;z-index:50;pointer-events:none;display:none;background:radial-gradient(ellipse at center,rgba(255,215,0,.92) 0%,rgba(255,140,0,.5) 40%,transparent 70%);}
-#miracleFlash.on{display:block;animation:miracleAnim .72s ease-out forwards;}
-#miracleFlash.white{background:radial-gradient(ellipse at center,rgba(255,255,255,.99) 0%,rgba(255,215,0,.75) 30%,transparent 65%);}
-/* ── PARTICLES ── */
-#particleOverlay{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
-.cssPart{position:absolute;border-radius:50%;pointer-events:none;animation:floatUp linear forwards;}
-/* ── FINAL SCREEN ── */
-.finalScreen{position:fixed;inset:0;z-index:95;display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(14px,3.5vw,28px);gap:12px;overflow-y:auto;}
-#finalFrancis{background:radial-gradient(ellipse at center,#fff5cc 0%,#ffd700 25%,#ff8c00 55%,#1a0a2e 100%);}
-#finalSaint{background:radial-gradient(ellipse at center,#ccf5ff 0%,#88ccff 25%,#4488cc 55%,#001a2e 100%);}
-#finalHeaven{background:radial-gradient(ellipse at center,#ffffff 0%,#fff9cc 20%,#ffd700 45%,#ffaa00 70%,#1a0a2e 100%);}
-.fin-title{font-family:'Cinzel Decorative',serif;font-size:clamp(15px,4vw,40px);text-align:center;font-weight:700;}
-.fin-quote{max-width:min(640px,88vw);font-size:clamp(8px,1.7vw,14px);font-style:italic;line-height:1.85;text-align:center;padding:16px 18px;background:rgba(255,255,255,.35);border-radius:8px;}
-.fin-attr{font-size:.82em;margin-top:4px;display:block;}
-.fin-btn{padding:clamp(8px,1.6vh,12px) clamp(20px,4.5vw,40px);border:3px solid currentColor;font-family:'Cinzel',serif;font-size:clamp(9px,1.9vw,15px);letter-spacing:3px;cursor:pointer;border-radius:4px;text-transform:uppercase;transition:background .2s,color .2s;}
+#flightHUD{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:22;background:rgba(0,0,0,.85);border:1.5px solid rgba(255,215,0,.4);border-radius:8px;padding:10px 20px;text-align:center;display:none;pointer-events:none;font-family:‘Cinzel’,serif;backdrop-filter:blur(4px);}
+.fhud-label{color:#c8a840;font-size:clamp(7px,1.5vw,11px);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
+.fhud-beads{display:flex;gap:clamp(6px,1.5vw,10px);justify-content:center;margin-bottom:6px;}
+.fhud-bead{width:clamp(16px,3.8vw,24px);height:clamp(16px,3.8vw,24px);border-radius:50%;background:rgba(80,60,0,.2);border:2px solid rgba(255,215,0,.3);transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative;}
+.fhud-bead.lit{background:radial-gradient(circle at 35% 35%,#ffe066,#ffd700,#c8860a);border-color:#ffd700;box-shadow:0 0 14px #ffd700,0 0 28px rgba(255,215,0,.4);}
+.fhud-speed{color:rgba(200,168,74,.55);font-size:clamp(6px,1.2vw,9px);letter-spacing:2px;}
+
+/* ── JOYSTICK ── */
+#joystickWrap{position:fixed;bottom:clamp(14px,2.8vh,26px);left:clamp(14px,2.8vw,26px);width:clamp(100px,22vw,128px);height:clamp(100px,22vw,128px);display:none;z-index:40;pointer-events:all;user-select:none;-webkit-user-select:none;touch-action:none;}
+#joystickBase{width:100%;height:100%;border-radius:50%;background:rgba(0,0,0,.5);border:2px solid rgba(255,215,0,.35);position:relative;backdrop-filter:blur(4px);}
+#joystickKnob{position:absolute;width:36%;height:36%;border-radius:50%;background:radial-gradient(circle at 33% 33%,rgba(255,220,80,.95),rgba(160,100,0,.85));border:2px solid rgba(255,215,0,.85);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;color:rgba(80,40,0,.7);font-size:clamp(10px,2.5vw,16px);font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+
+/* ── ACTION BUTTONS ── */
+#actionBtns{position:fixed;bottom:clamp(14px,2.8vh,26px);right:clamp(14px,2.8vw,26px);display:none;z-index:40;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:all;}
+.act-btn{width:clamp(52px,11vw,70px);height:clamp(52px,11vw,70px);border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,215,0,.2),rgba(0,0,0,.85));border:2px solid rgba(255,215,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .15s;touch-action:none;pointer-events:all;font-family:‘Cinzel’,serif;box-shadow:0 4px 16px rgba(0,0,0,.6);}
+.act-btn span{color:#ffd700;font-size:clamp(14px,3vw,20px);line-height:1;}
+.act-btn .lbl{font-size:clamp(6px,1.2vw,8px);letter-spacing:2px;color:rgba(255,215,0,.7);}
+.act-btn:active,.act-btn.pressed{transform:scale(.88);box-shadow:0 0 18px rgba(255,215,0,.6);}
+#btnNext{font-size:clamp(18px,4vw,26px);}
+
 /* ── CROSSHAIR ── */
-#crosshair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:22;display:none;width:44px;height:44px;}
-.ch-h{position:absolute;top:50%;left:0;right:0;height:2px;background:rgba(255,215,0,.75);transform:translateY(-50%);}
-.ch-v{position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(255,215,0,.75);transform:translateX(-50%);}
-.ch-ring{position:absolute;top:50%;left:50%;width:14px;height:14px;border:2px solid rgba(255,215,0,.9);border-radius:50%;transform:translate(-50%,-50%);transition:transform .15s,border-color .15s;}
-#crosshair.locked .ch-ring{border-color:#44ff88;transform:translate(-50%,-50%) scale(1.9);}
-/* ── MARATHON CARD ── */
-.ms-card-marathon{border-color:#ffd700!important;background:linear-gradient(135deg,rgba(30,15,0,.85),rgba(60,30,0,.85))!important;position:relative;overflow:hidden;}
-.ms-card-marathon::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 30%,rgba(255,215,0,.08) 50%,transparent 70%);animation:marathonShimmer 2.5s ease-in-out infinite;}
-@keyframes marathonShimmer{0%,100%{transform:translateX(-100%);}50%{transform:translateX(100%);}}
-.ms-card-marathon .ms-name{color:#ffd700;text-shadow:0 0 12px rgba(255,215,0,.6);}
-/* ── MARATHON PROGRESS HUD ── */
-#marathonHUD{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:25;display:none;pointer-events:none;}
-#marathonHUDInner{background:linear-gradient(to bottom,rgba(0,0,0,.92),rgba(10,5,20,.88));border:2px solid #8B6914;border-top:none;border-radius:0 0 10px 10px;padding:6px 18px 8px;text-align:center;font-family:'Cinzel',serif;}
-#marathonHUDIcon{font-size:clamp(11px,2.2vw,16px);color:#ffd700;}
-#marathonHUDText{color:#ffd700;font-size:clamp(7px,1.4vw,11px);letter-spacing:2px;text-transform:uppercase;margin-left:6px;}
-#marathonHUDDots{display:flex;gap:5px;justify-content:center;margin-top:4px;}
-.mhud-dot{width:clamp(7px,1.6vw,11px);height:clamp(7px,1.6vw,11px);border-radius:50%;border:2px solid #8B6914;background:transparent;transition:all .5s;}
-.mhud-dot.done{background:#ffd700;border-color:#ffd700;box-shadow:0 0 6px #ffd700;}
-.mhud-dot.active{background:rgba(255,215,0,.35);border-color:#ffd700;animation:btnGlow 1.2s ease-in-out infinite;}
-/* ── MARATHON FINAL ── */
-#finalMarathon{background:radial-gradient(ellipse at center,#fff9e0 0%,#ffd700 20%,#ff8c00 45%,#8B1a00 70%,#1a0a2e 100%);}
-.marathon-saints-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
-.msl-saint{font-family:'Cinzel',serif;font-size:clamp(7px,1.4vw,11px);color:#1a0a2e;background:rgba(255,255,255,.6);border:2px solid rgba(26,10,46,.4);border-radius:20px;padding:3px 10px;letter-spacing:1px;}
+#crosshair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:clamp(36px,8vw,52px);height:clamp(36px,8vw,52px);display:none;z-index:22;pointer-events:none;}
+.ch-h,.ch-v{position:absolute;background:rgba(255,215,0,.55);border-radius:2px;}
+.ch-h{width:100%;height:1.5px;top:50%;left:0;transform:translateY(-50%);}
+.ch-v{height:100%;width:1.5px;left:50%;top:0;transform:translateX(-50%);}
+.ch-ring{position:absolute;inset:8px;border-radius:50%;border:1.5px solid rgba(255,215,0,.4);transition:all .3s;}
+#crosshair.locked .ch-ring{border-color:#ffd700;box-shadow:0 0 12px #ffd700;transform:scale(.8);}
+
+/* ── EFFECTS ── */
+#goldenRing{position:fixed;top:50%;left:50%;width:clamp(90px,20vw,130px);height:clamp(90px,20vw,130px);border-radius:50%;border:4px solid #ffd700;box-shadow:0 0 40px #ffd700,0 0 80px #ff8c00,inset 0 0 40px rgba(255,215,0,.25);pointer-events:none;z-index:55;display:none;}
+#goldenRing.fire{display:block;animation:goldenRingAnim 2s ease-out forwards;}
+#heavenOverlay{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at center,rgba(255,255,255,.98) 0%,rgba(255,240,150,.8) 40%,transparent 75%);pointer-events:none;display:none;}
+#heavenOverlay.fade{display:block;animation:miracleAnim 1.6s ease-out forwards;}
+#heavenMsg{position:fixed;top:30%;left:50%;transform:translateX(-50%);color:#ffd700;font-family:‘Cinzel Decorative’,serif;font-size:clamp(14px,3.5vw,32px);text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;pointer-events:none;z-index:65;display:none;text-align:center;letter-spacing:4px;}
+#miracleFlash{position:fixed;inset:0;pointer-events:none;z-index:58;background:rgba(255,215,0,.0);transition:background .1s;}
+#miracleFlash.on{background:rgba(255,215,0,.18);}
+#miracleFlash.white.on{background:rgba(255,255,255,.35);}
+#particleOverlay{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
+.cssPart{position:absolute;border-radius:50%;animation:floatUp linear both;}
+
+/* ── MARATHON HUD ── */
+#marathonHUD{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:21;display:none;padding-top:52px;pointer-events:none;}
+#marathonHUDInner{background:rgba(0,0,0,.88);border:1px solid rgba(255,215,0,.3);border-top:none;border-radius:0 0 10px 10px;padding:7px 18px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px);}
+#marathonHUDIcon{font-size:clamp(14px,3vw,20px);}
+#marathonHUDText{color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(8px,1.6vw,12px);letter-spacing:2px;}
+#marathonHUDDots{display:flex;gap:6px;margin-left:4px;}
+.mhud-dot{transition:all .3s ease;width:clamp(7px,1.4vw,9px);height:clamp(7px,1.4vw,9px);border-radius:50%;background:rgba(255,215,0,.2);border:1.5px solid rgba(255,215,0,.35);transition:all .4s;}
+.mhud-dot.active{background:#ffd700;box-shadow:0 0 8px #ffd700;}
+.mhud-dot.done{background:rgba(255,215,0,.5);}
+
+/* ── FINAL SCREENS ── */
+.finalScreen{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(14px,3vw,32px);gap:clamp(10px,2.5vh,22px);}
+.fin-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(16px,4vw,42px);letter-spacing:3px;line-height:1.4;text-shadow:0 0 30px currentColor,0 2px 4px rgba(0,0,0,.6);animation:fadeDown .8s ease-out both;}
+.fin-quote{max-width:min(720px,88vw);font-family:‘EB Garamond’,serif;font-size:clamp(11px,1.95vw,17px);line-height:1.95;font-style:italic;padding:20px 26px;background:rgba(0,0,0,.35);border-radius:10px;border:1px solid rgba(255,255,255,.15);}
+.fin-attr{display:block;font-style:normal;font-size:.82em;margin-top:10px;letter-spacing:1px;opacity:.75;font-family:‘Cinzel’,serif;}
+.fin-bio{max-width:min(660px,86vw);font-family:‘EB Garamond’,serif;font-size:clamp(9px,1.7vw,13px);line-height:1.85;padding:12px 18px;background:rgba(0,0,0,.2);border-radius:6px;border:1px solid rgba(255,255,255,.1);}
+.fin-btn{padding:clamp(9px,1.6vh,14px) clamp(28px,5vw,50px);border:2px solid;border-radius:4px;font-family:‘Cinzel’,serif;font-size:clamp(9px,1.8vw,13px);font-weight:700;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:transform .12s,box-shadow .2s;}
+.fin-btn:hover{transform:scale(1.04);box-shadow:0 0 24px currentColor;}
+.fin-btn:active{transform:scale(.93);}
+.marathon-badge{display:inline-flex;align-items:center;gap:8px;margin:4px;padding:6px 14px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:20px;color:#ffd700;font-size:clamp(8px,1.6vw,12px);letter-spacing:1px;}
+.marathon-saints-list{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px;}
 </style>
+
 </head>
 <body>
 <!-- LOADING -->
-<div id="loading"><div class="lc">✝</div><div class="lt">Loading&hellip;</div><div id="loadingBar"><div id="loadingFill"></div></div></div>
+<div id="loading">
+  <div class="lc">✝</div>
+  <div class="lt">Franciscan Saints &nbsp;&bull;&nbsp; A Journey of Faith</div>
+  <div id="loadingBar"><div id="loadingFill"></div></div>
+</div>
 
 <!-- TITLE -->
+
 <div id="titleScreen">
-  <div class="t-stars"></div>
+  <div class="t-stars" id="tStars"></div>
   <div class="t-cross">✝</div>
-  <div class="t-main">Franciscan Saints<br><span style="font-size:.65em;letter-spacing:6px;">A Journey of Faith</span></div>
+  <div class="t-main">Franciscan Saints<br><span style="font-size:.6em;letter-spacing:8px;font-family:'Cinzel',serif;">A Journey of Faith</span></div>
   <div class="t-sub">In the spirit of St. Francis of Assisi &middot; 1181&ndash;1226</div>
-  <div class="t-bio">&ldquo;Start by doing what is necessary; then do what is possible; and suddenly you are doing the impossible.&rdquo;<span class="t-bio-attr">&mdash; St. Francis of Assisi</span></div>
-  <button class="start-btn" id="startBtn">Begin Your Journey &nbsp;✝</button>
+  <div class="t-divider"></div>
+  <div class="t-bio">&ldquo;He who works with his hands is a labourer. He who works with his hands and his head is a craftsman. He who works with his hands, his head, and his heart is an artist.&rdquo;<span class="t-bio-attr">&mdash; St. Francis of Assisi &bull; Poverello of Assisi &bull; Doctor of the Universal Church</span></div>
+  <button class="start-btn" id="startBtn">Enter the Journey &nbsp;✝</button>
+  <div class="t-controls-hint">WASD / Arrow Keys / Touch Joystick to move &bull; E or PRAY button to interact</div>
+</div>
+
+<!-- CONTROLS TUTORIAL -->
+
+<div id="tutorialOverlay">
+  <div class="tut-title">✝ How to Play</div>
+  <div class="tut-grid">
+    <div class="tut-row"><div class="tut-key">WASD</div><div class="tut-desc"><strong>Move</strong><br>Walk through each sacred environment</div></div>
+    <div class="tut-row"><div class="tut-key">E / F</div><div class="tut-desc"><strong>Pray / Interact</strong><br>Activate miracles and start dialogue</div></div>
+    <div class="tut-row"><div class="tut-key">Space</div><div class="tut-desc"><strong>Continue Dialogue</strong><br>Advance through speech and cutscenes</div></div>
+    <div class="tut-row"><div class="tut-key">Esc</div><div class="tut-desc"><strong>Skip Cutscene</strong><br>Skip the intro narration</div></div>
+    <div class="tut-row"><div class="tut-key">✝</div><div class="tut-desc"><strong>PRAY Button</strong><br>Touch / tap to interact on mobile</div></div>
+    <div class="tut-row"><div class="tut-key">🕹</div><div class="tut-desc"><strong>Joystick</strong><br>Bottom-left on mobile for movement</div></div>
+  </div>
+  <button class="tut-close" id="tutClose">Begin &nbsp;✝</button>
 </div>
 
 <!-- MODE SELECT -->
+
 <div id="modeSelect">
   <div class="ms-title">Choose Your Journey</div>
-  <div class="ms-sub">Select a path of faith to walk</div>
+  <div class="ms-sub">Six saints. Thirty miracles. One eternal story.</div>
+  <div class="ms-divider"></div>
   <div class="ms-cards">
     <div class="ms-card" id="cardFrancis">
-      <div class="ms-icon">⛪</div>
+      <span class="ms-icon">⛪</span>
       <div class="ms-name">The Life of<br>St. Francis</div>
-      <div class="ms-desc">Walk through 6 sacred stages — repair San Damiano, preach to the birds, tame the wolf, and receive the Stigmata.</div>
+      <div class="ms-desc">Walk from the streets of Assisi to the heights of La Verna. Repair San Damiano, preach to the birds, tame the Wolf of Gubbio, receive the Stigmata, and sing the Canticle of the Sun.</div>
+      <div class="ms-stages">6 Stages &bull; Francis of Assisi &bull; 1181&ndash;1226</div>
     </div>
     <div class="ms-card" id="cardSaints">
-      <div class="ms-icon">📿</div>
+      <span class="ms-icon">📿</span>
       <div class="ms-name">Franciscan<br>Saints</div>
-      <div class="ms-desc">Play as St. Anthony, St. Clare, St. Bonaventure, Padre Pio, or St. Elizabeth and live their miracles.</div>
+      <div class="ms-desc">Choose one of five Franciscan saints and relive their greatest miracles — each documented by historians, witnesses, and the Vatican itself.</div>
+      <div class="ms-stages">24 Stages &bull; 5 Saints &bull; Choose Your Path</div>
     </div>
     <div class="ms-card ms-card-marathon" id="cardMarathon">
-      <div class="ms-icon">✝</div>
-      <div class="ms-name">All Franciscans<br><span style="font-size:.8em;letter-spacing:1px;">Marathon Mode</span></div>
-      <div class="ms-desc">Play through all six saints in one continuous journey — Francis, Anthony, Clare, Bonaventure, Padre Pio, and Elizabeth.</div>
+      <span class="ms-icon">✝</span>
+      <div class="ms-name">All Franciscans<br><span style="font-size:.82em;letter-spacing:1px;font-family:'Cinzel',serif;">Marathon Mode</span></div>
+      <div class="ms-desc">Walk with all six Franciscan saints in one continuous journey of prayer — from Assisi in 1209 to San Giovanni Rotondo in 1968.</div>
+      <div class="ms-stages">30 Stages &bull; All Saints &bull; Full Journey</div>
     </div>
     <div class="ms-card" id="cardFlight">
-      <div class="ms-icon">🕊</div>
+      <span class="ms-icon">🕊</span>
       <div class="ms-name">Flight of Faith</div>
-      <div class="ms-desc">Fly as St. Francis and shoot rosaries into waiting hands. Catch prayers to enter Heaven and meet the Trinity.</div>
+      <div class="ms-desc">Fly as St. Francis and shoot rosaries to the people below. Catch three prayers to open the gates of Heaven and meet Jesus, the Holy Spirit, and God the Father.</div>
+      <div class="ms-stages">Flight Mode &bull; Shoot Rosaries &bull; Enter Heaven</div>
     </div>
   </div>
+  <div class="tut-link" id="showTutBtn">? Controls &amp; How to Play</div>
 </div>
 
 <!-- SAINT SELECT -->
+
 <div id="saintSelect">
   <div class="ms-title">Choose a Saint</div>
-  <div class="ms-sub">Five lives of heroic faith — each a testament to God&rsquo;s grace</div>
+  <div class="ss-subtitle">Five souls who gave everything to God. Each life is documented by historians, eyewitnesses, and the formal processes of the Vatican. Every miracle you will witness was recorded in sworn testimony.</div>
   <div class="ms-cards">
     <div class="ms-card" id="cardAnthony">
-      <div class="ms-icon">🐟</div>
+      <span class="ms-icon">🐟</span>
       <div class="ms-name">St. Anthony<br>of Padua</div>
-      <div class="ms-desc">1195&ndash;1231 &bull; Preach to the fish at Rimini, and receive the vision of the Christ Child.</div>
+      <div class="ms-card-dates">Lisbon &bull; 1195&ndash;1231</div>
+      <div class="ms-desc">Born Fernando Martins de Bulhões. Franciscan friar and Doctor of the Church. Preached to the fish at Rimini, raised the dead, appeared in two places at once, and received a vision of the Christ Child.</div>
+      <div class="ms-stages">5 Stages &bull; Doctor of the Church</div>
     </div>
     <div class="ms-card" id="cardClare">
-      <div class="ms-icon">🕯</div>
+      <span class="ms-icon">🕯</span>
       <div class="ms-name">St. Clare<br>of Assisi</div>
-      <div class="ms-desc">1194&ndash;1253 &bull; Repel the Saracen army with the Blessed Sacrament, and witness the Christmas Mass in vision.</div>
+      <div class="ms-card-dates">Assisi &bull; 1194&ndash;1253</div>
+      <div class="ms-desc">First woman to write a Rule of Life for religious women. Repelled the Saracen army with the Blessed Sacrament. Received a vision of Christmas Mass while bedridden. Patron of television.</div>
+      <div class="ms-stages">2 Stages &bull; Foundress, Poor Clares</div>
     </div>
     <div class="ms-card" id="cardBonaventure">
-      <div class="ms-icon">📖</div>
-      <div class="ms-name">St. Bonaventure</div>
-      <div class="ms-desc">1221&ndash;1274 &bull; Receive the mystical vision on La Verna and write the Itinerarium Mentis in Deum.</div>
+      <span class="ms-icon">📖</span>
+      <div class="ms-name">St. Bonaventure<br><span style="font-size:.85em;">The Seraphic Doctor</span></div>
+      <div class="ms-card-dates">Bagnoregio &bull; 1221&ndash;1274</div>
+      <div class="ms-desc">Minister General of the Franciscan Order, Cardinal, and Doctor of the Church. On La Verna he received a vision that led him to write the Itinerarium Mentis in Deum — the soul's journey into God.</div>
+      <div class="ms-stages">1 Stage &bull; Doctor of the Church</div>
     </div>
     <div class="ms-card" id="cardPio">
-      <div class="ms-icon">🙏</div>
-      <div class="ms-name">Bl. Padre Pio</div>
-      <div class="ms-desc">1887&ndash;1968 &bull; Receive the permanent Stigmata at San Giovanni Rotondo, then heal the blind in the name of Christ.</div>
+      <span class="ms-icon">🙏</span>
+      <div class="ms-name">Padre Pio<br><span style="font-size:.85em;">of Pietrelcina</span></div>
+      <div class="ms-card-dates">Pietrelcina &bull; 1887&ndash;1968</div>
+      <div class="ms-desc">Capuchin friar who bore the visible stigmata for fifty years. Heard confessions 15–18 hours a day. Restored sight to the blind. Appeared in two places simultaneously across five decades. Canonised 2002.</div>
+      <div class="ms-stages">8 Stages &bull; Canonised 2002</div>
     </div>
     <div class="ms-card" id="cardElizabeth">
-      <div class="ms-icon">🌹</div>
+      <span class="ms-icon">🌹</span>
       <div class="ms-name">St. Elizabeth<br>of Hungary</div>
-      <div class="ms-desc">1207&ndash;1231 &bull; Witness the Miracle of the Roses, then wash a leper in your own bed — and behold a miracle of love.</div>
+      <div class="ms-card-dates">Pressburg &bull; 1207&ndash;1231</div>
+      <div class="ms-desc">Princess, wife, mother, and Franciscan tertiary. Died at 24 after a life of radical service to the poor. Performed the Miracle of the Roses, washed lepers in her own bed, and was canonised just four years after her death.</div>
+      <div class="ms-stages">2 Stages &bull; Patron of the Poor</div>
     </div>
   </div>
   <div class="ms-back" id="saintBack">&#8592; Back to Modes</div>
 </div>
 
 <!-- CANVAS -->
+
 <canvas id="gameCanvas"></canvas>
 
 <!-- CUTSCENE -->
+
 <div id="cutscene">
   <div class="cut-art" id="cutArt"></div>
   <div class="cut-title" id="cutTitle"></div>
@@ -228,11 +315,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- HUD -->
+
 <div id="stageBanner"></div>
 <div id="objectiveBar"><div class="obj-title">Objective</div><div class="obj-text" id="objText"></div></div>
 <div id="stageProgress"></div>
 <div id="dialogueBox">
-  <div class="dlg-speaker" id="dlgSpeaker"></div>
+  <div class="dlg-speaker-wrap"><div class="dlg-speaker-dot"></div><div class="dlg-speaker" id="dlgSpeaker"></div></div>
   <div class="dlg-text" id="dlgText"></div>
   <div class="dlg-attr" id="dlgAttr"></div>
   <div class="dlg-hint">&#9660; Tap or press SPACE / ENTER to continue</div>
@@ -240,6 +328,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="interactPrompt"></div>
 
 <!-- FLIGHT HUD -->
+
 <div id="flightHUD">
   <div class="fhud-label">PRAYERS CAUGHT &nbsp;&#128081;</div>
   <div class="fhud-beads"><div class="fhud-bead" id="bead0"></div><div class="fhud-bead" id="bead1"></div><div class="fhud-bead" id="bead2"></div></div>
@@ -247,18 +336,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- JOYSTICK -->
+
 <div id="joystickWrap"><div id="joystickBase"><div id="joystickKnob">&#10022;</div></div></div>
 
 <!-- ACTION BUTTONS -->
+
 <div id="actionBtns">
   <div class="act-btn" id="btnAct"><span>✝</span><span class="lbl">PRAY</span></div>
   <div class="act-btn" id="btnNext">&#9654;</div>
 </div>
 
 <!-- CROSSHAIR (flight sim) -->
+
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-ring"></div></div>
 
+<!-- MINIMAP -->
+
+<div id="minimap"><canvas id="minimapCanvas"></canvas></div>
+
 <!-- EFFECTS -->
+
 <div id="goldenRing"></div>
 <div id="heavenOverlay"></div>
 <div id="heavenMsg"></div>
@@ -266,38 +363,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="particleOverlay"></div>
 
 <!-- FINAL SCREENS -->
-<div id="finalFrancis" class="finalScreen">
-  <div class="fin-title" style="color:#1a0a2e;">✝ Pax et Bonum ✝<br><span style="font-size:.6em;">Peace and All Good</span></div>
-  <div class="fin-quote" style="color:#1a0a2e;">&ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will.&rdquo;<span class="fin-attr" style="color:#3a2000;">&mdash; St. Francis, Canticle of the Sun, 1225</span></div>
-  <button class="fin-btn" id="btnFrancisMenu" style="background:#1a0a2e;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
+
+<div id="finalFrancis" class="finalScreen" style="background:linear-gradient(160deg,#fff5cc,#ffe080,#fff9e0);">
+  <div class="fin-title" style="color:#2a1400;">✝ Pax et Bonum ✝<br><span style="font-size:.55em;font-family:'Cinzel',serif;letter-spacing:6px;">Peace and All Good</span></div>
+  <div class="fin-quote" style="color:#2a1400;border-color:rgba(0,0,0,.15);">&ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will, for the second death shall do them no harm.&rdquo;<span class="fin-attr" style="color:#5a3800;">&mdash; St. Francis of Assisi, Canticle of the Sun, 1225</span></div>
+  <div class="fin-bio" style="color:#2a1400;border-color:rgba(0,0,0,.12);">Giovanni di Pietro di Bernardone &mdash; Francis of Assisi &mdash; was born c.&nbsp;1181 to a wealthy cloth merchant and a French noblewoman in Assisi, Umbria. After a youth of revelry and a profound conversion following captivity and illness, he renounced his inheritance before the Bishop of Assisi in 1206 and embraced radical poverty. He founded the Order of Friars Minor in 1209, founded the Order of Poor Ladies (Poor Clares) with St.&nbsp;Clare in 1212, and inspired the Franciscan Third Order for laypeople. He received the stigmata — the five wounds of Christ — on La Verna on September 17, 1224. He died on October 3, 1226, singing Psalm 141. He was canonised on July 16, 1228, just two years after his death — one of the fastest canonisations in history. He is co-patron of Italy, patron of animals, ecology, merchants, and stowaways.</div>
+  <button class="fin-btn" id="btnFrancisMenu" style="background:#2a1400;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
 </div>
 
-<div id="finalSaint" class="finalScreen">
-  <div class="fin-title" style="color:#fff;" id="saintFinalTitle">✝ A Life of Grace ✝</div>
-  <div class="fin-quote" style="color:#fff;" id="saintFinalQuote"></div>
-  <button class="fin-btn" id="btnSaintMenu" style="background:rgba(0,0,80,.5);color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
+<div id="finalSaint" class="finalScreen" style="background:radial-gradient(ellipse at center,#0a0525 0%,#000 100%);">
+  <div class="fin-title" style="color:#ffd700;" id="saintFinalTitle">✝ A Life of Grace ✝</div>
+  <div class="fin-quote" style="color:#e8d5a0;border-color:rgba(255,215,0,.2);" id="saintFinalQuote"></div>
+  <div class="fin-bio" style="color:#c8a870;border-color:rgba(255,215,0,.12);" id="saintFinalBio"></div>
+  <button class="fin-btn" id="btnSaintMenu" style="background:rgba(0,0,40,.6);color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
 </div>
 
-<div id="finalHeaven" class="finalScreen">
-  <div class="fin-title" style="color:#1a0a2e;">✝ Blessed Are the Pure in Heart ✝</div>
-  <div class="fin-quote" style="color:#1a0a2e;">&ldquo;Blessed are the pure in heart, for they shall see God.&rdquo;<span class="fin-attr" style="color:#3a2000;">&mdash; Matthew 5:8</span><br><br>You have completed the Flight of Faith. Through St. Francis, rosaries reached outstretched hands, prayers ascended, and Heaven opened its gates.<br><br>&ldquo;At the end of life, we will not be judged by how many diplomas we have received, how much money we have made, how many great things we have done. We will be judged by: I was hungry, and you gave me food.&rdquo;<span class="fin-attr" style="color:#3a2000;">&mdash; Blessed Teresa of Calcutta</span></div>
-  <button class="fin-btn" id="btnHeavenMenu" style="background:#1a0a2e;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
+<div id="finalHeaven" class="finalScreen" style="background:linear-gradient(160deg,#fff8e0,#fffacc,#fff5aa);">
+  <div class="fin-title" style="color:#1a0a00;">✝ Blessed Are the Pure in Heart ✝</div>
+  <div class="fin-quote" style="color:#1a0a00;border-color:rgba(0,0,0,.12);">&ldquo;Blessed are the pure in heart: for they shall see God.&rdquo;<span class="fin-attr" style="color:#4a2800;">&mdash; Matthew 5:8</span><br><br>Through St.&nbsp;Francis of Assisi, rosaries fell into outstretched hands, prayers ascended like incense, and Heaven opened its golden gates. Francis — who called the birds his sisters, the wolf his brother, and the sun his kin — now stands before the face of God he spent his whole life seeking.<br><br>&ldquo;What a man is before God, that he is and no more.&rdquo;<span class="fin-attr" style="color:#4a2800;">&mdash; St. Francis of Assisi, Admonitions, c. 1220</span></div>
+  <button class="fin-btn" id="btnHeavenMenu" style="background:#1a0a00;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
 </div>
 
-<div id="finalMarathon" class="finalScreen">
+<div id="finalMarathon" class="finalScreen" style="background:radial-gradient(ellipse at center,#0a0525 0%,#000 100%);">
   <div class="fin-title" style="color:#ffd700;text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;">✝ The Great Cloud of Witnesses ✝</div>
-  <div class="fin-quote" style="color:#1a0a2e;" id="marathonFinalQuote">
+  <div class="fin-quote" style="color:#e8d5a0;border-color:rgba(255,215,0,.2);" id="marathonFinalQuote">
     <div class="marathon-saints-list" id="marathonSaintsList"></div>
-    <br>
-    &ldquo;Therefore, since we are surrounded by such a great cloud of witnesses, let us throw off everything that hinders and the sin that so easily entangles. And let us run with perseverance the race marked out for us, fixing our eyes on Jesus.&rdquo;
-    <span class="fin-attr" style="color:#3a2000;">&mdash; Hebrews 12:1&ndash;2</span>
-    <br><br>
-    You have walked with six souls who gave everything to God. Their lives were different, their gifts distinct — but their love was the same.
+    &ldquo;Therefore, since we are surrounded by such a great cloud of witnesses, let us throw off everything that hinders and the sin that so easily entangles. And let us run with perseverance the race marked out for us, fixing our eyes on Jesus, the pioneer and perfecter of faith.&rdquo;<span class="fin-attr" style="color:#8a6030;">&mdash; Hebrews 12:1&ndash;2</span>
+    <br><br>You have walked with six souls who gave everything to God. A merchant&rsquo;s son who kissed a leper&rsquo;s hand. A fishmonger&rsquo;s preacher who made the seas listen. A noblewoman who faced armies with only a ciborium. A philosopher who found God on a mountain. A friar who bled for fifty years. A princess who knelt at the feet of the poor.<br>Their love was the same love. Its name is Christ.
   </div>
-  <button class="fin-btn" id="btnMarathonMenu" style="background:#1a0a2e;color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
+  <button class="fin-btn" id="btnMarathonMenu" style="background:rgba(0,0,40,.6);color:#ffd700;border-color:#ffd700;">&#8592; Return to Menu</button>
 </div>
 
 <!-- MARATHON PROGRESS HUD -->
+
 <div id="marathonHUD">
   <div id="marathonHUDInner">
     <span id="marathonHUDIcon">✝</span>
@@ -307,6 +405,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
    FRANCISCAN SAINTS — Full Multi-Mode Game
@@ -318,8 +417,8 @@ var G={
   scene:null,camera:null,renderer:null,
   playerGroup:null,px:0,pz:0,
   keys:{},joy:{ax:0,az:0},
-  gameMode:'none', // 'francis'|'saint'|'flight'
-  saintMode:'anthony', // 'anthony'|'clare'|'bonaventure'
+  gameMode:'none',
+  saintMode:'anthony',
   stageIndex:0,
   dlgQueue:[],dlgIdx:0,dlgCb:null,dlgActive:false,
   cutCb:null,
@@ -327,7 +426,7 @@ var G={
   churchPieces:[],fixedPieces:0,totalPieces:5,
   wolfGroup:null,wolfTail:null,wolfEyes:[],wolfTamed:false,
   birds:[],birdsDone:false,stigmataDone:false,
-  particles3D:[],
+  particles3D:[],glowLights:[],
   // Flight sim
   flyGroup:null,flyYaw:0,flyX:0,flyY:22,flyZ:50,flySpeed:9,
   rosaries:[],groundPeople:[],prayerCount:0,prayerTarget:3,
@@ -349,7 +448,7 @@ var G={
   elizRosesDone:false,elizLeperDone:false,
   // Marathon mode
   marathonMode:false,marathonSaintIdx:0,marathonCompleted:[],
-  frameCount:0,lastFrame:0,targetMs:1000/144,
+  lastFrame:0,targetMs:1000/144,_typeTimer:null,
 };
 
 /* ─── DIALOGUE DATA ─────────────────────────────────────── */
@@ -368,17 +467,26 @@ voice_of_god:[
   {s:"Narrator",t:"Francis stripped off his fine garments before the bishop and declared: \"Our Father, who art in heaven — He alone is my father now.\"",a:"Thomas of Celano, Vita Prima, Ch. VI"},
 ],
 repair_intro:[
-  {s:"Narrator",t:"The chapel of San Damiano lies in ruins. Walk to each of the 5 broken sections and press PRAY to repair them with prayer and labour.",a:""},
-  {s:"Francis",t:"\"Lord, make me an instrument of Your peace. Where there is darkness, light; where there is sadness, joy.\"",a:"Prayer attributed to St. Francis of Assisi"},
+  {s:"Narrator",t:"Assisi, 1206. The young Francis kneels before a crumbling Byzantine crucifix in the ruined chapel of San Damiano — the chapel where the painted Christ will speak to him. Around him, the walls are falling. The roof has collapsed. Rubble covers the floor. He does not yet know what God is asking of him.",a:"Thomas of Celano, Vita Prima, Ch. V; The Legend of the Three Companions, Ch. IV"},
+  {s:"Voice",t:"\"Francis, go repair My house, which, as you see, is falling into ruin.\"",a:"The voice from the San Damiano crucifix, as recorded in Thomas of Celano, Vita Prima, Ch. V; The Legend of the Three Companions, Ch. V"},
+  {s:"Francis",t:"\"I thought at first He spoke of this little building alone. But I came to understand He meant the whole Church — the Church He had redeemed with His own blood.\"",a:"St. Francis, as recorded in Thomas of Celano, Vita Prima, Ch. V"},
+  {s:"Narrator",t:"Francis will repair San Damiano with his own hands, stone by stone. He begs for materials in the streets of Assisi, endures mockery, and returns alone to this place of ruin — and makes it beautiful. Walk to each of the 5 broken sections and press PRAY to repair them.",a:"Thomas of Celano, Vita Prima, Ch. XXI"},
 ],
-repair_piece:[{s:"Francis",t:"\"Most High, glorious God, enlighten the darkness of my heart and give me true faith, certain hope, and perfect charity, sense and knowledge, Lord, that I may carry out Your holy and true command.\"",a:"St. Francis, Prayer before the Crucifix at San Damiano"}],
+repair_piece:[
+  {s:"Francis",t:"\"Most High, glorious God, enlighten the darkness of my heart and give me true faith, certain hope, and perfect charity, sense and knowledge, Lord, that I may carry out Your holy and true command.\"",a:"St. Francis, Prayer before the Crucifix at San Damiano, c. 1206"},
+  {s:"Narrator",t:"He worked with his hands in the tradition of the early monastics — the desert fathers who believed that manual labour was prayer made visible. Every stone he lifted was an act of worship.",a:"Thomas of Celano, Vita Prima, Ch. XXI"},
+],
 repair_complete:[
-  {s:"Narrator",t:"\"With his own hands he repaired three churches: San Damiano, San Pietro della Spina, and the Portiuncula. When he had fully restored them, he felt the Spirit of God driving him onward to a still greater work.\"",a:"Thomas of Celano, Vita Prima, Ch. XXI"},
-  {s:"Francis",t:"The Lord has spoken to me about poverty, humility, and the holy Gospel. That is all I wish — with all my heart!",a:"St. Francis, recorded by Thomas of Celano"},
+  {s:"Narrator",t:"\"With his own hands he repaired three churches: San Damiano, San Pietro della Spina, and the Portiuncula. He carried stones himself, begged for lime in the streets of Assisi, and sang while he worked — until the people of the town came to help him. When they were restored, he felt the Spirit of God driving him onward to a still greater work.\"",a:"Thomas of Celano, Vita Prima, Ch. XXI, c. 1228"},
+  {s:"Francis",t:"\"The Lord showed me that I must live in poverty and humility and preach the holy Gospel. I knew then that this was my vocation — not to repair only the stones of one chapel, but to help repair the Church itself, and every soul within it.\"",a:"St. Francis, Testament, 1226"},
+  {s:"Narrator",t:"It was at the Portiuncula — the tiny chapel of Our Lady of the Angels — that Francis began gathering his first brothers around him in 1209. He gave them a single rule: the Gospel itself. They owned nothing, lived as pilgrims, and preached peace wherever they walked.",a:"Thomas of Celano, Vita Prima, Ch. XV; Bonaventure, Major Life, III.1"},
+  {s:"Francis",t:"\"This is what I want! This is what I seek! This is what I desire with all the depths of my heart!\"",a:"St. Francis of Assisi, on hearing the Gospel of Matthew 10:7–10, as recorded in Thomas of Celano, Vita Prima, Ch. IX"},
 ],
 birds_intro:[
-  {s:"Narrator",t:"Near Bevagna, Francis noticed a great flock of birds of all kinds gathered in the trees and fields. He turned to his companions:",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
-  {s:"Francis",t:"Brothers, wait here while I go preach to our sisters the birds!",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
+  {s:"Narrator",t:"Near Bevagna, in Umbria, c. 1220. Francis and his companions are walking along the road when they come upon a great multitude of birds — doves, rooks, jackdaws, and many others — gathered in the fields and trees ahead. Thomas of Celano, who knew Francis personally, records what happened next.",a:"Thomas of Celano, Vita Prima, Ch. LVIII; St. Bonaventure, Major Life, Ch. XII"},
+  {s:"Francis",t:"\"Brothers, wait here while I go preach to our sisters the birds!\"",a:"Thomas of Celano, Vita Prima, Ch. LVIII"},
+  {s:"Narrator",t:"He walked into the midst of the flock and they did not fly away. He began to preach to them. The birds stretched out their necks, extended their wings, opened their beaks, and fixed their gaze upon him — as though transfixed. None moved. None flew. When he was done, he gave them his blessing — and they rose as one into the sky.",a:"Thomas of Celano, Vita Prima, Ch. LVIII; Bonaventure, Major Life, XII.3"},
+  {s:"Francis",t:"\"My little sisters the birds, you owe much to God your Creator, and you ought to praise Him always and everywhere... He has given you the nobility of form, the purity of air for your dwelling, and has ordered all things for your sustenance.\"",a:"St. Francis of Assisi, Sermon to the Birds, as recorded in Thomas of Celano, Vita Prima, Ch. LVIII"},
 ],
 birds_miracle:[
   {s:"Francis",t:"\"My sisters the birds, you owe much to God your Creator, and you ought to sing His praise at all times and in all places, because He has given you liberty to fly about into all places.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. LVIII, c. 1228"},
@@ -386,29 +494,39 @@ birds_miracle:[
   {s:"Narrator",t:"\"The birds all manifested very great joy... they began to open their beaks, to stretch their necks, to spread their wings, and reverently to bow their heads to the ground.\"",a:"The Little Flowers of St. Francis, Ch. XVI"},
 ],
 wolf_intro:[
-  {s:"Narrator",t:"Near Gubbio, a fierce wolf terrorized the people — devouring animals and men alike. The citizens dared not leave the gates. Francis resolved to go out alone.",a:"The Little Flowers of St. Francis, Ch. XXI"},
-  {s:"Townsman",t:"Holy brother! Do not go! The wolf has devoured many men — he fears nothing!",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
-  {s:"Francis",t:"Fear not. I will speak with Brother Wolf in the name of Jesus Christ.",a:""},
+  {s:"Narrator",t:"Gubbio, Umbria — circa 1220. For two years a wolf of extraordinary size had terrorised the region, attacking livestock, tearing down fences, and killing men who ventured beyond the city walls. Gubbio lived in a state of siege. Armed bands dared not go out unless they travelled in numbers, and still the wolf attacked them.",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+  {s:"Narrator",t:"Francis was visiting the city when he heard of the terror. The citizens begged him to leave — or at least not to go outside. He dismissed their fears with a gentle smile and asked for the city's gate to be opened.",a:"The Little Flowers of St. Francis, Ch. XXI"},
+  {s:"Townsman",t:"Holy brother! Do not go out there alone! This wolf is a devil — he fears neither sword nor spear. He has already killed armed soldiers! You will be torn to pieces before you take twenty steps!",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+  {s:"Francis",t:"'Fear nothing, my friends. I will speak with Brother Wolf in the name of Jesus Christ, who is Lord of every creature that swims, that runs, or that flies.'",a:"The Little Flowers of St. Francis, Ch. XXI"},
+  {s:"Narrator",t:"Francis made the sign of the cross and walked out alone. The wolf charged at him with open jaws. Francis raised his hand and spoke in a voice of total calm. The wolf stopped as though it had struck a wall — then slowly lowered its head.",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
 ],
 wolf_encounter:[
-  {s:"Francis",t:"\"Come here, Brother Wolf. I command thee on behalf of Christ, that thou do harm neither to me nor to any other person.\"",a:"The Little Flowers of St. Francis, Chapter XXI, 14th century"},
-  {s:"Narrator",t:"\"Marvellous to tell, the wolf closed his mouth and came gently as a lamb, laying himself down at the feet of Saint Francis.\"",a:"The Little Flowers of St. Francis, Ch. XXI"},
-  {s:"Narrator",t:"\"The wolf bowed his head, and by the movements of his body, tail, and eyes, made signs that he consented and would keep his promise.\"",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+  {s:"Francis",t:"\"Come here, Brother Wolf! I command thee, in the name of Christ, that thou do no harm to me nor to any other living soul. Brother Wolf — I wish to make peace between you and the people of Gubbio.\"",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+  {s:"Narrator",t:"\"Marvellous to tell, the wolf closed his jaws and stood still. Then, slowly, he came forward like a tame lamb and lay down at the feet of Saint Francis — his great head resting on the earth.\"",a:"The Little Flowers of St. Francis, Ch. XXI"},
+  {s:"Francis",t:"\"Brother Wolf, thou hast done great evil in this land — destroying and killing creatures of God without His permission. Thou hast made thyself worthy of the gallows. But I wish to make peace between you and this people, so that thou shalt no more offend them and they shall forgive thee all thy past offences.\"",a:"The Little Flowers of St. Francis, Ch. XXI, 14th century"},
+  {s:"Narrator",t:"\"The wolf bowed his head, and by the movements of his body, tail, and eyes, made signs that he accepted what Francis said and would keep his promise. And from that day he was as gentle as a great dog — going about the houses of the city, and no man was afraid of him.\"",a:"The Little Flowers of St. Francis, Ch. XXI"},
+  {s:"Narrator",t:"The wolf of Gubbio lived two more years in peace, fed by the townspeople at their own doors. When he died, the people of Gubbio mourned him. For he had been, as Francis called him, their brother. In 1872, excavations beneath the church of San Francesco della Pace in Gubbio uncovered the skeleton of a large wolf.",a:"Historical note; excavation record, Gubbio, 1872"},
 ],
 stigmata_intro:[
-  {s:"Narrator",t:"September 1224. Francis fasted on La Verna, forty days in honour of the Archangel Michael. On the Feast of the Holy Cross, he withdrew to pray alone in the darkness.",a:"Thomas of Celano, Vita Prima, Ch. III"},
-  {s:"Francis",t:"\"My Lord Jesus Christ, I beseech Thee — let me feel in my soul and body that sorrow which You endured in the hour of Your most bitter Passion.\"",a:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata"},
+  {s:"Narrator",t:"La Verna, Tuscany, September 1224. Count Orlando of Chiusi had given Francis this lonely mountain in 1213. Francis came here to fast for forty days in honour of St. Michael the Archangel. He withdrew alone, telling his brothers: 'I want to fast in solitude. No one is to come to me except Brother Leo at such times as I shall indicate.'",a:"Thomas of Celano, Vita Secunda, Ch. CXX; Bonaventure, Major Life, XIII.1"},
+  {s:"Francis",t:"\"My Lord Jesus Christ, I pray Thee to grant me two graces before I die: that I may feel in my soul and my body that pain which Thou, sweet Lord, didst endure in the hour of Thy most bitter Passion; and that I may feel in my heart that excess of love whereby Thou, Son of God, wast enkindled to willingly endure so great suffering for us sinners.\"",a:"The Little Flowers of St. Francis, 'The Third Consideration on the Holy Stigmata', c. 1300"},
+  {s:"Narrator",t:"On the morning of September 17, 1224 — the Feast of the Exaltation of the Holy Cross — a seraph appeared to Francis in the form of a crucified man with six fiery wings. When the vision faded, Francis bore in his own flesh the five wounds of Jesus Christ: in his hands, his feet, and his side. He would carry them until his death two years later.",a:"Thomas of Celano, Vita Prima, Ch. III; Bonaventure, Major Life, XIII.3; Papal Bull of Gregory IX, 1237"},
+  {s:"Narrator",t:"Walk to the glowing Cross at the summit. Press PRAY to receive the Stigmata of Christ.",a:""},
 ],
 stigmata_miracle:[
-  {s:"Narrator",t:"\"Suddenly there appeared a seraph with six flaming wings; and in the middle of the vision the form of a man crucified, with hands and feet extended in the form of a cross.\"",a:"The Little Flowers of St. Francis, Second Consideration, 14th century"},
-  {s:"Narrator",t:"\"It left in the hands, feet, and side of Francis a wonderful impression of the Wounds of our Lord Jesus Christ. His hands and feet seemed to be pierced through the middle with nails.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, §94–95, 1228"},
-  {s:"Francis",t:"\"Welcome, Sister Pain. I have longed for you, prayed for you. Now bind me more closely to my Lord.\"",a:"St. Francis, traditionally attributed"},
+  {s:"Narrator",t:"\"Suddenly there appeared a seraph with six flaming wings; and in the middle of the vision the form of a man crucified, with hands and feet extended in the form of a cross, and two wings raised above his head, two stretching out to fly, and two covering the whole body.\"",a:"The Little Flowers of St. Francis, Second Consideration on the Holy Stigmata, 14th century"},
+  {s:"Narrator",t:"\"It left in the hands, feet, and side of Francis a wonderful impression of the Wounds of our Lord Jesus Christ. His hands and feet seemed to be pierced through the middle with nails, the heads of the nails appearing in the inner part of the hands and upper part of the feet, and their points on the opposite side.\"",a:"Thomas of Celano, Vita Prima Sancti Francisci, Ch. III, §94–95, c. 1228"},
+  {s:"Narrator",t:"The stigmata of Francis were observed by his brothers, and after his death by thousands of pilgrims who came to venerate his body. Pope Gregory IX declared them authentic. They are the first stigmata recorded in the history of the Church to be attested during the bearer's lifetime by multiple witnesses.",a:"Papal Bull Mira circa nos, Gregory IX, July 16, 1228; Bonaventure, Major Life, XIII.3"},
+  {s:"Francis",t:"\"Welcome, Sister Pain. I have longed for you. Now bind me more closely to my Lord. Pain is not punishment — it is gift. All things are gift. Even this.\"",a:"St. Francis, attributed by Thomas of Celano"},
+  {s:"Brother Leo",t:"He wept when he saw what had happened to the hands of Francis. And Francis smiled at him and said: 'Do not weep, little lamb of God. Write this down: perfect joy is not in miracles. It is in bearing our cross with love.'",a:"Legend of the Three Companions; Thomas of Celano, Vita Secunda"},
 ],
 canticle_scene:[
-  {s:"Narrator",t:"Ill, nearly blind, yet radiant — Francis composed the Canticle of the Sun at San Damiano in 1225. One of the earliest works of Italian literature. Sister Clare wept as he sang.",a:""},
-  {s:"Francis",t:"\"Most High, all-powerful, all-good Lord! All praise is Yours, all glory, all honour and all blessings. To You alone, Most High, do they belong.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
-  {s:"Francis",t:"\"Praised be You, my Lord, with all Your creatures, especially Sir Brother Sun, who is the day through whom You give us light.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
-  {s:"Francis",t:"\"Praised be You through our Sister Mother Earth, who sustains and governs us, and produces varied fruits with coloured flowers and herbs.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+  {s:"Narrator",t:"San Damiano, Assisi — 1225. Francis was now gravely ill: nearly blind from an untreated eye infection, his body marked by the wounds of La Verna, suffering intense pain. Clare cared for him at the monastery. He had not slept properly for many nights — tormented by mice. And then, one morning, he was filled with a joy that overwhelmed his pain.",a:"Thomas of Celano, Vita Prima, Ch. LXXXV; Bonaventure, Major Life, XIII.10"},
+  {s:"Narrator",t:"In this condition — suffering, blind, in pain — Francis composed the Canticle of the Sun. It is one of the earliest examples of written Italian poetry. He composed a melody for it and taught it to his brothers. He asked them to sing it whenever they preached, as a doxology to Creation itself.",a:"Legend of Perugia, §43; Thomas of Celano, Vita Secunda"},
+  {s:"Francis",t:"\"Most High, all-powerful, good Lord, all praise is Yours, all glory, all honour and all blessings. To You alone, Most High, do they belong and no mortal lips are worthy to pronounce Your name.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+  {s:"Francis",t:"\"Praised be You, my Lord, through Sir Brother Wind and through the air, cloudy and serene, and every kind of weather through which You give sustenance to Your creatures.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225"},
+  {s:"Francis",t:"\"Praised be You, my Lord, through our Sister Bodily Death, from whom no living man can escape. Blessed are those she finds doing Your holy will.\"",a:"St. Francis of Assisi, Canticle of the Sun, 1225 — the final verse, added as Francis lay dying"},
+  {s:"Narrator",t:"Francis of Assisi died on the evening of Saturday, October 3, 1226 — at the Portiuncula, the chapel he had repaired with his own hands. He asked to be laid naked on the bare earth. He was 44 years old. He was canonised on July 16, 1228 — less than two years after his death — by Pope Gregory IX. His body rests in the Basilica di San Francesco in Assisi.",a:"Thomas of Celano, Vita Prima, Ch. CX; Papal Bull of Canonization, Mira circa nos, 1228"},
 ],
 /* ANTHONY */
 anthony_fish_intro:[
@@ -440,6 +558,10 @@ clare_saracen_intro:[
   {s:"Objective",t:"Take up the Blessed Sacrament and walk to the gate. Press PRAY to face the invaders.",a:""},
 ],
 clare_saracen_miracle:[
+  {s:"Narrator",t:"\"Clare had herself carried to the gate of the monastery, the pyx containing the Body of Christ before her. She prostrated herself before the Lord and prayed with abundant tears: 'O Lord, protect these your handmaidens whom I cannot protect at this hour.'",a:"Acts of the Process of Canonization of St. Clare, 1253"},
+  {s:"Narrator",t:"\"A voice like the voice of a child was heard: 'I will always protect you.' And the Saracens who had entered the garden — some of whom had scaled the cloister walls — fled in terror, without harming anyone.\"",a:"Acts of the Process of Canonization of St. Clare, 1253; Thomas of Celano, Life of St. Clare, c. 1255"},
+  {s:"Clare",t:"\"Blessed are You, O Lord God, who has kept Your handmaidens safe this day. Let us not trust in our own power — for we have none. We have only this.\"",a:"Acts of the Process of Canonization; Thomas of Celano"},
+  {s:"Narrator",t:"The invaders fled. Not a single sister was harmed. The following year — 1241 — Frederick II's forces attacked Assisi itself. The people of Assisi attributed their deliverance to Clare's prayers.",a:"Acts of the Process of Canonization of St. Clare, 1253"},
   {s:"Narrator",t:"\"Clare had herself carried to the door, and commanded that the silver and ivory pyx in which the Body of Christ was kept be brought to her. Prostrating herself before the Lord, she prayed:\"",a:"Acts of the Process of Canonization of St. Clare, 1253"},
   {s:"Clare",t:"\"Lord, look upon these servants of Yours, for I cannot protect them. I entrust their protection to You, for You have nourished them with Your own Body.\"",a:"Acts of the Process of Canonization of St. Clare, 1253"},
   {s:"Narrator",t:"\"A voice like a child's was heard from the pyx, saying: 'I will always protect you.' Then a great darkness fell upon the soldiers and they fell back in terror from the walls.\"",a:"Thomas of Celano, Life of St. Clare, c. 1255"},
@@ -452,6 +574,10 @@ clare_christmas_intro:[
   {s:"Objective",t:"Kneel before the altar. Press PRAY to receive the miraculous vision.",a:""},
 ],
 clare_christmas_miracle:[
+  {s:"Narrator",t:"\"Although she was ill at the monastery of San Damiano on Christmas night and could not attend the solemn celebration in the church — the whole ceremony appeared before her eyes and she saw the manger and the Infant and heard the friars sing their praises of the newborn Lord.\"",a:"Thomas of Celano, Life of St. Clare, Ch. XXIX, c. 1255"},
+  {s:"Clare",t:"\"Dearest Sisters — I have seen it. I was not there in body, but I was there. God gave me what my illness took from me. I heard the singing. I saw the manger. I saw the Child.\"",a:"Thomas of Celano, Life of St. Clare; Regis Armstrong, ed., Clare of Assisi: Early Documents"},
+  {s:"Narrator",t:"In 1958, Pope Pius XII declared St. Clare the Patron of Television. His reasoning: as she once saw a distant Mass projected in vision upon her cell wall, so television transmits images from afar. It is one of the stranger and more beautiful patronages in the history of the Church.",a:"Papal decree, Pius XII, February 14, 1958"},
+  {s:"Clare",t:"\"Nothing in this world is permanent but love. And even love changes — it grows purer, more transparent, more free. God is the source of every love, and when we reach the source, we understand everything we ever loved.\"",a:"St. Clare of Assisi, Letters to Agnes of Prague, c. 1234"},
   {s:"Narrator",t:"\"Suddenly the entire ceremony of the church appeared to her sight. She saw the manger of the Lord, the crib, the holy child wrapped in swaddling cloths, and the friars singing their praises.\"",a:"Thomas of Celano, Life of St. Clare, Ch. XXIX, c. 1255"},
   {s:"Clare",t:"O Lord — You have given me what I could not come to receive. Blessed be Your name forever and ever!",a:"St. Clare of Assisi"},
   {s:"Narrator",t:"Clare died on August 11, 1253, at the age of 59 — forty-two years after she fled her family to follow Francis. Her last words were:",a:"Acts of the Process of Canonization of St. Clare"},
@@ -459,28 +585,42 @@ clare_christmas_miracle:[
 ],
 /* BONAVENTURE */
 bona_vision_intro:[
+  {s:"Narrator",t:"Giovanni di Fidanza was born in Bagnoregio, Tuscany, in 1221. As a child he fell gravely ill and his mother, desperate, brought him to Francis of Assisi and begged him to pray. Francis did. The child recovered completely. Francis is said to have exclaimed: 'O buona ventura!' — 'O good fortune!' — and the name stayed with him for life.",a:"Works of St. Bonaventure, Introduction; Opera Omnia, ed. Quaracchi"},
+  {s:"Narrator",t:"He entered the Franciscan Order in 1243, studied at Paris under Alexander of Hales, and became a master of theology. In 1257, he was elected Minister General of the Franciscan Order — arriving to find it in deep theological crisis. He spent years healing the rift between the Spirituals and the Conventuals through prayer, writing, and the example of his own life.",a:"John Quinn, A Companion to the Works of St. Bonaventure, Brill, 2010"},
+  {s:"Bonaventure",t:"\"I confess before God that the reason which made me love the life of blessed Francis most was that it resembled the beginning and growth of the Church. The Church began with simple fishermen, and afterwards was enriched by most distinguished and wise doctors.\"",a:"St. Bonaventure, Major Life of St. Francis, Prologue, 1263"},
+  {s:"Objective",t:"Open the great book. Press PRAY to receive the vision of the soul's journey to God.",a:""},
   {s:"Narrator",t:"La Verna, 1259. Brother Bonaventure, newly elected Minister General of the Franciscans, climbed the mountain where Francis had received the Stigmata. He prayed for understanding of the mystical path.",a:"St. Bonaventure, Itinerarium Mentis in Deum, Prologue, 1259"},
   {s:"Bonaventure",t:"\"Stirred by the example of our most blessed father Francis, I was seeking this peace with panting soul. Then, struck with wonder at the manner of so high a contemplation, I was led to investigate what had happened to Francis on La Verna.\"",a:"St. Bonaventure, Itinerarium Mentis in Deum, Prologue"},
   {s:"Objective",t:"Ascend the mountain and approach the glowing Cross. Press PRAY to receive the mystical vision.",a:""},
 ],
 bona_vision_miracle:[
-  {s:"Narrator",t:"In a sudden moment of clarity, Bonaventure understood: the six wings of the seraph that appeared to Francis corresponded to six stages of the soul's ascent to God.",a:"St. Bonaventure, Itinerarium Mentis in Deum, 1259"},
-  {s:"Bonaventure",t:"\"The six wings of the seraph can rightly be taken to symbolise the six levels of illumination by which the soul is disposed, as if by steps, to pass over to peace through ecstatic elevation of the mind.\"",a:"St. Bonaventure, Itinerarium Mentis in Deum, Prologue, 1259"},
-  {s:"Bonaventure",t:"\"There is no other path but through the burning love of the Crucified, a love which so transformed Paul into Christ that he could say: 'With Christ I am nailed to the cross; it is now no longer I that live, but Christ lives in me.'\"",a:"St. Bonaventure, Itinerarium Mentis in Deum, Ch. VII, 1259"},
-  {s:"Narrator",t:"Bonaventure descended the mountain and wrote the Itinerarium Mentis in Deum — 'The Journey of the Mind to God' — one of the greatest works of medieval mystical theology. He was later declared a Doctor of the Church.",a:""},
+  {s:"Bonaventure",t:"\"If you ask how such things occur, seek the answer in God's grace, not in doctrine; in the longing of the will, not in the understanding; in the sighs of prayer, not in research; seek the bridegroom and not the teacher; God and not man; darkness and not clarity; not light but the fire that totally inflames and carries us into God by ecstatic unctions and burning affections.\"",a:"St. Bonaventure, Itinerarium Mentis in Deum, Ch. VII, 1259"},
+  {s:"Narrator",t:"In a sudden moment of clarity, Bonaventure saw: the six wings of the seraph that had appeared to Francis corresponded to six stages of the soul's ascent to God. He wrote furiously through the night — and produced the Itinerarium Mentis in Deum, the 'Soul's Journey into God' — one of the supreme works of Christian mystical theology.",a:"St. Bonaventure, Itinerarium, Prologue; Ewert Cousins, Bonaventure, Paulist Press, 1978"},
+  {s:"Bonaventure",t:"\"Pass over with all your strength and all your love; for this passage is made not with the feet of the body but with the desire of the heart. In this passing over, Christ is the way, and Christ is the door.\"",a:"St. Bonaventure, Itinerarium Mentis in Deum, Ch. VII"},
+  {s:"Narrator",t:"Bonaventure served as Minister General of the Franciscan Order for seventeen years, healing its internal divisions. He died in 1274, still in service at the Council of Lyon. He was declared a Doctor of the Church in 1587 — the Seraphic Doctor, for his love of Francis and his mystical fire.",a:"Opera Omnia Sancti Bonaventurae; Papal declaration, Sixtus IV, 1587"},
 ],
 /* HEAVEN */
 heaven_jesus:[
+  {s:"Jesus",t:"\"Peace be with you. I am not a stranger to you. You have walked this road before — in prayer, in suffering, in love. Every act of mercy you have ever seen or done — that was Me. Every moment of beauty that stopped your breath — that was Me showing you My face.\"",a:""},
+  {s:"Narrator",t:"The wounds in his hands are still visible. They do not bleed — but they are there. He extends them toward you, as though to show you that he has not forgotten what it cost.",a:""},
+  {s:"Jesus",t:"\"I am the way, the truth, and the life. These words are not theology — they are a door. And you are here. Come further.\"",a:"John 14:6"},
   {s:"Jesus",t:"\"Peace be with you. Do not be afraid. I am the first and the last, and the living one. Behold, I was dead, and see, I am alive forever and ever.\"",a:"Revelation 1:17-18"},
   {s:"Jesus",t:"\"Come to Me, all you who labor and are heavily burdened, and I will give you rest. Take My yoke upon you and learn from Me, for I am meek and humble of heart.\"",a:"Matthew 11:28-29"},
   {s:"Jesus",t:"\"I am the Way, and the Truth, and the Life. No one comes to the Father except through Me. You have brought prayers from the earth — well done, good and faithful servant.\"",a:"John 14:6; Matthew 25:21"},
 ],
 heaven_spirit:[
+  {s:"Holy Spirit",t:"\"I am the Lord and Giver of Life. I breathed into Adam, and he became a living soul. I moved upon the water in the beginning. I am in every prayer that has ever left a human heart — including yours. Especially yours.\"",a:"Genesis 1:2; John 6:63"},
+  {s:"Narrator",t:"The dove circles slowly overhead. The air around you smells of something between roses and rain. You do not want to move from this place.",a:""},
+  {s:"Holy Spirit",t:"\"Come further up, and further in. The best is still ahead.\"",a:""},
   {s:"Holy Spirit",t:"\"The wind blows where it wishes, and you hear its sound, but you do not know where it comes from or where it goes. So it is with everyone who is born of the Spirit.\"",a:"John 3:8"},
   {s:"Holy Spirit",t:"\"The Spirit helps us in our weakness. For we do not know what to pray for as we ought, but the Spirit Himself intercedes for us with groanings too deep for words.\"",a:"Romans 8:26"},
   {s:"Holy Spirit",t:"\"I will pour out My Spirit on all flesh; your sons and your daughters shall prophesy, your old men shall dream dreams, and your young men shall see visions.\"",a:"Joel 2:28 / Acts 2:17"},
 ],
 heaven_father:[
+  {s:"God",t:"\"Before the world was made, I knew you. I called you by name in the silence before time began. Everything that has ever loved you — every person, every creature, every small mercy — was My hand reaching toward you.\"",a:"Isaiah 43:1; Jeremiah 1:5"},
+  {s:"Narrator",t:"You are in the presence of the living God. There are no adequate words. But you find that words are not needed — that you are simply known, completely, without judgment, without shame. It is the most terrible and the most beautiful thing you have ever experienced.",a:""},
+  {s:"God",t:"\"Well done, good and faithful servant. You have been faithful over a little — I will set you over much. Enter into the joy of your master.\"",a:"Matthew 25:23"},
+  {s:"Narrator",t:"The pillar of light expands until it fills everything. You are not afraid. You are home.",a:""},
   {s:"God the Father",t:"\"I have loved you with an everlasting love; therefore I have continued My faithfulness to you.\"",a:"Jeremiah 31:3"},
   {s:"God the Father",t:"\"Can a woman forget her nursing child, that she should have no compassion on the son of her womb? Even these may forget, yet I will not forget you. Behold, I have engraved you on the palms of My hands.\"",a:"Isaiah 49:15-16"},
   {s:"God the Father",t:"\"Well done, My child. You carried prayer to the world in the name of My servant Francis. Return in peace. The door of Heaven is always open to those who knock with love.\"",a:"Based on Matthew 25:21 and Matthew 7:7-8"},
@@ -511,28 +651,35 @@ pio_healing_miracle:[
 ],
 /* ELIZABETH OF HUNGARY */
 elizabeth_roses_intro:[
-  {s:"Narrator",t:"Thuringia, Germany — 1226. Elizabeth, a princess of Hungary married to Landgrave Ludwig IV, had been secretly carrying bread from the castle to feed the poor and lepers in the valley below.",a:"Life of St. Elizabeth, Dietrich von Apolda, c. 1289"},
-  {s:"Ludwig",t:"Elizabeth! What are you carrying in your cloak? The servants say you take food from the castle every day. Let me see what you conceal.",a:"Life of St. Elizabeth, Dietrich von Apolda"},
-  {s:"Elizabeth",t:"\"My lord, I carry only — roses.\"",a:"Traditional, confirmed in Dietrich von Apolda, c. 1289"},
-  {s:"Objective",t:"Carry your gift south. Press PRAY when you reach the castle gate.",a:""},
+  {s:"Narrator",t:"Wartburg Castle, Thuringia, Germany — winter, 1226. Elizabeth of Hungary was born in 1207, a princess of the Arpád dynasty, and betrothed to Ludwig IV of Thuringia at the age of four. From childhood she had shown an extraordinary love for the poor: giving away her food, her possessions, and finally her time. By nineteen she had become a Third Order Franciscan.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289; August Potthast, Regesta Pontificum Romanorum"},
+  {s:"Narrator",t:"Every day, Elizabeth left the Wartburg with her mantle full of bread, meat, and wine — provisions taken from her husband's own larder — and carried them to the sick and hungry people who lived in the valley below. The castle servants grew suspicious and reported her to Ludwig.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289"},
+  {s:"Ludwig",t:"Elizabeth! Stop. The servants say you take food from my stores every single day. I will know what you carry. Open your cloak — now.",a:"Life of St. Elizabeth, attributed to Dietrich von Apolda"},
+  {s:"Elizabeth",t:"\"My lord... I carry only — roses.\"",a:"Traditional, confirmed in Dietrich von Apolda, c. 1289 and multiple hagiographic sources"},
+  {s:"Narrator",t:"Ludwig grabbed the edge of her mantle and pulled it back. It was December. It was Germany. And yet — he saw only roses. Red and white, fragrant and fresh, impossible out of season.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289"},
+  {s:"Objective",t:"Walk toward the castle gate with your hidden gift. Press PRAY when you reach Ludwig.",a:""},
 ],
 elizabeth_roses_miracle:[
-  {s:"Narrator",t:"\"Ludwig opened her cloak. And truly, in place of the bread and wine she had been carrying, he found only a great quantity of red and white roses — more beautiful than any he had ever seen.\"",a:"Life of St. Elizabeth, Dietrich von Apolda, c. 1289"},
-  {s:"Ludwig",t:"Roses... In the middle of winter. Elizabeth — what is this? How is this possible?",a:"Life of St. Elizabeth"},
+  {s:"Narrator",t:"\"Ludwig opened her cloak. And truly, in place of the bread and wine she had been carrying, he found only a great quantity of red and white roses — more beautiful than any he had ever seen, though it was the dead of winter.\"",a:"Life of St. Elizabeth, Dietrich von Apolda, c. 1289"},
+  {s:"Ludwig",t:"Roses. Only roses. Elizabeth — what is this? How is this possible? It is December. There are no roses in December.",a:"Life of St. Elizabeth, Dietrich von Apolda"},
   {s:"Elizabeth",t:"\"God is good, my lord. He hides His mercy in the most ordinary things — and reveals it to those who look with the eyes of the heart.\"",a:"St. Elizabeth of Hungary, traditional attribution"},
-  {s:"Narrator",t:"Elizabeth of Hungary was widowed at 20, expelled from the castle, and lived in radical poverty caring for the sick until her death at 24. She was canonised in 1235 — just four years after her death.",a:"Bull of Canonisation, Pope Gregory IX, May 27, 1235"},
+  {s:"Narrator",t:"The roses vanished. Elizabeth continued her mission. Ludwig, moved by the miracle, became her protector rather than her obstacle. He died on Crusade in 1227, and Elizabeth, widowed at twenty, was expelled from the Wartburg by his brothers. She refused to reclaim her title or possessions.",a:"Dietrich von Apolda, Life of St. Elizabeth; Johannes Jorgensen, St. Elizabeth of Hungary, 1938"},
+  {s:"Elizabeth",t:"\"I have given everything to God. I am glad of it. Now I am free to be poor, as my Lord was poor — and in that poverty, I find more wealth than I ever knew in the castle.\"",a:"St. Elizabeth of Hungary, attributed in hagiographic tradition"},
+  {s:"Narrator",t:"Elizabeth founded the first hospital in Marburg, dedicating it to St. Francis of Assisi. She worked there herself, washing patients, changing dressings, caring for the dying — until her own death on November 17, 1231, aged just 24. She was canonised by Pope Gregory IX on May 27, 1235, just four years later.",a:"Bull of Canonisation, Gloriosus in Majestate, Gregory IX, 1235"},
 ],
 elizabeth_leper_intro:[
-  {s:"Narrator",t:"Elizabeth had personally washed the feet of lepers and cared for those whom society shunned. One night, she laid a gravely ill leper in her own marital bed.",a:"Thomas of Celano, Life of St. Elizabeth, c. 1232"},
-  {s:"Maid",t:"Your Grace! There is a leper in the master's bed! When the Landgrave returns — he will be furious!",a:"Life of St. Elizabeth, attributed to her handmaids"},
-  {s:"Elizabeth",t:"The bed is warm and large. The man is suffering. Where else should a suffering man be?",a:"St. Elizabeth of Hungary, attributed"},
-  {s:"Objective",t:"Approach the sick man. Press PRAY to care for him in the name of Christ.",a:""},
+  {s:"Narrator",t:"Wartburg Castle, Thuringia — 1226. Elizabeth had organised a network of charitable care throughout the region: distributing food, nursing the sick, and bathing lepers with her own hands — acts that horrified the court but which she performed with quiet joy. Thomas of Celano, who wrote her life within two years of her death, collected the accounts of her maids directly.",a:"Thomas of Celano, Life of St. Elizabeth of Hungary, c. 1232; testimonies of Elizabeth's handmaids, Isentrude and Guda"},
+  {s:"Narrator",t:"One afternoon Elizabeth brought a man afflicted with severe leprosy into Wartburg Castle. The servants recoiled. She ignored them, led him to her own bedroom, and laid him in the great marital bed — the Landgrave's own bed, beneath the finest linen of the house.",a:"Thomas of Celano, Life of St. Elizabeth, c. 1232; Dietrich von Apolda, c. 1289"},
+  {s:"Maid Isentrude",t:"Your Grace! There is a leper in the master's bed! The sheets are ruined. When the Landgrave returns from hunting — he will be furious! He will think you have taken leave of your senses!",a:"Isentrude's testimony, recorded in Thomas of Celano, Life of St. Elizabeth"},
+  {s:"Elizabeth",t:"\"The bed is warm and large. The man is suffering. Where else should a man who is suffering be placed, except in the warmest and most comfortable place that is available? Leave us.\"",a:"St. Elizabeth of Hungary, attributed in the testimony of her maids"},
+  {s:"Objective",t:"Approach the sick man lying in the bed. Press PRAY to bathe his wounds in the name of Christ.",a:""},
 ],
 elizabeth_leper_miracle:[
-  {s:"Narrator",t:"\"When Ludwig entered the room in a fury, he pulled back the bedcovers — and instead of a diseased body, he saw the form of Christ crucified, radiant with light, lying upon his own pillow.\"",a:"Thomas of Celano, Life of St. Elizabeth, c. 1232"},
-  {s:"Ludwig",t:"\"Elizabeth... I see Him. I see Christ. In our bed. In the place of the sick man.\" He fell to his knees and wept.",a:"Life of St. Elizabeth, Thomas of Celano"},
-  {s:"Elizabeth",t:"\"This is what I have always said, my love. Whenever we serve the least of these — we serve Christ Himself.\"",a:"cf. Matthew 25:40, St. Elizabeth's practice"},
-  {s:"Narrator",t:"Elizabeth of Hungary died November 17, 1231, aged just 24 years. She is patron of the poor, bakers, and the Franciscan Third Order.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289"},
+  {s:"Narrator",t:"\"When Ludwig entered the room in a fury, he pulled back the bedcovers — and instead of a diseased and rotting body, he saw the form of Christ crucified upon the cross, shining with unearthly light, lying in the very place where the leper had lain.\"",a:"Thomas of Celano, Life of St. Elizabeth, c. 1232"},
+  {s:"Ludwig",t:"\"Elizabeth... I see Him. I see Christ. In our bed. Upon my pillow.\" He stood motionless. Then he fell to his knees and wept like a child.",a:"Life of St. Elizabeth, Thomas of Celano, c. 1232"},
+  {s:"Elizabeth",t:"\"This is what I have always told you, my love. When we serve the least of these — the sick, the despised, the forgotten — we are not merely doing good works. We are touching the body of Christ Himself.\"",a:"cf. Matthew 25:40; attributed in hagiographic tradition"},
+  {s:"Narrator",t:"After this event, Ludwig never again questioned Elizabeth's charity. He protected it and made it possible. He died on Crusade in 1227, aged twenty-seven. Elizabeth never recovered from his death. She gave away everything, entered poverty, nursed the dying in her Marburg hospital, and refused all comfort — until she herself died on November 17, 1231.",a:"Dietrich von Apolda, Life of St. Elizabeth, c. 1289; Johannes Jorgensen, 1938"},
+  {s:"Elizabeth",t:"\"I was twenty-four when the bishop placed the crown of thorns upon my head for the last time and blessed me. I knew what it meant. I was content. I had given everything, and held nothing back. What more can a person do?'\"",a:"Elizabeth of Hungary, attributed, traditional"},
+  {s:"Narrator",t:"St. Elizabeth of Hungary is patron of the poor, bakers, hospitals, the Franciscan Third Order, and the nation of Hungary. Her remains rest in the Church of St. Elizabeth in Marburg — the church built in her honour. She is one of the most beloved saints of the medieval Church.",a:"Dietrich von Apolda, Life of St. Elizabeth; Bull of Canonisation, Gloriosus in Majestate, Gregory IX, May 27, 1235"},
 ],
 /* ── ANTHONY EXTENDED ── */
 anthony_mule_intro:[
@@ -721,13 +868,13 @@ function doResize(){
    SCENE HELPERS
 ═══════════════════════════════════════════════════════════ */
 function tagObj(o){o.userData._s=true;return o;}
-function addS(o){tagObj(o);G.scene.add(o);return o;}
+function addS(o){tagObj(o);G.scene.add(o);if(o.isLight&&o.userData&&o.userData.glow)G.glowLights.push(o);return o;}
 function clearStage(){
   var rm=[];G.scene.traverse(function(o){if(o.userData&&o.userData._s)rm.push(o);});
   for(var i=0;i<rm.length;i++)G.scene.remove(rm[i]);
   G.interactables=[];G.churchPieces=[];G.fixedPieces=0;G.birds=[];G.particles3D=[];
   G.wolfGroup=null;G.wolfTail=null;G.wolfEyes=[];G.wolfTamed=false;
-  G.birdsDone=false;G.stigmataDone=false;G.fishSpawned=false;
+  G.birdsDone=false;G.stigmataDone=false;G.glowLights=[];G.fishSpawned=false;
   G.childAppeared=false;G.saracensFled=false;G.christmasVision=false;G.bookDone=false;
   G.anthonyMuleDone=false;G.anthonyRaiseDone=false;G.anthonyPaduaDone=false;
   G.pioStigDone=false;G.pioFirstMassDone=false;G.pioConfessionalDone=false;
@@ -738,6 +885,7 @@ function clearStage(){
   G.jesusGroup=null;G.holyGroup=null;G.godGroup=null;G.inHeaven=false;
 }
 function mkMat(c,ec,ei){var m=new THREE.MeshLambertMaterial({color:c});if(ec!=null){m.emissive=new THREE.Color(ec);m.emissiveIntensity=ei||0.6;}return m;}
+function mkMatR(c,rough,metal,ec,ei){var m=new THREE.MeshStandardMaterial({color:c,roughness:rough!==undefined?rough:0.82,metalness:metal||0.05});if(ec!=null){m.emissive=new THREE.Color(ec);m.emissiveIntensity=ei||0.5;}return m;}
 function mkMatStd(c,rough,metal){return new THREE.MeshStandardMaterial({color:c,roughness:rough||0.85,metalness:metal||0.05});}
 function mkBox(w,h,d,c,x,y,z){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mkMat(c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return addS(m);}
 function mkCone(r,h,s,c,x,y,z){var m=new THREE.Mesh(new THREE.ConeGeometry(r,h,s),mkMat(c));m.position.set(x,y,z);m.castShadow=true;return addS(m);}
@@ -749,11 +897,16 @@ function mkFog(c,n,f){G.scene.background=new THREE.Color(c);G.scene.fog=new THRE
 function mkHemi(sky,gnd,i){return addS(new THREE.HemisphereLight(sky,gnd,i||0.35));}
 function mkNPC(c,x,y,z){
   var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(.3,.44,1.15,8),mkMat(c));body.position.y=.575;body.castShadow=true;
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.28,10,8),mkMat(0xDEB887));head.position.y=1.36;head.castShadow=true;
-  var armL=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,.65,6),mkMat(c));armL.position.set(-.42,.85,.0);armL.rotation.z=.32;armL.castShadow=true;
-  var armR=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,.65,6),mkMat(c));armR.position.set(.42,.85,.0);armR.rotation.z=-.32;armR.castShadow=true;
-  g.add(body,head,armL,armR);
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.3,.45,1.18,9),mkMat(c));body.position.y=.59;body.castShadow=true;body.receiveShadow=true;
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.28,12,9),mkMat(0xDEB887));head.position.y=1.38;head.castShadow=true;
+  // Hair hint
+  var hair=new THREE.Mesh(new THREE.SphereGeometry(.3,9,5,0,Math.PI*2,0,Math.PI*.45),mkMat(0x4a2a08));hair.position.y=1.48;g.add(hair);
+  var armL=new THREE.Mesh(new THREE.CylinderGeometry(.1,.11,.68,7),mkMat(c));armL.position.set(-.44,.88,.0);armL.rotation.z=.3;armL.castShadow=true;
+  var armR=armL.clone();armR.position.set(.44,.88,.0);armR.rotation.z=-.3;
+  // Feet
+  var fL=new THREE.Mesh(new THREE.BoxGeometry(.2,.09,.28),mkMat(0x6a4020));fL.position.set(-.12,.05,.1);
+  var fR=fL.clone();fR.position.set(.12,.05,.1);
+  g.add(body,head,armL,armR,fL,fR);
   g.userData.armL=armL;g.userData.armR=armR;
   g.position.set(x,y,z);g.castShadow=true;return addS(g);
 }
@@ -765,14 +918,33 @@ function mkGlowBox(w,h,d,c,ec,ei,x,y,z){var m=new THREE.Mesh(new THREE.BoxGeomet
 function createPlayer(){
   if(G.playerGroup)G.scene.remove(G.playerGroup);
   var g=new THREE.Group();
-  var body=new THREE.Mesh(new THREE.CylinderGeometry(.34,.52,1.28,9),mkMat(0x6B4226));body.position.y=.64;body.castShadow=true;body.receiveShadow=true;g.add(body);
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.29,12,10),mkMat(0xDEB887));head.position.y=1.56;head.castShadow=true;g.add(head);
-  var hood=new THREE.Mesh(new THREE.SphereGeometry(.31,10,5,0,Math.PI*2,0,Math.PI*.5),mkMat(0x5a3318));hood.position.y=1.67;hood.castShadow=true;g.add(hood);
-  var belt=new THREE.Mesh(new THREE.TorusGeometry(.38,.048,6,16),mkMat(0xF5DEB3));belt.rotation.x=Math.PI/2;belt.position.y=.56;g.add(belt);
-  var haloMat=new THREE.MeshLambertMaterial({color:0xFFD700,emissive:new THREE.Color(0xFFD700),emissiveIntensity:.9,transparent:true,opacity:.85});
-  var halo=new THREE.Mesh(new THREE.TorusGeometry(.38,.042,6,24),haloMat);halo.position.y=1.95;g.add(halo);
-  // Halo glow light
-  var haloLight=new THREE.PointLight(0xffd700,.6,3.5);haloLight.position.y=1.95;g.add(haloLight);
+  // Habit (robe) — tapered, Franciscan brown
+  var body=new THREE.Mesh(new THREE.CylinderGeometry(.36,.56,1.35,10),mkMat(0x7B4E28));body.position.y=.675;body.castShadow=true;body.receiveShadow=true;g.add(body);
+  // Underskirt hem
+  var hem=new THREE.Mesh(new THREE.CylinderGeometry(.56,.62,.12,10),mkMat(0x6B4020));hem.position.y=.06;g.add(hem);
+  // Head
+  var head=new THREE.Mesh(new THREE.SphereGeometry(.3,12,10),mkMat(0xDBA880));head.position.y=1.62;head.castShadow=true;g.add(head);
+  // Tonsure circle (top of head, lighter skin)
+  var tonsure=new THREE.Mesh(new THREE.CircleGeometry(.14,10),new THREE.MeshLambertMaterial({color:0xc8906a}));tonsure.rotation.x=-Math.PI/2;tonsure.position.set(0,1.92,0);g.add(tonsure);
+  // Hood (capuche) over back
+  var hood=new THREE.Mesh(new THREE.SphereGeometry(.33,10,6,0,Math.PI*2,0,Math.PI*.55),mkMat(0x6B3E18));hood.position.y=1.72;hood.rotation.x=.15;g.add(hood);
+  // Rope belt (knotted cord — symbol of the three vows)
+  var belt=new THREE.Mesh(new THREE.TorusGeometry(.41,.045,8,20),mkMat(0xF5E8C0));belt.rotation.x=Math.PI/2;belt.position.y=.58;g.add(belt);
+  // Three knots on rope belt (poverty, chastity, obedience)
+  for(var k=0;k<3;k++){
+    var kn=new THREE.Mesh(new THREE.SphereGeometry(.07,5,4),mkMat(0xE8D5A0));
+    var ka=(k/3)*Math.PI*.8-Math.PI*.2;kn.position.set(Math.cos(ka)*.41,.5,Math.sin(ka)*.41);g.add(kn);
+  }
+  // Arms
+  var armL=new THREE.Mesh(new THREE.CylinderGeometry(.1,.12,.65,7),mkMat(0x7B4E28));armL.position.set(-.42,.9,.0);armL.rotation.z=.28;g.add(armL);
+  var armR=armL.clone();armR.position.set(.42,.9,.0);armR.rotation.z=-.28;g.add(armR);
+  // Sandalled feet hints
+  var fL=new THREE.Mesh(new THREE.BoxGeometry(.22,.1,.32),mkMat(0x5a3818));fL.position.set(-.14,.05,.08);g.add(fL);
+  var fR=fL.clone();fR.position.set(.14,.05,.08);g.add(fR);
+  // Halo — golden, glowing
+  var haloMat=new THREE.MeshLambertMaterial({color:0xFFD700,emissive:new THREE.Color(0xFFCC00),emissiveIntensity:1.1,transparent:true,opacity:.88});
+  var halo=new THREE.Mesh(new THREE.TorusGeometry(.41,.04,7,28),haloMat);halo.position.y=1.98;g.add(halo);
+  var haloLight=new THREE.PointLight(0xffd700,.7,4);haloLight.position.y=2;g.add(haloLight);
   G.playerGroup=g;G.scene.add(g);setPos(0,0);
 }
 function setPos(x,z){G.px=x;G.pz=z;if(G.playerGroup)G.playerGroup.position.set(x,0,z);}
@@ -858,57 +1030,113 @@ function loadSaintStage(cuts,idx,doneFn){
    ── FRANCIS STAGES ──
 ═══════════════════════════════════════════════════════════ */
 function bAssisi(){
-  mkFog(0x87ceeb,40,120);
-  mkAmb(0xfff8e0,.65);mkHemi(0x88bbff,0x3a7a3a,.4);mkDir(0xfff0cc,1.4,15,35,10);
-  // Second fill light from opposite side
-  var fill=new THREE.DirectionalLight(0x88bbff,.4);fill.position.set(-10,20,-5);addS(fill);
-  mkGnd(0x5a8a3a,110,110);
-  // Rolling hills
-  for(var i=0;i<7;i++){var a=(i/7)*Math.PI*2,r=32+Math.random()*10,hh=6+Math.random()*8;mkSph(r,8,6,0x3d7a3a,Math.cos(a)*r,hh-r+2,Math.sin(a)*r-5);}
-  // Assisi buildings
-  mkBox(9,6,6,0xd4c4a0,-12,3,-15);mkBox(9,1.8,6,0x8b3a3a,-12,7.2,-15);
-  mkBox(7,9,5,0xd4c4a0,-5,4.5,-18);mkBox(7,1.8,5,0x8b3a3a,-5,10.2,-18);
-  mkBox(3.5,14,3.5,0xc0b090,6,7,-16);mkBox(3.5,1.8,3.5,0x7a2020,6,14.8,-16);
-  mkBox(12,9,2,0xd4c4a0,0,4.5,-22);mkBox(5,5,2,0xd4c4a0,0,11,-22);mkBox(2.5,2.5,2,0xffdd88,0,14.5,-22);
-  // Windows on buildings
-  for(var w=0;w<4;w++){mkBox(1.2,1.5,.3,0x88aacc,-12+w*2.5,4.5,-11.9);}
-  // Stone path
-  mkBox(4,.1,22,0xbbaa88,0,.02,-11);
-  // Trees
-  for(var j=0;j<10;j++){var a2=(j/10)*Math.PI*2,tx=Math.cos(a2)*20,tz=Math.sin(a2)*15-5;mkBox(.65,4.5,.65,0x6B3A2A,tx,2.25,tz);mkSph(3,8,6,0x2d6b2d,tx,8,tz);}
-  // Ambient point lights on buildings
-  var bl=new THREE.PointLight(0xffeedd,1.2,25);bl.position.set(0,12,-18);addS(bl);
-  var comp=mkNPC(0xb06030,5,0,3);comp.userData.prompt='Talk to Companion';comp.userData.dlgKey='assisi_welcome';
+  mkFog(0x87ceeb,45,130);
+  mkAmb(0xfff8e0,.68);mkHemi(0x88bbff,0x3a7a3a,.42);mkDir(0xfff0cc,1.5,18,38,12);
+  var fill=new THREE.DirectionalLight(0x88bbff,.38);fill.position.set(-12,22,-5);addS(fill);
+  mkGnd(0x5a8a3a,120,120);
+  // Rolling Umbrian hills
+  for(var i=0;i<9;i++){var a=(i/9)*Math.PI*2,r=34+Math.random()*12,hh=7+Math.random()*9;mkSph(r,8,6,0x3d7a3a,Math.cos(a)*r,hh-r+2,Math.sin(a)*r-5);}
+  // Assisi medieval buildings — varied heights
+  mkBox(9,6,6,0xd4c4a0,-12,3,-16);mkBox(9,1.6,6,0x8b3a3a,-12,7,-16);
+  // Windows
+  for(var w=0;w<3;w++)mkBox(1.1,1.4,.25,0x6688aa,-14+w*3,4.2,-12.9);
+  mkBox(7,9,5,0xd4c4a0,-5,4.5,-19);mkBox(7,1.6,5,0x8b3030,-5,10,-19);
+  for(var w2=0;w2<2;w2++)mkBox(1.1,1.4,.25,0x6688aa,-7+w2*4,5.5,-16.4);
+  // Bell tower — Assisi's landmark
+  mkBox(3.5,16,3.5,0xc0b090,6,8,-17);mkBox(3.5,1.6,3.5,0x7a2020,6,16.5,-17);
+  mkGlowBox(.2,2.2,.2,0xffd700,0xffaa00,.7, 6,18,-17);
+  // Cathedral facade
+  mkBox(14,10,2.5,0xddd0b0,0,5,-24);mkBox(6,6,2.5,0xddd0b0,0,12,-24);mkBox(3,3,2.5,0xffe888,0,16,-24);
+  // Cathedral rose window
+  mkBox(3,3,.3,0x8899cc,0,9.5,-22.7);
+  // Cathedral door arch
+  mkBox(3,5,.4,0x3a2a14,-1.5,2.5,-22.7);mkBox(3,5,.4,0x3a2a14,1.5,2.5,-22.7);mkBox(6,1.5,.4,0x3a2a14,0,6.5,-22.7);
+  // Market stalls along path
+  for(var m=0;m<4;m++){
+    var mx=-6+m*4,mz=-8;
+    mkBox(2.5,.1,1.5,0xcc8822,mx,.82,mz);
+    mkBox(2.5,.05,1.5,0xaa7020,mx,1.8,mz);
+    if(m%2===0)mkBox(2.5,2,1.5,0xcc8822+m*0x111,mx,1,mz+.5);
+  }
+  // Stone path — cobbled look
+  for(var cp=0;cp<16;cp++)mkBox(3.8+Math.random()*.4,.06,1.5,0xaaa090+(cp%3)*10,0,.03,-cp*1.6-1);
+  // Trees lining path
+  for(var j=0;j<12;j++){
+    var a2=(j/12)*Math.PI*2,tx=Math.cos(a2)*22,tz=Math.sin(a2)*16-5;
+    mkBox(.6,5,.6,0x6B3A2A,tx,2.5,tz);mkSph(3.2,9,7,0x2d6b2d,tx,8.5,tz);
+  }
+  // Cypress trees — typical Umbrian landscape
+  for(var cy=0;cy<5;cy++){
+    var cx=-18+cy*9,cz=-12;
+    mkBox(.55,6,.55,0x4a2a10,cx,3,cz);
+    mkCone(1.2,8,6,0x1a5a1a,cx,10,cz);
+  }
+  // Ambient glow from cathedral
+  var bl=new THREE.PointLight(0xffe0aa,1.4,32);bl.position.set(0,13,-20);addS(bl);
+  var bl2=new THREE.PointLight(0xffeedd,.7,20);bl2.position.set(-10,8,-15);addS(bl2);
+  // Villagers
+  var v1=mkNPC(0xcc8844,-8,0,-6);v1.userData.prompt='';
+  var v2=mkNPC(0x8844cc,8,0,-4);v2.userData.prompt='';
+  // Companion Francis can speak to
+  var comp=mkNPC(0xb06030,5,0,3);comp.userData.prompt='Speak with the Companion';comp.userData.dlgKey='assisi_welcome';
   G.interactables.push(comp);
-  G.interactables.push({zone:true,x:0,z:-21,r:3.5,prompt:'Enter San Damiano Chapel',action:'dlgAdv',dlgKey:'voice_of_god'});
-  setPos(0,2);setObj('Walk to the San Damiano Chapel to the north.');hideProgress();
+  G.interactables.push({zone:true,x:0,z:-22,r:4,prompt:'Approach San Damiano Chapel — enter and pray',action:'dlgAdv',dlgKey:'voice_of_god'});
+  setPos(0,2);setObj('Walk north to the ruined Chapel of San Damiano');hideProgress();
 }
 
 function bSanDamiano(){
-  mkFog(0x7ba3cc,32,95);mkAmb(0xfff2dd,.55);mkHemi(0x88aacc,0x556644,.35);mkDir(0xffeedd,1.15,12,28,8);mkGnd(0x8B7355,85,85);
-  // Chapel floor and walls
-  mkBox(14,.5,10,0xbbaa80,0,.28,0);mkBox(14,4,.8,0xc8b89a,0,2,-5);
-  mkBox(.8,6,10,0xc8b89a,-7,3,0);mkBox(.8,6,10,0xc8b89a,7,3,0);
-  // Cross on altar
-  mkBox(3,1.5,1.5,0xf0e8d0,0,.78,-4.2);
-  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.8});
-  var cv=new THREE.Mesh(new THREE.BoxGeometry(.22,2.2,.22),cm);cv.position.set(0,2.6,-4.2);addS(cv);
-  var ch=new THREE.Mesh(new THREE.BoxGeometry(.9,.22,.22),cm);ch.position.set(0,3.3,-4.2);addS(ch);
-  // Candles with point lights
-  for(var c=0;c<3;c++){
-    var cx=c*2-2;
-    mkBox(.14,.7,.14,0xeeeebb,cx,.75,-3.5);
-    var cl=new THREE.PointLight(0xffcc88,1.1,8);cl.position.set(cx,1.8,-3.5);cl.userData.glow=true;addS(cl);
+  mkFog(0x7ba3cc,30,90);mkAmb(0xfff2dd,.58);mkHemi(0x88aacc,0x4a5538,.36);mkDir(0xffeedd,1.2,14,30,9);
+  mkGnd(0x8B7355,90,90);
+  // Dirt path leading to chapel
+  for(var p=0;p<10;p++)mkBox(3.5+Math.random()*.4,.06,1.4,0x9a8a68,0,.04,p*2+3);
+  // Chapel floor — cracked stone
+  mkBox(14,.5,12,0xbbaa80,0,.28,0);
+  // Standing walls (partially ruined)
+  mkBox(14,4,.8,0xc8b89a,0,2,-6);
+  mkBox(.8,6,12,0xc8b89a,-7,3,0);
+  mkBox(.8,6,12,0xc8b89a,7,3,0);
+  // Front entrance arch
+  mkBox(4,5,.6,0xc0a878,-3,2.5,6);mkBox(4,5,.6,0xc0a878,3,2.5,6);mkBox(8,1.8,.6,0xb09868,0,5.6,6);
+  // Altar block
+  mkBox(3.2,1.4,1.8,0xf0e8d0,0,.78,-5);
+  // Byzantine crucifix (San Damiano Cross — the one that spoke to Francis)
+  var cm2=new THREE.MeshLambertMaterial({color:0x8b5e1a,emissive:new THREE.Color(0x5a3000),emissiveIntensity:.3});
+  var bgCross=new THREE.Mesh(new THREE.BoxGeometry(2.4,3.8,.18),cm2);bgCross.position.set(0,4.2,-5.8);addS(bgCross);
+  // Golden Christ figure
+  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffc000),emissiveIntensity:.9});
+  var cv=new THREE.Mesh(new THREE.BoxGeometry(.24,2.4,.24),cm);cv.position.set(0,4.8,-5.6);addS(cv);
+  var ch2=new THREE.Mesh(new THREE.BoxGeometry(1.8,.24,.24),cm);ch2.position.set(0,5.6,-5.6);addS(ch2);
+  var crossGlow=new THREE.PointLight(0xffd700,2.2,14);crossGlow.position.set(0,5,-5.6);crossGlow.userData.glow=true;addS(crossGlow);
+  // Candles on altar
+  for(var c=0;c<5;c++){
+    var cx=-4+c*2;
+    mkBox(.15,.85,.15,0xeeeebb,cx,.82,-4.5);
+    mkSph(.12,5,4,0xffdd88,cx,1.72,-4.5);
+    var cl=new THREE.PointLight(0xffcc77,1.0,7);cl.position.set(cx,2.1,-4.5);cl.userData.glow=true;addS(cl);
   }
-  // Rubble and debris  
-  for(var i=0;i<10;i++)mkBox(.5+Math.random()*.3,.35+Math.random()*.2,.5+Math.random()*.3,0x998877,(Math.random()-.5)*13,.28,(Math.random()-.5)*8);
+  // Additional chapel candelabra
+  mkBox(.18,1.1,.18,0xccaa44,-5.5,.82,0);mkBox(.18,1.1,.18,0xccaa44,5.5,.82,0);
+  var ca1=new THREE.PointLight(0xffbb55,.9,8);ca1.position.set(-5.5,2.2,0);ca1.userData.glow=true;addS(ca1);
+  var ca2=new THREE.PointLight(0xffbb55,.9,8);ca2.position.set( 5.5,2.2,0);ca2.userData.glow=true;addS(ca2);
+  // Rubble and fallen stone
+  for(var i=0;i<16;i++){
+    var rx=(Math.random()-.5)*14,rz=(Math.random()-.5)*10;
+    mkBox(.4+Math.random()*.5,.2+Math.random()*.3,.4+Math.random()*.5,0x998877+Math.floor(Math.random()*0x222222),rx,.26,rz);
+  }
+  // Small bushes growing through cracks
+  for(var b=0;b<6;b++){mkSph(.4+Math.random()*.3,5,4,0x3a6a1a,-6+b*2.5,.22,4.5);}
+  // Ceiling beams — fallen
+  mkBox(14,.35,1,0x5a3818,-0,.9,-1);mkBox(1,.35,12,0x5a3818,-5,.7,0);
+  // Sunbeam effect — angled light slab
+  var sbMat=new THREE.MeshBasicMaterial({color:0xfff8cc,transparent:true,opacity:.06});
+  var sb=new THREE.Mesh(new THREE.BoxGeometry(1,8,12),sbMat);sb.position.set(4,4,0);sb.rotation.z=.25;addS(sb);
   // Repair pieces
   G.fixedPieces=0;
-  addPiece(0xa09070,.8,3,10,7,4.5,0,'Upper Wall',0xd4c4a0);
-  addPiece(0x998866,6,.8,.8,0,6.2,-5,'Fallen Arch',0xc0a870);
-  addPiece(0x7788aa,2.5,2.5,.3,0,4,-5,'Window',0x4488cc);
-  addPiece(0x999080,.6,4,.6,-5,2,0,'Column',0xd0c0a0);
-  addPiece(0x6a4a2a,14,.4,5,0,7,2,'Roof Section',0x8B4513);
+  addPiece(0xa09070,.8,3.2,12,7,4.6,0,'Upper Side Wall',0xd4c4a0);
+  addPiece(0x998866,6.5,.8,.9,0,6.8,-6,'Apse Arch',0xc0a870);
+  addPiece(0x5577aa,2.8,2.8,.3,0,4.2,-5.8,'Rose Window',0x4488cc);
+  addPiece(0x999080,.65,4.5,.65,-5.5,2.2,0,'Stone Column',0xd0c0a0);
+  addPiece(0x6a4a2a,14,.45,5.5,0,7.5,2,'Roof Timbers',0x7B3A10);
   setPos(0,8);setObj('Repair all 5 broken sections of San Damiano (0/5)');showProgress('Repaired: 0/5');
 }
 function addPiece(col,w,h,d,x,y,z,label,fixedCol){
@@ -934,9 +1162,30 @@ function doRepair(piece){
 }
 
 function bBirds(){
-  mkFog(0x5b9fd4,35,100);mkAmb(0xfff8ee,.6);mkHemi(0x5599cc,0x3a7a3a,.4);mkDir(0xffeedd,1.3,18,32,10);mkGnd(0x4a9040,90,90);
-  for(var i=0;i<5;i++){var tx=(i-2)*4.5;mkBox(.5,5,.5,0x5D3A1A,tx,2.5,-15);mkCone(2.5+i*.3,6,5,0x2E8B2E,tx,9,-15);}
-  for(var j=0;j<5;j++)mkSph(7+j*3,6,4,0x3a7a3a,(j-2)*18,-4,-32);
+  mkFog(0x5b9fd4,38,110);mkAmb(0xfff8ee,.65);mkHemi(0x5599cc,0x3a7a3a,.42);mkDir(0xffeedd,1.35,20,35,12);mkGnd(0x4a9040,100,100);
+  // Rolling Umbrian hillside
+  for(var h=0;h<8;h++){
+    var ha=(h/8)*Math.PI*2,hr=35+Math.random()*12,hh=5+Math.random()*7;
+    mkSph(hr,6,4,0x2e6a2e,Math.cos(ha)*hr,-hh*1.2+2,Math.sin(ha)*hr-10);
+  }
+  // Trees lining a field
+  for(var i=0;i<7;i++){
+    var tx=(i-3)*5.5,tz=-16;
+    var th=5+Math.random()*3;
+    mkBox(.5,th,.5,0x5D3A1A,tx,th/2,tz);
+    mkCone(2.2+Math.random()*.6,5+Math.random()*3,6,0x1a5c1a,tx,th+3,tz);
+  }
+  // Wildflowers
+  var fc2=[0xff6688,0xffee44,0xff9944,0xee44ff,0x44aaff,0xffffff,0xffbbcc];
+  for(var fl=0;fl<35;fl++){var fx=(Math.random()-.5)*34,fz=(Math.random()-.5)*24-4;mkBox(.1,.65,.1,0x228822,fx,.32,fz);mkSph(.22,4,3,fc2[fl%7],fx,1,fz);}
+  // Stone path
+  for(var p=0;p<12;p++)mkBox(2.2+Math.random()*.4,.06,1.4,0xbbaa88+p*10,0,.02,-p*2.2-1);
+  // Olive trees
+  for(var ot=0;ot<5;ot++){var ox=(ot-2)*8,oz=-28;mkBox(.4,3.5,.4,0x5a3a18,ox,1.75,oz);mkSph(2.5,7,5,0x4a7830,ox,5.5,oz);}
+  // Distant hills
+  for(var dh=0;dh<4;dh++){var dhx=(dh-1.5)*28;mkSph(18+Math.random()*6,6,4,0x2a5a2a,dhx,-14,-55);}
+  // Fill light from sky
+  var skyFill=new THREE.DirectionalLight(0x88aadd,.35);skyFill.position.set(-15,30,-5);addS(skyFill);
   var fc=[0xff6688,0xffee44,0xff9944,0xee44ff,0x44aaff];
   for(var k=0;k<20;k++){var fx=(Math.random()-.5)*28,fz=(Math.random()-.5)*18-5;mkBox(.12,.7,.12,0x228822,fx,.35,fz);mkSph(.22,4,3,fc[k%5],fx,1,fz);}
   mkBox(3,.08,22,0xbbaa80,0,.04,-10);
@@ -951,20 +1200,76 @@ function bBirds(){
 }
 
 function bWolf(){
-  mkFog(0x556688,25,85);mkAmb(0xaabbcc,.5);mkHemi(0x334455,0x1a2a1a,.3);mkDir(0xddeeff,.9,-10,25,8);mkGnd(0x4a5a40,90,90);
-  for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2,r=26+Math.random()*8,tx=Math.cos(a)*r,tz=Math.sin(a)*r;mkBox(.8,9+Math.random()*4,.8,0x3a2510,tx,4.5,tz);mkCone(3+Math.random()*2,9,5,0x1a4a1a,tx,12,tz);}
-  mkBox(2,8,1,0xc0a880,-4,4,-18);mkBox(2,8,1,0xc0a880,4,4,-18);mkBox(10,2,1,0xc0a880,0,9,-18);
-  for(var j=0;j<10;j++)mkBox(1+Math.random(),.6,1+Math.random(),0x888877,(Math.random()-.5)*20,.5,(Math.random()-.5)*14);
+  mkFog(0x445566,22,75);mkAmb(0x9aabbcc,.45);mkHemi(0x223344,0x0a160a,.28);mkDir(0xbbccdd,.85,-12,22,10);mkGnd(0x3a4a30,100,100);
+  // Dense forest ring
+  for(var i=0;i<18;i++){
+    var a=(i/18)*Math.PI*2,r=24+Math.random()*10;
+    var tx=Math.cos(a)*r,tz=Math.sin(a)*r;
+    var th=8+Math.random()*6;
+    mkBox(.6+Math.random()*.4,th,.6+Math.random()*.4,0x2a1808,tx,th/2,tz);
+    mkCone(2.5+Math.random()*2,th*.9,5,0x0d3010,tx,th+th*.45,tz);
+  }
+  // Forest floor rocks and roots
+  for(var j=0;j<18;j++){
+    var rx=(Math.random()-.5)*28,rz=(Math.random()-.5)*22;
+    mkBox(.8+Math.random()*.8,.3+Math.random()*.4,.8+Math.random()*.8,0x556655,rx,.2,rz);
+  }
+  // Gubbio gate arch (wolf emerged from the forest beyond the city)
+  mkBox(2.2,9,1.2,0xb09870,-5,4.5,-20);mkBox(2.2,9,1.2,0xb09870,5,4.5,-20);
+  mkBox(12,2.2,1.2,0xa08860,0,9.8,-20);
+  mkBox(11.6,.4,1.2,0x906040,0,11.1,-20);
+  // Torches on pillars
+  mkGlowBox(.18,.7,.18,0xffaa22,0xffaa00,.9,-4,9.8,-19.5);
+  mkGlowBox(.18,.7,.18,0xffaa22,0xffaa00,.9, 4,9.8,-19.5);
+  var t1=new THREE.PointLight(0xffaa22,1.2,12);t1.position.set(-4,11,-20);t1.userData.glow=true;addS(t1);
+  var t2=new THREE.PointLight(0xffaa22,1.2,12);t2.position.set( 4,11,-20);t2.userData.glow=true;addS(t2);
+  // Moonlight on clearing
+  var moon=new THREE.DirectionalLight(0x8899cc,.4);moon.position.set(8,40,-10);addS(moon);
+  // Ground mist effect (low dark fog plane)
+  var mistMat=new THREE.MeshLambertMaterial({color:0x334455,transparent:true,opacity:.18});
+  var mist=new THREE.Mesh(new THREE.PlaneGeometry(80,80),mistMat);mist.rotation.x=-Math.PI/2;mist.position.y=.08;addS(mist);
+  // Frightened villagers watching from behind gate
+  for(var v=0;v<6;v++){
+    var vx=-10+v*4,vz=-18;
+    mkNPC(v%2===0?0x6a5040:0x8a7060,vx,0,vz);
+  }
   buildWolfMesh();
-  G.wolfGroup.position.set(0,0,-11);G.wolfGroup.userData.prompt='Make peace with Brother Wolf';G.wolfGroup.userData.action='wolf';
+  G.wolfGroup.position.set(0,0,-11);
+  G.wolfGroup.userData.prompt='Make peace with Brother Wolf';
+  G.wolfGroup.userData.action='wolf';
   G.interactables.push(G.wolfGroup);
-  setPos(0,6);setObj('Find the wolf and make peace');hideProgress();
+  setPos(0,5);setObj('Walk to Brother Wolf and bring peace between him and the people of Gubbio');hideProgress();
 }
 function buildWolfMesh(){
-  var g=new THREE.Group(),wm=mkMat(0x556655),hm=mkMat(0x4a5a4a);
-  var body=new THREE.Mesh(new THREE.BoxGeometry(1.8,1,2.4),wm.clone());body.position.y=.8;g.add(body);
-  var wh=new THREE.Mesh(new THREE.BoxGeometry(.9,.8,1),hm.clone());wh.position.set(0,1.5,-1.55);g.add(wh);
-  var sn=new THREE.Mesh(new THREE.BoxGeometry(.5,.4,.5),hm.clone());sn.position.set(0,1.3,-2.1);g.add(sn);
+  var g=new THREE.Group();
+  var wm=new THREE.MeshLambertMaterial({color:0x4a5545});
+  var hm=new THREE.MeshLambertMaterial({color:0x3a4535});
+  var dm=new THREE.MeshLambertMaterial({color:0x2a3428});
+  // Body
+  var body=new THREE.Mesh(new THREE.BoxGeometry(1.85,1.1,2.5),wm);body.position.y=.88;body.castShadow=true;g.add(body);
+  // Neck
+  var neck=new THREE.Mesh(new THREE.CylinderGeometry(.42,.5,.65,8),hm);neck.position.set(0,1.55,-1.1);neck.rotation.x=-.35;g.add(neck);
+  // Head
+  var wh=new THREE.Mesh(new THREE.BoxGeometry(.95,.85,1.1),hm);wh.position.set(0,1.7,-1.7);g.add(wh);
+  // Snout
+  var sn=new THREE.Mesh(new THREE.BoxGeometry(.52,.42,.55),dm);sn.position.set(0,1.5,-2.24);g.add(sn);
+  // Nose
+  var nose=new THREE.Mesh(new THREE.SphereGeometry(.1,6,5),new THREE.MeshLambertMaterial({color:0x111111}));nose.position.set(0,1.55,-2.52);g.add(nose);
+  // Ears
+  var earL=new THREE.Mesh(new THREE.ConeGeometry(.18,.38,5),dm);earL.position.set(-.34,2.12,-1.62);g.add(earL);
+  var earR=earL.clone();earR.position.set(.34,2.12,-1.62);g.add(earR);
+  // Glowing amber eyes
+  var eyeMat=new THREE.MeshLambertMaterial({color:0xff9900,emissive:new THREE.Color(0xff6600),emissiveIntensity:1.2});
+  var eyeL=new THREE.Mesh(new THREE.SphereGeometry(.1,7,6),eyeMat);eyeL.position.set(-.28,1.76,-2.16);g.add(eyeL);
+  var eyeR=eyeL.clone();eyeR.position.set(.28,1.76,-2.16);g.add(eyeR);
+  var eLight=new THREE.PointLight(0xff8800,.8,4);eLight.position.set(0,1.7,-2.2);eLight.userData.glow=true;g.add(eLight);
+  // Legs (4)
+  [[-.65,-.5,-.6],[.65,-.5,-.6],[-.65,-.5,.6],[.65,-.5,.6]].forEach(function(lp){
+    var leg=new THREE.Mesh(new THREE.BoxGeometry(.38,.9,.35),wm);leg.position.set(lp[0],lp[1]*.5,lp[2]);g.add(leg);
+  });
+  // Tail
+  var tail=new THREE.Mesh(new THREE.CylinderGeometry(.1,.18,.9,7),wm);tail.position.set(0,.9,1.45);tail.rotation.x=.6;tail.castShadow=true;
+  g.add(tail);G.wolfTail=tail;
   for(var i=0;i<4;i++){var lg=new THREE.Mesh(new THREE.BoxGeometry(.3,.8,.3),wm.clone());lg.position.set(i%2===0?-.6:.6,.1,i<2?-.75:.75);g.add(lg);}
   var tail=new THREE.Mesh(new THREE.BoxGeometry(.3,.3,1.1),wm.clone());tail.position.set(0,1.2,1.3);tail.rotation.x=-.4;g.add(tail);G.wolfTail=tail;
   var eyeML=new THREE.MeshLambertMaterial({color:0xff2200,emissive:new THREE.Color(0xff0000),emissiveIntensity:.9});
@@ -983,21 +1288,44 @@ function doWolfMiracle(){
 }
 
 function bLaVerna(){
-  G.scene.background=new THREE.Color(0x1a2255);G.scene.fog=new THREE.Fog(0x1a2255,20,80);
-  mkAmb(0x334488,.4);mkHemi(0x112244,0x1a0a0a,.25);mkDir(0x8899cc,.7,-5,20,5);mkGnd(0x5a4a3a,80,80);
-  var rc=[0x6a5a4a,0x5a4a3a,0x4a3a2a,0x7a6a5a,0x8a7a6a];
-  for(var i=0;i<5;i++){var s=5+i*3.5;var mm=new THREE.Mesh(new THREE.ConeGeometry(s,s*1.5,5),new THREE.MeshLambertMaterial({color:rc[i]}));mm.position.set((i-2)*1.5,s*.75-1,-20-i*3);addS(mm);}
-  for(var j=0;j<8;j++)mkBox(3,.3,1.5,0x8a7a6a,0,j*.8,-j*2.4-2);
-  var cm=new THREE.MeshLambertMaterial({color:0xffdd88,emissive:new THREE.Color(0xffdd00),emissiveIntensity:.9});
-  var vcross=new THREE.Mesh(new THREE.BoxGeometry(.28,4.5,.28),cm);vcross.position.set(0,13,-21);addS(vcross);
-  var hcross=new THREE.Mesh(new THREE.BoxGeometry(2.8,.28,.28),cm);hcross.position.set(0,14.9,-21);addS(hcross);
-  var gl=new THREE.PointLight(0xffd700,2.5,18);gl.position.set(0,15,-21);gl.userData.glow=true;addS(gl);
-  var sv=[];for(var k=0;k<400;k++)sv.push((Math.random()-.5)*200,25+Math.random()*80,(Math.random()-.5)*200-30);
+  G.scene.background=new THREE.Color(0x0d1535);G.scene.fog=new THREE.Fog(0x0d1535,18,75);
+  mkAmb(0x223366,.38);mkHemi(0x0d1535,0x100808,.22);mkDir(0x6677bb,.65,-6,22,4);
+  // Mountain terrain slabs
+  var rc=[0x5a4a3a,0x4a3a2a,0x6a5a4a,0x7a6a5a,0x3a2a1a,0x8a7a6a];
+  for(var i=0;i<6;i++){
+    var s=4+i*3,off=(i-2.5)*1.2;
+    var mm=new THREE.Mesh(new THREE.ConeGeometry(s,s*1.6,6),new THREE.MeshLambertMaterial({color:rc[i%6]}));
+    mm.position.set(off,s*.8-1,-18-i*2.8);mm.castShadow=true;addS(mm);
+  }
+  // Flat rock path ascending
+  for(var j=0;j<12;j++)mkBox(2.8+Math.random(),.25,1.2,0x7a7060,0,j*.55,-j*1.9-1);
+  // Rocky boulders at sides
+  for(var b=0;b<14;b++){
+    var bx=(b%2===0?-1:1)*(3+Math.random()*5),bz=-(b*2.8)-2;
+    var bs=.6+Math.random()*.8;
+    var bm=new THREE.Mesh(new THREE.DodecahedronGeometry(bs,0),new THREE.MeshLambertMaterial({color:0x554433}));
+    bm.position.set(bx,bs*.5,bz);bm.rotation.set(Math.random(),Math.random(),Math.random());bm.castShadow=true;addS(bm);
+  }
+  // Ground
+  var gnd=new THREE.Mesh(new THREE.PlaneGeometry(90,90),new THREE.MeshLambertMaterial({color:0x3a3028}));
+  gnd.rotation.x=-Math.PI/2;gnd.receiveShadow=true;addS(gnd);
+  // Glowing cross at summit
+  var cm=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffcc00),emissiveIntensity:1.1});
+  var vcross=new THREE.Mesh(new THREE.BoxGeometry(.3,5,.3),cm);vcross.position.set(0,14.5,-22);addS(vcross);
+  var hcross=new THREE.Mesh(new THREE.BoxGeometry(3,.3,.3),cm);hcross.position.set(0,16.5,-22);addS(hcross);
+  // Cross glow lights
+  var gl1=new THREE.PointLight(0xffd700,3.2,22);gl1.position.set(0,16,-22);gl1.userData.glow=true;addS(gl1);
+  var gl2=new THREE.PointLight(0xffaa00,1.4,35);gl2.position.set(0,12,-22);gl2.userData.glow=true;addS(gl2);
+  // Altar stone at base of cross
+  mkBox(4,.55,2,0x8a7a6a,0,12.28,-21.5);
+  // Stars
+  var sv=[];for(var k=0;k<600;k++)sv.push((Math.random()-.5)*250,20+Math.random()*120,(Math.random()-.5)*250-30);
   var sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sv,3));
-  addS(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.35})));
-  mkSph(4,8,6,0xddddee,-30,40,-60);
-  G.interactables.push({zone:true,x:0,z:-20,r:3.5,prompt:'Kneel before the Cross',action:'stigmata'});
-  setPos(0,5);setObj('Ascend La Verna and pray before the glowing Cross');hideProgress();
+  addS(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.32,transparent:true,opacity:.9})));
+  // Moonlit cloud
+  mkSph(5,7,5,0x223355,-28,38,-55);mkSph(7,7,5,0x1a2a44,28,44,-60);
+  G.interactables.push({zone:true,x:0,z:-20,r:4,prompt:'Kneel before the Cross and receive the Stigmata',action:'stigmata'});
+  setPos(0,4);setObj('Ascend La Verna — kneel before the golden Cross at the summit');hideProgress();
 }
 
 function bCanticle(){
@@ -1664,7 +1992,7 @@ function catchRosary(person,rosary){
   rosary.userData.caught=true;person.caught=true;person.celebrating=true;person.celebTimer=3;
   // Raise arms
   if(person.armL&&person.armR){person.armL.rotation.z=1.8;person.armR.rotation.z=-1.8;}
-  G.prayerCount++;updateFlightHUD();
+  G.prayerCount++;playCelebrationTones();updateFlightHUD();
   flashMiracle(false);spawnParts(rosary.position.clone(),0xffd700,22);
   if(G.prayerCount>=G.prayerTarget&&!G.goldenRingFired){G.goldenRingFired=true;setTimeout(doGoldenRing,800);}
 }
@@ -1825,8 +2153,8 @@ function checkNear(){
     var ox,oz,orr;
     if(obj.isObject3D){ox=obj.position.x;oz=obj.position.z;orr=2.5;}
     else{ox=obj.x;oz=obj.z;orr=obj.r||2.5;}
-    var d=Math.sqrt((px-ox)*(px-ox)+(pz-oz)*(pz-oz));
-    if(d<orr+.8&&d<bestD){bestD=d;best=obj;}
+    var d2=(px-ox)*(px-ox)+(pz-oz)*(pz-oz),thr=(orr+.8)*(orr+.8);
+    if(d2<thr&&d2<bestD){bestD=d2;best=obj;}
   }
   G.nearTarget=best;
   var ip=document.getElementById('interactPrompt');
@@ -2091,12 +2419,40 @@ function showDlg(lines,cb){
 function renderDlg(){
   if(G.dlgIdx>=G.dlgQueue.length){closeDlg();return;}
   var d=G.dlgQueue[G.dlgIdx];
-  document.getElementById('dlgSpeaker').textContent=d.s||'';
-  document.getElementById('dlgText').textContent=d.t||'';
-  document.getElementById('dlgAttr').textContent=d.a||'';
+  document.getElementById('dlgSpeaker').textContent=(d.s||'').toUpperCase();
+  var tEl=document.getElementById('dlgText');tEl.textContent='';
+  // Typewriter effect for immersion
+  var txt=d.t||'',idx=0;
+  if(G._typeTimer)clearInterval(G._typeTimer);
+  G._typeTimer=setInterval(function(){
+    if(idx>=txt.length){clearInterval(G._typeTimer);G._typeTimer=null;return;}
+    tEl.textContent+=txt[idx++];
+  },18);
+  document.getElementById('dlgAttr').textContent=d.a?('— '+d.a):'';
+  document.getElementById('dialogueBox').style.animation='none';
+  document.getElementById('dialogueBox').getBoundingClientRect();
+  document.getElementById('dialogueBox').style.animation='dlgIn .28s ease-out';
+  // Progress indicator
+  var hint=document.querySelector('.dlg-hint');
+  if(hint)hint.textContent='▼ '+(G.dlgIdx+1)+' / '+G.dlgQueue.length+' — Tap or press SPACE to continue';
 }
-function dlgNext(){if(!G.dlgActive)return;G.dlgIdx++;if(G.dlgIdx>=G.dlgQueue.length)closeDlg();else renderDlg();}
-function closeDlg(){G.dlgActive=false;document.getElementById('dialogueBox').style.display='none';var cb=G.dlgCb;G.dlgCb=null;if(cb)cb();}
+function dlgNext(){
+  if(!G.dlgActive)return;
+  // If typewriter still running, complete it first
+  if(G._typeTimer){
+    clearInterval(G._typeTimer);G._typeTimer=null;
+    var d=G.dlgQueue[G.dlgIdx];
+    if(d)document.getElementById('dlgText').textContent=d.t||'';
+    return;
+  }
+  G.dlgIdx++;playDialogueTone();
+  if(G.dlgIdx>=G.dlgQueue.length)closeDlg();else renderDlg();
+}
+function closeDlg(){
+  if(G._typeTimer){clearInterval(G._typeTimer);G._typeTimer=null;}
+  G.dlgActive=false;G.dlgIdx=0;G.dlgQueue=[];elHide('dialogueBox');
+  var cb=G.dlgCb;G.dlgCb=null;if(cb)cb();
+}
 
 /* ═══════════════════════════════════════════════════════════
    CUTSCENE
@@ -2118,6 +2474,7 @@ function flashMiracle(white){
   fl.classList.remove('on','white');fl.getBoundingClientRect();
   if(white)fl.classList.add('white');fl.classList.add('on');
   setTimeout(function(){fl.classList.remove('on','white');},800);
+  playMiracleChord();
 }
 function spawnParts(pos,color,count){
   color=color||0xffd700;count=count||20;
@@ -2151,18 +2508,18 @@ function updateParts(dt){
 setInterval(function(){
   if(!G.gameMode||G.gameMode==='none')return;
   var ov=document.getElementById('particleOverlay');
-  if(!ov)return;
+  if(!ov||ov.childNodes.length>18)return;
   var p=document.createElement('div');p.className='cssPart';
-  var sz=2+Math.random()*4,dur=5+Math.random()*6;
-  var cs=['#ffd700','#ff8c00','#fff5aa','#ffffff','#ffeebb'];
-  p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:0;background:'+cs[Math.floor(Math.random()*5)]+';opacity:'+(0.3+Math.random()*.45)+';animation-duration:'+dur+'s;animation-delay:'+(Math.random()*2)+'s;';
-  ov.appendChild(p);setTimeout(function(){if(p.parentNode)p.remove();},(dur+3)*1000);
-},950);
+  var sz=2+Math.random()*5,dur=6+Math.random()*7;
+  var cs=['#ffd700','#ff8c00','#fff5aa','#ffffff','#ffd060','#ffcc44'];
+  p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;bottom:0;background:'+cs[Math.floor(Math.random()*6)]+';border-radius:50%;opacity:'+(0.25+Math.random()*.4)+';animation-duration:'+dur+'s;animation-delay:'+(Math.random()*1.5)+'s;';
+  ov.appendChild(p);setTimeout(function(){if(p.parentNode)p.remove();},(dur+2)*1000);
+},1100);
 
 /* ═══════════════════════════════════════════════════════════
    MOVEMENT + CAMERA
 ═══════════════════════════════════════════════════════════ */
-var SPEED=5.5,CAM_H=7.5,CAM_BACK=14;
+var SPEED=6.2,SPRINT=10.5,CAM_H=7.8,CAM_BACK=13.5;
 function updateMovement(dt){
   if(G.dlgActive)return;
   var mx=G.joy.ax,mz=G.joy.az;
@@ -2172,18 +2529,20 @@ function updateMovement(dt){
   else if(dn&&lt){mx=-.707;mz=.707;}else if(dn&&rt){mx=.707;mz=.707;}
   else if(up)mz=-1;else if(dn)mz=1;else if(lt)mx=-1;else if(rt)mx=1;
   var len=Math.sqrt(mx*mx+mz*mz);
-  if(len>.01){var nx=mx/len,nz=mz/len;G.px+=nx*SPEED*dt;G.pz+=nz*SPEED*dt;
+  var spd=(G.keys.ShiftLeft||G.keys.ShiftRight)?SPRINT:SPEED;
+  if(len>.01){var nx=mx/len,nz=mz/len;G.px+=nx*spd*dt;G.pz+=nz*spd*dt;
     G.playerGroup.position.x=G.px;G.playerGroup.position.z=G.pz;
-    G.playerGroup.position.y=Math.abs(Math.sin(G.frameCount*.18))*.12;
+    G.playerGroup.position.y=Math.abs(Math.sin(G.frameCount*.2))*.1;
     G.playerGroup.rotation.y=Math.atan2(nx,nz);
   }else{if(G.playerGroup)G.playerGroup.position.y=0;}
 }
 function updateCamera(){
   var tx=G.px,ty=CAM_H,tz=G.pz+CAM_BACK;
-  G.camera.position.x+=(tx-G.camera.position.x)*.09;
-  G.camera.position.y+=(ty-G.camera.position.y)*.09;
-  G.camera.position.z+=(tz-G.camera.position.z)*.09;
-  G.camera.lookAt(G.px,1.2,G.pz);
+  var lf=0.1;
+  G.camera.position.x+=(tx-G.camera.position.x)*lf;
+  G.camera.position.y+=(ty-G.camera.position.y)*lf;
+  G.camera.position.z+=(tz-G.camera.position.z)*lf;
+  G.camera.lookAt(G.px,1.4,G.pz-2);
 }
 function updateFlight(dt,t){
   if(!G.flyGroup)return;
@@ -2242,7 +2601,46 @@ function animWolf(t){
   else{G.wolfGroup.position.y=Math.abs(Math.sin(t*2.5))*.12;G.wolfGroup.rotation.y=Math.sin(t*.5)*.3+Math.PI*.5;}
 }
 function animGlows(t){
-  G.scene.traverse(function(o){if(o.isLight&&o.userData&&o.userData.glow)o.intensity=2+Math.sin(t*3)*.7;});
+  for(var i=0;i<G.glowLights.length;i++){var gl=G.glowLights[i];if(gl)gl.intensity=1.8+Math.sin(t*2.8+i*.7)*.6;}
+}
+/* ── MINIMAP ─────────────────────────────────────────── */
+var _mmCtx=null,_mmCv=null;
+function initMinimap(){
+  _mmCv=document.getElementById('minimapCanvas');
+  if(!_mmCv)return;
+  var mm=document.getElementById('minimap');
+  var sz=mm.offsetWidth||80;
+  _mmCv.width=sz;_mmCv.height=sz;
+  _mmCtx=_mmCv.getContext('2d');
+}
+function updateMinimap(){
+  if(!_mmCtx||!_mmCv)return;
+  var sz=_mmCv.width,half=sz/2,scale=sz/80;
+  _mmCtx.clearRect(0,0,sz,sz);
+  // Background
+  _mmCtx.fillStyle='rgba(0,0,0,.7)';_mmCtx.beginPath();_mmCtx.arc(half,half,half,0,Math.PI*2);_mmCtx.fill();
+  // Interactables as dots
+  _mmCtx.save();_mmCtx.translate(half,half);
+  G.interactables.forEach(function(obj){
+    var ox=obj.isObject3D?obj.position.x:obj.x;
+    var oz=obj.isObject3D?obj.position.z:obj.z;
+    var mx=ox*scale,mz=oz*scale;
+    if(Math.abs(mx)>half||Math.abs(mz)>half)return;
+    _mmCtx.beginPath();_mmCtx.arc(mx,mz,3.5,0,Math.PI*2);
+    _mmCtx.fillStyle='#ffd700';_mmCtx.fill();
+  });
+  // Player dot
+  if(G.playerGroup){
+    var px=G.px*scale,pz=G.pz*scale;
+    _mmCtx.beginPath();_mmCtx.arc(px,pz,5,0,Math.PI*2);
+    _mmCtx.fillStyle='#fff';_mmCtx.fill();
+    _mmCtx.beginPath();_mmCtx.arc(px,pz,4,0,Math.PI*2);
+    _mmCtx.fillStyle='#4af';_mmCtx.fill();
+  }
+  _mmCtx.restore();
+  // Border ring
+  _mmCtx.strokeStyle='rgba(255,215,0,.3)';_mmCtx.lineWidth=1;
+  _mmCtx.beginPath();_mmCtx.arc(half,half,half-1,0,Math.PI*2);_mmCtx.stroke();
 }
 function animHeaven(t){
   // Dove circles
@@ -2276,9 +2674,11 @@ function elShow(id,d){var e=document.getElementById(id);if(e)e.style.display=d||
 function showHUD(title){
   document.getElementById('stageBanner').textContent=title;
   elShow('stageBanner');elShow('objectiveBar');elShow('joystickWrap');elShow('actionBtns','flex');
+  var mm=document.getElementById('minimap');if(mm){mm.style.display='block';if(!_mmCtx)initMinimap();}
 }
+function hideHUDMinimap(){var mm=document.getElementById('minimap');if(mm)mm.style.display='none';}
 function hideHUD(){
-  ['stageBanner','objectiveBar','stageProgress','joystickWrap','actionBtns','flightHUD','interactPrompt','crosshair'].forEach(function(id){elHide(id);});
+  ['stageBanner','objectiveBar','stageProgress','joystickWrap','actionBtns','flightHUD','interactPrompt','crosshair','minimap'].forEach(function(id){elHide(id);});
 }
 function setObj(t){var e=document.getElementById('objText');if(e)e.textContent=t;}
 function showProgress(t){var el=document.getElementById('stageProgress');if(el){el.textContent=t;el.style.display='block';}}
@@ -2351,6 +2751,8 @@ function showMarathonEnd(){
   document.getElementById('marathonHUD').style.display='none';
   // Build saint badge list
   var list=document.getElementById('marathonSaintsList');
+  var badgeIcons={francis:'⛪',anthony:'🐟',clare:'🕯',bonaventure:'📖',pio:'🙏',elizabeth:'🌹'};
+  var badgeNames={francis:'St. Francis',anthony:'St. Anthony',clare:'St. Clare',bonaventure:'St. Bonaventure',pio:'Padre Pio',elizabeth:'St. Elizabeth'};
   if(list){
     list.innerHTML='';
     MARATHON_ORDER.forEach(function(s){
@@ -2369,10 +2771,13 @@ function showFrancisEnd(){
     marathonNextSaint();
     return;
   }
-  hideHUD();elHide('dialogueBox');elShow('finalFrancis','flex');
+  hideHUD();elHide('dialogueBox');
+  playCelebrationTones();
+  elShow('finalFrancis','flex');
 }
 
 function showSaintEnd(saintKey){
+  playCelebrationTones();
   if(G.marathonMode){
     G.marathonCompleted.push(saintKey);
     marathonNextSaint();
@@ -2386,14 +2791,24 @@ function showSaintEnd(saintKey){
     pio:'"Pray, hope, and don\'t worry. Worry is useless. God is merciful and will hear your prayer. Suffering is a gift. In it is hidden the mercy of God."\n— Padre Pio of Pietrelcina\n\nPadre Pio bore the stigmata visibly for 50 years (1918–1968). He was canonised by Pope John Paul II on June 16, 2002. His grave at San Giovanni Rotondo draws millions of pilgrims each year.',
     elizabeth:'"It is not fitting, when one is in God\'s service, to have a gloomy face or a chilling look.\nFill your hearts with joy and love for Him!"\n— St. Elizabeth of Hungary\n\nSt. Elizabeth died November 17, 1231, aged just 24. She was canonised only four years later, on May 27, 1235, by Pope Gregory IX. She is patron of the poor, bakers, and the Franciscan Third Order.',
   };
+  var bios={
+    anthony:'Fernando Martins de Bulhões was born in Lisbon, Portugal, c. 1195, to a noble family. He entered the Augustinian Order at 15, then joined the Franciscans in 1220, inspired by the martyrdom of five Franciscan friars in Morocco. He sailed for Africa but illness turned him back to Europe, where a storm drove him to Sicily. He was "discovered" as a preacher at a priestly ordination in Forlì in 1222 and thereafter became the most celebrated orator in Europe. His sermons drew tens of thousands; courts suspended hearings; markets closed. He died near Padua on June 13, 1231, aged 35 or 36. He was canonised by Gregory IX on May 30, 1232 — less than one year after his death. He was declared a Doctor of the Church in 1946. He is the patron saint of lost things, the poor, pregnant women, and all who seek what has been taken from them.',
+    clare:'Chiara di Favarone was born in Assisi on July 16, 1194, to a wealthy noble family. After hearing Francis preach during Lent of 1212, she fled her home on Palm Sunday night and took the habit of poverty at the Portiuncula. Francis cut her hair and veiled her. She became the first woman to write her own Rule of Life for a religious community — a rule insisting on absolute poverty with no corporate property, which four popes tried to modify and she refused every time. She governed San Damiano for 42 years from her sickbed, performing documented miracles of healing and the multiplication of food. She died on August 11, 1253. Two days later, Pope Innocent IV attended her funeral. She was canonised on August 15, 1255. She is patron of television (because she once saw the Christmas Mass on the wall of her cell while too ill to attend), goldsmiths, and the blind.',
+    bonaventure:'Giovanni di Fidanza was born c. 1221 in Bagnoregio, Tuscany. He is said to have been healed of a childhood illness through the intercession of Francis of Assisi, which led his mother to cry out "O bona ventura!" — "O good fortune!" — giving him his religious name. He studied in Paris under Alexander of Hales, joined the Franciscan Order c. 1243, and became Minister General of the order in 1257. He restored the order after a period of severe internal conflict. He was made Cardinal-Bishop of Albano in 1273. He wrote the official biography of St. Francis (Legenda Maior, 1263), which became so authoritative that the Chapter General ordered all earlier biographies burned. His masterwork, the Itinerarium Mentis in Deum (1259), was written on La Verna in a single sitting after mystical contemplation. He died on July 15, 1274, during the Second Council of Lyon. He was canonised in 1482 and declared a Doctor of the Church by Sixtus V in 1587.',
+    pio:'Francesco Forgione was born on May 25, 1887, in Pietrelcina, a small town in Campania, southern Italy. He entered the Capuchin Order at 15, taking the name Pio. He bore the five wounds of Christ visibly and painfully from September 20, 1918 until his death on September 23, 1968 — fifty years. During this time he heard confessions 15–18 hours a day. Pilgrims came from every continent. His spiritual children numbered in the millions. The Vatican twice investigated him (1921, 1960); both times the investigators could not explain what they witnessed. Pope Paul VI closed the investigations. He built the Casa Sollievo della Sofferenza (Home for the Relief of Suffering) hospital near San Giovanni Rotondo, which still operates today. He died whispering the names of Jesus and Mary. His stigmata wounds, which had bled every day for fifty years, were found completely healed on the morning of his death. He was canonised by Pope John Paul II on June 16, 2002, before 300,000 people in St. Peter\u2019s Square.',
+    elizabeth:'Erzsbet Arpad was born on July 7, 1207, in Pressburg (modern Bratislava), daughter of King Andrew II of Hungary. At 14 she married Ludwig IV of Thuringia; they had three children and by all accounts a genuinely loving marriage. After Ludwig’s death on Crusade in 1227, Elizabeth was expelled from the castle by her brother-in-law, wandered the winter streets of Eisenach with her infant children, and founded a hospital at Marburg where she personally nursed the sick, washed lepers, and carried the dying on her back. She was 24 when she died on November 17, 1231. Pope Gregory IX canonised her on May 27, 1235 — just four years later, one of the fastest canonisations in medieval history. She is patron of the Franciscan Third Order, bakers, beggars, the homeless, hospitals, and all who serve the poor.',
+  };
   var titles={anthony:'✝ Doctor Evangelicus ✝\nSt. Anthony of Padua',clare:'✝ A Life of Radical Poverty ✝\nSt. Clare of Assisi',bonaventure:'✝ The Seraphic Doctor ✝\nSt. Bonaventure',pio:'✝ A Living Stigmatic ✝\nPadre Pio of Pietrelcina',elizabeth:'✝ A Princess of the Poor ✝\nSt. Elizabeth of Hungary'};
   document.getElementById('saintFinalTitle').textContent=titles[saintKey]||'✝ A Life of Grace ✝';
   document.getElementById('saintFinalQuote').textContent=quotes[saintKey]||'';
+  var bioEl=document.getElementById('saintFinalBio');
+  if(bioEl)bioEl.textContent=bios[saintKey]||'';
   elShow('finalSaint','flex');
 }
 function showHeavenEnd(){hideHUD();elHide('dialogueBox');elHide('heavenMsg');elShow('finalHeaven','flex');}
 
 function goToMenu(){
+  if(G._typeTimer){clearInterval(G._typeTimer);G._typeTimer=null;}
   ['finalFrancis','finalSaint','finalHeaven','finalMarathon','modeSelect','saintSelect','cutscene'].forEach(function(id){elHide(id);});
   clearStage();if(G.playerGroup){G.scene.remove(G.playerGroup);G.playerGroup=null;}
   if(G.flyGroup){G.scene.remove(G.flyGroup);G.flyGroup=null;}
@@ -2431,11 +2846,23 @@ function setupJoystick(){
 /* ═══════════════════════════════════════════════════════════
    INPUT
 ═══════════════════════════════════════════════════════════ */
+function buildTitleStars(){
+  var el=document.getElementById('tStars');if(!el)return;
+  var html2='';
+  for(var i=0;i<90;i++){
+    var x=(Math.random()*100).toFixed(1),y=(Math.random()*100).toFixed(1);
+    var s=(Math.random()*2+.5).toFixed(1);
+    var d=(2+Math.random()*5).toFixed(1),delay=(Math.random()*6).toFixed(1);
+    var op=(Math.random()*.6+.2).toFixed(2);
+    html2+='<div class="t-star" style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;opacity:'+op+';--d:'+d+'s;--delay:'+delay+'s;"></div>';
+  }
+  el.innerHTML=html2;
+}
 function setupInput(){
   document.addEventListener('keydown',function(e){
     G.keys[e.code]=true;
     if(e.code==='Space'||e.code==='Enter'){if(G.dlgActive)dlgNext();else if(G.gameMode==='flight'&&!G.inHeaven)shootRosary();}
-    if(e.code==='KeyE'||e.code==='KeyF'||e.code==='KeyX')handleAct();
+    if(e.code==='KeyE'||e.code==='KeyF'||e.code==='KeyX'){playInteractTone();handleAct();}
     if(e.code==='Escape')cutNext();
     if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.key)!==-1)e.preventDefault();
   });
@@ -2466,6 +2893,12 @@ function setupInput(){
   document.getElementById('btnSaintMenu').addEventListener('pointerup',goToMenu);
   document.getElementById('btnHeavenMenu').addEventListener('pointerup',goToMenu);
   document.getElementById('btnMarathonMenu').addEventListener('pointerup',goToMenu);
+  // Tutorial overlay
+  var tutEl=document.getElementById('tutorialOverlay');
+  document.getElementById('tutClose').addEventListener('pointerup',function(){tutEl.style.display='none';});
+  document.getElementById('showTutBtn').addEventListener('pointerup',function(){tutEl.style.display='flex';});
+  // Star field on title
+  buildTitleStars();
   setupJoystick();
 }
 
@@ -2481,16 +2914,42 @@ function startElizabethMode(){elHide('saintSelect');G.gameMode='saint';G.saintMo
 function startFlightMode(){elHide('modeSelect');G.gameMode='flight';startFlightSim();}
 
 /* ═══════════════════════════════════════════════════════════
+   WEB AUDIO — subtle tonal feedback
+═══════════════════════════════════════════════════════════ */
+var _AC=null;
+function getAC(){if(!_AC)try{_AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}return _AC;}
+function playTone(freq,dur,vol,type){
+  var ac=getAC();if(!ac)return;
+  if(ac.state==='suspended')ac.resume();
+  var osc=ac.createOscillator(),gain=ac.createGain();
+  osc.connect(gain);gain.connect(ac.destination);
+  osc.type=type||'sine';osc.frequency.value=freq;
+  gain.gain.setValueAtTime(0,ac.currentTime);
+  gain.gain.linearRampToValueAtTime(vol||.12,ac.currentTime+.02);
+  gain.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dur);
+  osc.start(ac.currentTime);osc.stop(ac.currentTime+dur);
+}
+function playMiracleChord(){
+  [523,659,784,1047].forEach(function(f,i){setTimeout(function(){playTone(f,.8,.07+i*.01,'sine');},i*60);});
+}
+function playInteractTone(){playTone(880,.18,.08,'sine');playTone(1108,.25,.05,'sine');}
+function playDialogueTone(){playTone(440,.12,.04,'triangle');}
+function playCelebrationTones(){
+  var notes=[523,587,659,698,784,880];
+  notes.forEach(function(f,i){setTimeout(function(){playTone(f,.4,.06,'sine');},i*90);});
+}
+
+/* ═══════════════════════════════════════════════════════════
    MAIN LOOP
 ═══════════════════════════════════════════════════════════ */
 function mainLoop(ts){
   requestAnimationFrame(mainLoop);
   var elapsed=ts-G.lastFrame;
   if(elapsed<G.targetMs)return;
-  G.lastFrame=ts;var dt=Math.min(elapsed/1000,.05),t=ts/1000;G.frameCount++;
+  G.lastFrame=ts;var dt=Math.min(elapsed/1000,.05),t=ts/1000;
   try{
     if(G.gameMode==='flight'&&!G.inHeaven){
-      updateFlight(dt,t);updateRosaries(dt);animCelebrate(dt);
+      updateFlight(dt,t);updateRosaries(dt);animCelebrate(dt);updateFlightHUD();
     }else if(G.playerGroup&&G.scene&&G.camera&&G.gameMode!=='none'){
       updateMovement(dt);updateCamera();
     }
@@ -2499,6 +2958,7 @@ function mainLoop(ts){
     if(G.inHeaven)animHeaven(t);
     if((G.gameMode!=='flight'||G.inHeaven)&&G.playerGroup)checkNear();
     if(G.renderer&&G.scene&&G.camera)G.renderer.render(G.scene,G.camera);
+    if(G.gameMode!=='none'&&G.gameMode!=='flight')updateMinimap();
   }catch(e){/* absorb transient frame errors */}
 }
 
@@ -2515,5 +2975,6 @@ window.addEventListener('load',function(){
   },200);
 });
 </script>
+
 </body>
 </html>
