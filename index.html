@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -31,54 +30,54 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 @keyframes shineSwipe{0%{left:-100%;}100%{left:200%;}}
 
 /* ── LOADING ── */
-#loading{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 50% 60%,#0a0520 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:‘Cinzel’,serif;color:#ffd700;}
+#loading{position:fixed;inset:0;z-index:999;background:radial-gradient(ellipse at 50% 60%,#0a0520 0%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:'Cinzel',serif;color:#ffd700;}
 .lc{font-size:clamp(44px,12vw,88px);animation:glowPulse 1.5s ease-in-out infinite;}
 .lt{font-size:clamp(10px,2.5vw,17px);letter-spacing:6px;text-transform:uppercase;color:#c8a84a;animation:fadeUp 1s ease-out .4s both;}
 #loadingBar{width:min(300px,72vw);height:6px;background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.3);border-radius:4px;overflow:hidden;margin-top:4px;}
 #loadingFill{height:100%;background:linear-gradient(to right,#6a4800,#ffd700,#ffaa00);width:0%;transition:width .25s ease-out;box-shadow:0 0 12px #ffd700;}
 
 /* ── TITLE ── */
-#titleScreen{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 45%,#180830 0%,#07000f 60%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;overflow:hidden;padding:clamp(12px,3vw,28px);}
+#titleScreen{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 45%,#180830 0%,#07000f 60%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;overflow:hidden;padding:clamp(12px,3vw,28px);}
 .t-stars{position:absolute;inset:0;pointer-events:none;}
-.t-star{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(–d,3s) ease-in-out var(–delay,0s) infinite;}
+.t-star{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle var(--d,3s) ease-in-out var(--delay,0s) infinite;}
 .t-cross{font-size:clamp(52px,14vw,110px);color:#ffd700;animation:glowPulse 2.2s ease-in-out infinite;line-height:1.1;margin-bottom:4px;}
-.t-main{font-family:‘Cinzel Decorative’,serif;font-size:clamp(16px,4.5vw,48px);color:#ffd700;text-align:center;letter-spacing:2px;line-height:1.3;text-shadow:3px 3px 0 #4a2c00,6px 6px 14px rgba(0,0,0,.9);animation:fadeDown 1.3s ease-out both;}
+.t-main{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,4.5vw,48px);color:#ffd700;text-align:center;letter-spacing:2px;line-height:1.3;text-shadow:3px 3px 0 #4a2c00,6px 6px 14px rgba(0,0,0,.9);animation:fadeDown 1.3s ease-out both;}
 .t-sub{font-size:clamp(8px,2vw,16px);color:#c8a84a;letter-spacing:5px;margin-top:8px;animation:fadeDown 1.3s ease-out .25s both;}
 .t-divider{width:min(260px,60vw);height:1px;background:linear-gradient(to right,transparent,#ffd700,transparent);margin:14px 0;animation:fadeDown 1.3s ease-out .4s both;}
-.t-bio{max-width:min(620px,86vw);padding:14px 20px;background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(0,0,0,.7));border:1px solid rgba(255,215,0,.25);border-radius:6px;color:#e8d5a0;font-family:‘EB Garamond’,serif;font-style:italic;font-size:clamp(9px,1.8vw,14px);line-height:1.85;text-align:center;animation:fadeDown 1.3s ease-out .55s both;}
+.t-bio{max-width:min(620px,86vw);padding:14px 20px;background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(0,0,0,.7));border:1px solid rgba(255,215,0,.25);border-radius:6px;color:#e8d5a0;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(9px,1.8vw,14px);line-height:1.85;text-align:center;animation:fadeDown 1.3s ease-out .55s both;}
 .t-bio-attr{color:#ffd700;font-style:normal;font-size:.82em;margin-top:6px;display:block;letter-spacing:1px;}
 .t-controls-hint{font-size:clamp(7px,1.4vw,10px);color:rgba(200,168,74,.6);letter-spacing:3px;margin-top:10px;animation:fadeDown 1.3s ease-out .7s both;}
-.start-btn{margin-top:18px;padding:clamp(10px,1.8vh,16px) clamp(28px,5vw,58px);background:linear-gradient(135deg,#3a2000,#8B6914,#ffd700,#8B6914,#3a2000);background-size:200% auto;border:2px solid #ffd700;color:#0a0008;font-family:‘Cinzel Decorative’,serif;font-size:clamp(10px,2vw,16px);font-weight:700;letter-spacing:5px;text-transform:uppercase;cursor:pointer;border-radius:4px;animation:fadeDown 1.3s ease-out .85s both,btnGlow 2.5s ease-in-out 2s infinite;transition:transform .12s,background-position .4s;position:relative;overflow:hidden;}
-.start-btn::after{content:’’;position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,.3),transparent);animation:shineSwipe 3s ease-in-out 3s infinite;}
+.start-btn{margin-top:18px;padding:clamp(10px,1.8vh,16px) clamp(28px,5vw,58px);background:linear-gradient(135deg,#3a2000,#8B6914,#ffd700,#8B6914,#3a2000);background-size:200% auto;border:2px solid #ffd700;color:#0a0008;font-family:'Cinzel Decorative',serif;font-size:clamp(10px,2vw,16px);font-weight:700;letter-spacing:5px;text-transform:uppercase;cursor:pointer;border-radius:4px;animation:fadeDown 1.3s ease-out .85s both,btnGlow 2.5s ease-in-out 2s infinite;transition:transform .12s,background-position .4s;position:relative;overflow:hidden;}
+.start-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,.3),transparent);animation:shineSwipe 3s ease-in-out 3s infinite;}
 .start-btn:hover{transform:scale(1.04);background-position:right center;}.start-btn:active{transform:scale(.93);}
 
 /* ── CONTROLS TUTORIAL ── */
-#tutorialOverlay{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;animation:tutFadeIn .4s ease-out;}
-.tut-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(14px,3.5vw,30px);color:#ffd700;letter-spacing:4px;text-align:center;margin-bottom:clamp(16px,4vh,32px);text-shadow:0 0 20px #ffd700;}
+#tutorialOverlay{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.92);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;animation:tutFadeIn .4s ease-out;}
+.tut-title{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,3.5vw,30px);color:#ffd700;letter-spacing:4px;text-align:center;margin-bottom:clamp(16px,4vh,32px);text-shadow:0 0 20px #ffd700;}
 .tut-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2.5vw,22px);max-width:min(700px,88vw);}
 .tut-row{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:8px;padding:clamp(10px,2vw,18px);display:flex;align-items:center;gap:12px;}
 .tut-key{font-size:clamp(18px,4vw,32px);min-width:48px;text-align:center;color:#ffd700;}
-.tut-desc{color:#e8d5a0;font-family:‘EB Garamond’,serif;font-size:clamp(9px,1.7vw,14px);line-height:1.5;}
-.tut-desc strong{color:#ffd700;font-family:‘Cinzel’,serif;font-size:.88em;}
-.tut-close{margin-top:clamp(18px,4vh,32px);padding:10px 36px;background:transparent;border:2px solid #ffd700;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(9px,1.8vw,13px);letter-spacing:4px;cursor:pointer;border-radius:4px;transition:background .2s,color .2s;}
+.tut-desc{color:#e8d5a0;font-family:'EB Garamond',serif;font-size:clamp(9px,1.7vw,14px);line-height:1.5;}
+.tut-desc strong{color:#ffd700;font-family:'Cinzel',serif;font-size:.88em;}
+.tut-close{margin-top:clamp(18px,4vh,32px);padding:10px 36px;background:transparent;border:2px solid #ffd700;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(9px,1.8vw,13px);letter-spacing:4px;cursor:pointer;border-radius:4px;transition:background .2s,color .2s;}
 .tut-close:hover{background:#ffd700;color:#000;}
 
 /* ── MODE SELECT ── */
-#modeSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
-.ms-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(15px,3.8vw,36px);color:#ffd700;letter-spacing:3px;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.5);margin-bottom:4px;}
+#modeSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
+.ms-title{font-family:'Cinzel Decorative',serif;font-size:clamp(15px,3.8vw,36px);color:#ffd700;letter-spacing:3px;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.5);margin-bottom:4px;}
 .ms-sub{color:#8a7040;font-size:clamp(8px,1.7vw,12px);letter-spacing:4px;text-align:center;margin-bottom:clamp(16px,3.5vh,28px);}
 .ms-divider{width:min(180px,50vw);height:1px;background:linear-gradient(to right,transparent,rgba(255,215,0,.4),transparent);margin:8px auto 20px;}
 .ms-cards{display:flex;flex-wrap:wrap;gap:clamp(8px,2vw,16px);justify-content:center;max-width:980px;}
 .ms-card{width:clamp(155px,27vw,230px);background:linear-gradient(160deg,rgba(255,215,0,.05),rgba(0,0,0,.8));border:1.5px solid rgba(139,105,20,.6);border-radius:10px;padding:clamp(14px,2.8vw,24px);cursor:pointer;transition:border-color .25s,transform .18s,box-shadow .25s;text-align:center;pointer-events:all;position:relative;overflow:hidden;}
-.ms-card::before{content:’’;position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,215,0,.08),transparent 60%);opacity:0;transition:opacity .25s;}
+.ms-card::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,215,0,.08),transparent 60%);opacity:0;transition:opacity .25s;}
 .ms-card:hover{border-color:#ffd700;transform:translateY(-6px);box-shadow:0 12px 40px rgba(255,215,0,.25);}
 .ms-card:hover::before{opacity:1;}
 .ms-card:active{transform:scale(.94);}
 .ms-card-marathon{border-color:rgba(255,140,0,.5);}
 .ms-card-marathon:hover{border-color:#ff8c00;box-shadow:0 12px 40px rgba(255,140,0,.3);}
 .ms-icon{font-size:clamp(30px,7.5vw,58px);margin-bottom:10px;line-height:1;display:block;}
-.ms-name{font-family:‘Cinzel Decorative’,serif;color:#ffd700;font-size:clamp(9px,2vw,15px);letter-spacing:1px;line-height:1.4;margin-bottom:8px;}
-.ms-desc{color:#a89060;font-size:clamp(7px,1.4vw,11px);line-height:1.65;font-family:‘EB Garamond’,serif;font-style:italic;}
+.ms-name{font-family:'Cinzel Decorative',serif;color:#ffd700;font-size:clamp(9px,2vw,15px);letter-spacing:1px;line-height:1.4;margin-bottom:8px;}
+.ms-desc{color:#a89060;font-size:clamp(7px,1.4vw,11px);line-height:1.65;font-family:'EB Garamond',serif;font-style:italic;}
 .ms-stages{color:rgba(200,168,74,.6);font-size:clamp(6px,1.1vw,9px);letter-spacing:2px;text-transform:uppercase;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,215,0,.1);}
 .ms-back{margin-top:clamp(14px,3vh,24px);color:#6a5030;font-size:clamp(8px,1.5vw,12px);letter-spacing:3px;cursor:pointer;text-transform:uppercase;padding-bottom:2px;transition:color .2s;}
 .ms-back:hover{color:#ffd700;}
@@ -86,42 +85,42 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 .tut-link:hover{color:#ffd700;}
 
 /* ── SAINT SELECT ── */
-#saintSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
-.ss-subtitle{color:#8a7040;font-size:clamp(7px,1.5vw,11px);letter-spacing:3px;text-align:center;margin-bottom:clamp(6px,1.5vh,12px);max-width:min(560px,86vw);font-family:‘EB Garamond’,serif;font-style:italic;line-height:1.6;}
-.ms-card-dates{color:rgba(200,168,74,.55);font-size:clamp(6px,1.1vw,9px);letter-spacing:1px;margin-top:4px;font-family:‘Cinzel’,serif;}
+#saintSelect{position:fixed;inset:0;z-index:98;background:radial-gradient(ellipse at 50% 40%,#0e0820 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(10px,2.5vw,22px);overflow-y:auto;}
+.ss-subtitle{color:#8a7040;font-size:clamp(7px,1.5vw,11px);letter-spacing:3px;text-align:center;margin-bottom:clamp(6px,1.5vh,12px);max-width:min(560px,86vw);font-family:'EB Garamond',serif;font-style:italic;line-height:1.6;}
+.ms-card-dates{color:rgba(200,168,74,.55);font-size:clamp(6px,1.1vw,9px);letter-spacing:1px;margin-top:4px;font-family:'Cinzel',serif;}
 
 /* ── CUTSCENE ── */
 #cutscene{position:fixed;inset:0;z-index:90;background:radial-gradient(ellipse at center,#0a0015 0%,#000 100%);display:none;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;padding:clamp(12px,3vw,28px);gap:12px;}
 .cut-art{font-size:clamp(58px,16vw,140px);text-align:center;line-height:1;filter:drop-shadow(0 0 20px rgba(255,215,0,.6));}
-.cut-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(12px,3.2vw,30px);color:#ffd700;letter-spacing:3px;text-transform:uppercase;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.7);max-width:min(700px,90vw);}
+.cut-title{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,3.2vw,30px);color:#ffd700;letter-spacing:3px;text-transform:uppercase;text-align:center;text-shadow:0 0 30px rgba(255,215,0,.7);max-width:min(700px,90vw);}
 .cut-divider{width:min(200px,55vw);height:1px;background:linear-gradient(to right,transparent,rgba(255,215,0,.5),transparent);}
-.cut-text{max-width:min(680px,88vw);font-family:‘EB Garamond’,serif;font-size:clamp(9px,2vw,15px);color:#e8d5a0;line-height:2;font-style:italic;text-align:center;padding:16px 22px;background:rgba(0,0,0,.55);border:1px solid rgba(255,215,0,.2);border-radius:6px;white-space:pre-line;}
-.cut-continue{color:rgba(255,215,0,.7);font-family:‘Cinzel’,serif;font-size:clamp(8px,1.6vw,11px);letter-spacing:3px;animation:blink 1.2s ease-in-out infinite;padding:8px 28px;border:1px solid rgba(255,215,0,.25);border-radius:30px;background:rgba(255,215,0,.04);cursor:pointer;text-align:center;}
+.cut-text{max-width:min(680px,88vw);font-family:'EB Garamond',serif;font-size:clamp(9px,2vw,15px);color:#e8d5a0;line-height:2;font-style:italic;text-align:center;padding:16px 22px;background:rgba(0,0,0,.55);border:1px solid rgba(255,215,0,.2);border-radius:6px;white-space:pre-line;}
+.cut-continue{color:rgba(255,215,0,.7);font-family:'Cinzel',serif;font-size:clamp(8px,1.6vw,11px);letter-spacing:3px;animation:blink 1.2s ease-in-out infinite;padding:8px 28px;border:1px solid rgba(255,215,0,.25);border-radius:30px;background:rgba(255,215,0,.04);cursor:pointer;text-align:center;}
 
 /* ── HUD ── */
-#stageBanner{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:10px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 70%,transparent 100%);color:#ffd700;font-family:‘Cinzel Decorative’,serif;font-size:clamp(8px,2vw,15px);letter-spacing:3px;text-shadow:2px 2px 6px #000,0 0 20px rgba(255,215,0,.3);pointer-events:none;display:none;text-transform:uppercase;}
-#objectiveBar{position:fixed;top:48px;left:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;font-family:‘Cinzel’,serif;pointer-events:none;display:none;max-width:min(240px,40vw);backdrop-filter:blur(4px);}
+#stageBanner{position:fixed;top:0;left:0;right:0;z-index:20;text-align:center;padding:10px 20px;background:linear-gradient(to bottom,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 70%,transparent 100%);color:#ffd700;font-family:'Cinzel Decorative',serif;font-size:clamp(8px,2vw,15px);letter-spacing:3px;text-shadow:2px 2px 6px #000,0 0 20px rgba(255,215,0,.3);pointer-events:none;display:none;text-transform:uppercase;}
+#objectiveBar{position:fixed;top:48px;left:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;font-family:'Cinzel',serif;pointer-events:none;display:none;max-width:min(240px,40vw);backdrop-filter:blur(4px);}
 #objectiveBar .obj-title{color:#8a6a20;font-size:clamp(5px,1.1vw,8px);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
-#objectiveBar .obj-text{color:#e8d5a0;font-size:clamp(7px,1.4vw,11px);line-height:1.6;font-family:‘EB Garamond’,serif;}
-#stageProgress{position:fixed;top:48px;right:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;text-align:right;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(7px,1.4vw,11px);pointer-events:none;display:none;backdrop-filter:blur(4px);}
+#objectiveBar .obj-text{color:#e8d5a0;font-size:clamp(7px,1.4vw,11px);line-height:1.6;font-family:'EB Garamond',serif;}
+#stageProgress{position:fixed;top:48px;right:10px;z-index:20;background:rgba(0,0,0,.88);border:1.5px solid rgba(139,105,20,.6);border-radius:6px;padding:8px 13px;text-align:right;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(7px,1.4vw,11px);pointer-events:none;display:none;backdrop-filter:blur(4px);}
 /* ── MINIMAP ── */
 #minimap{position:fixed;bottom:clamp(80px,14vh,110px);right:clamp(12px,2.5vw,18px);z-index:22;width:clamp(68px,13vw,88px);height:clamp(68px,13vw,88px);border-radius:50%;border:1.5px solid rgba(255,215,0,.35);background:rgba(0,0,0,.7);display:none;overflow:hidden;pointer-events:none;backdrop-filter:blur(2px);}
 #minimapCanvas{width:100%;height:100%;}
 
 /* ── DIALOGUE ── */
-#dialogueBox{position:fixed;bottom:clamp(80px,14vh,120px);left:50%;transform:translateX(-50%);width:min(820px,93vw);z-index:30;background:linear-gradient(160deg,rgba(4,2,14,.98),rgba(8,3,22,.98));border:2px solid rgba(139,105,20,.7);border-radius:8px;padding:14px 18px 12px;font-family:‘Cinzel’,serif;pointer-events:all;display:none;box-shadow:0 0 40px rgba(0,0,0,.8),0 0 20px rgba(139,105,20,.2),inset 0 1px 0 rgba(255,215,0,.08);animation:dlgIn .3s ease-out;}
+#dialogueBox{position:fixed;bottom:clamp(80px,14vh,120px);left:50%;transform:translateX(-50%);width:min(820px,93vw);z-index:30;background:linear-gradient(160deg,rgba(4,2,14,.98),rgba(8,3,22,.98));border:2px solid rgba(139,105,20,.7);border-radius:8px;padding:14px 18px 12px;font-family:'Cinzel',serif;pointer-events:all;display:none;box-shadow:0 0 40px rgba(0,0,0,.8),0 0 20px rgba(139,105,20,.2),inset 0 1px 0 rgba(255,215,0,.08);animation:dlgIn .3s ease-out;}
 .dlg-speaker-wrap{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
 .dlg-speaker-dot{width:8px;height:8px;border-radius:50%;background:#ffd700;box-shadow:0 0 8px #ffd700;flex-shrink:0;}
 #dialogueBox .dlg-speaker{color:#ffd700;font-size:clamp(8px,1.6vw,13px);font-weight:700;letter-spacing:3px;text-transform:uppercase;}
-#dialogueBox .dlg-text{color:#f0e5c8;font-size:clamp(9px,1.7vw,14px);line-height:1.8;font-family:‘EB Garamond’,serif;font-style:italic;}
-#dialogueBox .dlg-attr{color:#7a6030;font-size:clamp(6px,1.1vw,10px);margin-top:7px;font-style:normal;text-align:right;border-top:1px solid rgba(139,105,20,.3);padding-top:5px;font-family:‘Cinzel’,serif;letter-spacing:1px;}
+#dialogueBox .dlg-text{color:#f0e5c8;font-size:clamp(9px,1.7vw,14px);line-height:1.8;font-family:'EB Garamond',serif;font-style:italic;}
+#dialogueBox .dlg-attr{color:#7a6030;font-size:clamp(6px,1.1vw,10px);margin-top:7px;font-style:normal;text-align:right;border-top:1px solid rgba(139,105,20,.3);padding-top:5px;font-family:'Cinzel',serif;letter-spacing:1px;}
 #dialogueBox .dlg-hint{color:rgba(90,70,30,.8);font-size:clamp(6px,1.1vw,9px);margin-top:5px;text-align:center;animation:blink 1.2s ease-in-out infinite;letter-spacing:2px;}
 
 /* ── INTERACT PROMPT ── */
-#interactPrompt{position:fixed;top:50%;left:50%;transform:translate(-50%,-200%);background:rgba(0,0,0,.9);border:2px solid rgba(255,215,0,.85);border-radius:32px;padding:9px 22px;color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(8px,1.8vw,13px);display:none;z-index:25;pointer-events:none;text-align:center;animation:promptPulse 1.8s ease-in-out infinite;letter-spacing:2px;backdrop-filter:blur(4px);}
+#interactPrompt{position:fixed;top:50%;left:50%;transform:translate(-50%,-200%);background:rgba(0,0,0,.9);border:2px solid rgba(255,215,0,.85);border-radius:32px;padding:9px 22px;color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(8px,1.8vw,13px);display:none;z-index:25;pointer-events:none;text-align:center;animation:promptPulse 1.8s ease-in-out infinite;letter-spacing:2px;backdrop-filter:blur(4px);}
 
 /* ── FLIGHT HUD ── */
-#flightHUD{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:22;background:rgba(0,0,0,.85);border:1.5px solid rgba(255,215,0,.4);border-radius:8px;padding:10px 20px;text-align:center;display:none;pointer-events:none;font-family:‘Cinzel’,serif;backdrop-filter:blur(4px);}
+#flightHUD{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:22;background:rgba(0,0,0,.85);border:1.5px solid rgba(255,215,0,.4);border-radius:8px;padding:10px 20px;text-align:center;display:none;pointer-events:none;font-family:'Cinzel',serif;backdrop-filter:blur(4px);}
 .fhud-label{color:#c8a840;font-size:clamp(7px,1.5vw,11px);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
 .fhud-beads{display:flex;gap:clamp(6px,1.5vw,10px);justify-content:center;margin-bottom:6px;}
 .fhud-bead{width:clamp(16px,3.8vw,24px);height:clamp(16px,3.8vw,24px);border-radius:50%;background:rgba(80,60,0,.2);border:2px solid rgba(255,215,0,.3);transition:all .5s cubic-bezier(.175,.885,.32,1.275);position:relative;}
@@ -135,7 +134,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 
 /* ── ACTION BUTTONS ── */
 #actionBtns{position:fixed;bottom:clamp(14px,2.8vh,26px);right:clamp(14px,2.8vw,26px);display:none;z-index:40;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:all;}
-.act-btn{width:clamp(52px,11vw,70px);height:clamp(52px,11vw,70px);border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,215,0,.2),rgba(0,0,0,.85));border:2px solid rgba(255,215,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .15s;touch-action:none;pointer-events:all;font-family:‘Cinzel’,serif;box-shadow:0 4px 16px rgba(0,0,0,.6);}
+.act-btn{width:clamp(52px,11vw,70px);height:clamp(52px,11vw,70px);border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,215,0,.2),rgba(0,0,0,.85));border:2px solid rgba(255,215,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .15s;touch-action:none;pointer-events:all;font-family:'Cinzel',serif;box-shadow:0 4px 16px rgba(0,0,0,.6);}
 .act-btn span{color:#ffd700;font-size:clamp(14px,3vw,20px);line-height:1;}
 .act-btn .lbl{font-size:clamp(6px,1.2vw,8px);letter-spacing:2px;color:rgba(255,215,0,.7);}
 .act-btn:active,.act-btn.pressed{transform:scale(.88);box-shadow:0 0 18px rgba(255,215,0,.6);}
@@ -154,7 +153,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 #goldenRing.fire{display:block;animation:goldenRingAnim 2s ease-out forwards;}
 #heavenOverlay{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at center,rgba(255,255,255,.98) 0%,rgba(255,240,150,.8) 40%,transparent 75%);pointer-events:none;display:none;}
 #heavenOverlay.fade{display:block;animation:miracleAnim 1.6s ease-out forwards;}
-#heavenMsg{position:fixed;top:30%;left:50%;transform:translateX(-50%);color:#ffd700;font-family:‘Cinzel Decorative’,serif;font-size:clamp(14px,3.5vw,32px);text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;pointer-events:none;z-index:65;display:none;text-align:center;letter-spacing:4px;}
+#heavenMsg{position:fixed;top:30%;left:50%;transform:translateX(-50%);color:#ffd700;font-family:'Cinzel Decorative',serif;font-size:clamp(14px,3.5vw,32px);text-shadow:0 0 30px #ffd700,0 0 60px #ff8c00;pointer-events:none;z-index:65;display:none;text-align:center;letter-spacing:4px;}
 #miracleFlash{position:fixed;inset:0;pointer-events:none;z-index:58;background:rgba(255,215,0,.0);transition:background .1s;}
 #miracleFlash.on{background:rgba(255,215,0,.18);}
 #miracleFlash.white.on{background:rgba(255,255,255,.35);}
@@ -165,25 +164,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 #marathonHUD{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:21;display:none;padding-top:52px;pointer-events:none;}
 #marathonHUDInner{background:rgba(0,0,0,.88);border:1px solid rgba(255,215,0,.3);border-top:none;border-radius:0 0 10px 10px;padding:7px 18px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px);}
 #marathonHUDIcon{font-size:clamp(14px,3vw,20px);}
-#marathonHUDText{color:#ffd700;font-family:‘Cinzel’,serif;font-size:clamp(8px,1.6vw,12px);letter-spacing:2px;}
+#marathonHUDText{color:#ffd700;font-family:'Cinzel',serif;font-size:clamp(8px,1.6vw,12px);letter-spacing:2px;}
 #marathonHUDDots{display:flex;gap:6px;margin-left:4px;}
 .mhud-dot{transition:all .3s ease;width:clamp(7px,1.4vw,9px);height:clamp(7px,1.4vw,9px);border-radius:50%;background:rgba(255,215,0,.2);border:1.5px solid rgba(255,215,0,.35);transition:all .4s;}
 .mhud-dot.active{background:#ffd700;box-shadow:0 0 8px #ffd700;}
 .mhud-dot.done{background:rgba(255,215,0,.5);}
 
 /* ── FINAL SCREENS ── */
-.finalScreen{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:‘Cinzel’,serif;pointer-events:all;padding:clamp(14px,3vw,32px);gap:clamp(10px,2.5vh,22px);}
-.fin-title{font-family:‘Cinzel Decorative’,serif;font-size:clamp(16px,4vw,42px);letter-spacing:3px;line-height:1.4;text-shadow:0 0 30px currentColor,0 2px 4px rgba(0,0,0,.6);animation:fadeDown .8s ease-out both;}
-.fin-quote{max-width:min(720px,88vw);font-family:‘EB Garamond’,serif;font-size:clamp(11px,1.95vw,17px);line-height:1.95;font-style:italic;padding:20px 26px;background:rgba(0,0,0,.35);border-radius:10px;border:1px solid rgba(255,255,255,.15);}
-.fin-attr{display:block;font-style:normal;font-size:.82em;margin-top:10px;letter-spacing:1px;opacity:.75;font-family:‘Cinzel’,serif;}
-.fin-bio{max-width:min(660px,86vw);font-family:‘EB Garamond’,serif;font-size:clamp(9px,1.7vw,13px);line-height:1.85;padding:12px 18px;background:rgba(0,0,0,.2);border-radius:6px;border:1px solid rgba(255,255,255,.1);}
-.fin-btn{padding:clamp(9px,1.6vh,14px) clamp(28px,5vw,50px);border:2px solid;border-radius:4px;font-family:‘Cinzel’,serif;font-size:clamp(9px,1.8vw,13px);font-weight:700;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:transform .12s,box-shadow .2s;}
+.finalScreen{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'Cinzel',serif;pointer-events:all;padding:clamp(14px,3vw,32px);gap:clamp(10px,2.5vh,22px);}
+.fin-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,4vw,42px);letter-spacing:3px;line-height:1.4;text-shadow:0 0 30px currentColor,0 2px 4px rgba(0,0,0,.6);animation:fadeDown .8s ease-out both;}
+.fin-quote{max-width:min(720px,88vw);font-family:'EB Garamond',serif;font-size:clamp(11px,1.95vw,17px);line-height:1.95;font-style:italic;padding:20px 26px;background:rgba(0,0,0,.35);border-radius:10px;border:1px solid rgba(255,255,255,.15);}
+.fin-attr{display:block;font-style:normal;font-size:.82em;margin-top:10px;letter-spacing:1px;opacity:.75;font-family:'Cinzel',serif;}
+.fin-bio{max-width:min(660px,86vw);font-family:'EB Garamond',serif;font-size:clamp(9px,1.7vw,13px);line-height:1.85;padding:12px 18px;background:rgba(0,0,0,.2);border-radius:6px;border:1px solid rgba(255,255,255,.1);}
+.fin-btn{padding:clamp(9px,1.6vh,14px) clamp(28px,5vw,50px);border:2px solid;border-radius:4px;font-family:'Cinzel',serif;font-size:clamp(9px,1.8vw,13px);font-weight:700;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:transform .12s,box-shadow .2s;}
 .fin-btn:hover{transform:scale(1.04);box-shadow:0 0 24px currentColor;}
 .fin-btn:active{transform:scale(.93);}
 .marathon-badge{display:inline-flex;align-items:center;gap:8px;margin:4px;padding:6px 14px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:20px;color:#ffd700;font-size:clamp(8px,1.6vw,12px);letter-spacing:1px;}
 .marathon-saints-list{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px;}
 </style>
-
 </head>
 <body>
 <!-- LOADING -->
@@ -194,7 +192,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- TITLE -->
-
 <div id="titleScreen">
   <div class="t-stars" id="tStars"></div>
   <div class="t-cross">✝</div>
@@ -207,7 +204,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- CONTROLS TUTORIAL -->
-
 <div id="tutorialOverlay">
   <div class="tut-title">✝ How to Play</div>
   <div class="tut-grid">
@@ -222,7 +218,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- MODE SELECT -->
-
 <div id="modeSelect">
   <div class="ms-title">Choose Your Journey</div>
   <div class="ms-sub">Six saints. Thirty miracles. One eternal story.</div>
@@ -257,7 +252,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- SAINT SELECT -->
-
 <div id="saintSelect">
   <div class="ms-title">Choose a Saint</div>
   <div class="ss-subtitle">Five souls who gave everything to God. Each life is documented by historians, eyewitnesses, and the formal processes of the Vatican. Every miracle you will witness was recorded in sworn testimony.</div>
@@ -302,11 +296,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- CANVAS -->
-
 <canvas id="gameCanvas"></canvas>
 
 <!-- CUTSCENE -->
-
 <div id="cutscene">
   <div class="cut-art" id="cutArt"></div>
   <div class="cut-title" id="cutTitle"></div>
@@ -315,7 +307,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- HUD -->
-
 <div id="stageBanner"></div>
 <div id="objectiveBar"><div class="obj-title">Objective</div><div class="obj-text" id="objText"></div></div>
 <div id="stageProgress"></div>
@@ -328,7 +319,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="interactPrompt"></div>
 
 <!-- FLIGHT HUD -->
-
 <div id="flightHUD">
   <div class="fhud-label">PRAYERS CAUGHT &nbsp;&#128081;</div>
   <div class="fhud-beads"><div class="fhud-bead" id="bead0"></div><div class="fhud-bead" id="bead1"></div><div class="fhud-bead" id="bead2"></div></div>
@@ -336,26 +326,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- JOYSTICK -->
-
 <div id="joystickWrap"><div id="joystickBase"><div id="joystickKnob">&#10022;</div></div></div>
 
 <!-- ACTION BUTTONS -->
-
 <div id="actionBtns">
   <div class="act-btn" id="btnAct"><span>✝</span><span class="lbl">PRAY</span></div>
   <div class="act-btn" id="btnNext">&#9654;</div>
 </div>
 
 <!-- CROSSHAIR (flight sim) -->
-
 <div id="crosshair"><div class="ch-h"></div><div class="ch-v"></div><div class="ch-ring"></div></div>
 
 <!-- MINIMAP -->
-
 <div id="minimap"><canvas id="minimapCanvas"></canvas></div>
 
 <!-- EFFECTS -->
-
 <div id="goldenRing"></div>
 <div id="heavenOverlay"></div>
 <div id="heavenMsg"></div>
@@ -363,7 +348,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 <div id="particleOverlay"></div>
 
 <!-- FINAL SCREENS -->
-
 <div id="finalFrancis" class="finalScreen" style="background:linear-gradient(160deg,#fff5cc,#ffe080,#fff9e0);">
   <div class="fin-title" style="color:#2a1400;">✝ Pax et Bonum ✝<br><span style="font-size:.55em;font-family:'Cinzel',serif;letter-spacing:6px;">Peace and All Good</span></div>
   <div class="fin-quote" style="color:#2a1400;border-color:rgba(0,0,0,.15);">&ldquo;Praised be You, my Lord, through Sister Bodily Death, from whom no living person can escape. Blessed are those whom death will find in Your most holy will, for the second death shall do them no harm.&rdquo;<span class="fin-attr" style="color:#5a3800;">&mdash; St. Francis of Assisi, Canticle of the Sun, 1225</span></div>
@@ -395,7 +379,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <!-- MARATHON PROGRESS HUD -->
-
 <div id="marathonHUD">
   <div id="marathonHUDInner">
     <span id="marathonHUDIcon">✝</span>
@@ -405,7 +388,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;position:fixed;
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════
    FRANCISCAN SAINTS — Full Multi-Mode Game
@@ -580,7 +562,7 @@ clare_christmas_miracle:[
   {s:"Clare",t:"\"Nothing in this world is permanent but love. And even love changes — it grows purer, more transparent, more free. God is the source of every love, and when we reach the source, we understand everything we ever loved.\"",a:"St. Clare of Assisi, Letters to Agnes of Prague, c. 1234"},
   {s:"Narrator",t:"\"Suddenly the entire ceremony of the church appeared to her sight. She saw the manger of the Lord, the crib, the holy child wrapped in swaddling cloths, and the friars singing their praises.\"",a:"Thomas of Celano, Life of St. Clare, Ch. XXIX, c. 1255"},
   {s:"Clare",t:"O Lord — You have given me what I could not come to receive. Blessed be Your name forever and ever!",a:"St. Clare of Assisi"},
-  {s:"Narrator",t:"Clare died on August 11, 1253, at the age of 59 — forty-two years after she fled her family to follow Francis. Her last words were:",a:"Acts of the Process of Canonization of St. Clare"},
+  {s:"Narrator",t:"Clare died on August 11, 1253, at the age of 59 — forty-two years after she fled her family to follow Francis. Her last words were — spoken to her own soul:",a:"Acts of the Process of Canonization of St. Clare"},
   {s:"Clare",t:"\"Go forth in peace, for you have followed the good road. Go forth without fear, for He who created you has made you holy and has always protected you.\"",a:"St. Clare of Assisi, last words, 1253"},
 ],
 /* BONAVENTURE */
@@ -870,11 +852,12 @@ function doResize(){
 function tagObj(o){o.userData._s=true;return o;}
 function addS(o){tagObj(o);G.scene.add(o);if(o.isLight&&o.userData&&o.userData.glow)G.glowLights.push(o);return o;}
 function clearStage(){
+  if(G._typeTimer){clearInterval(G._typeTimer);G._typeTimer=null;}
   var rm=[];G.scene.traverse(function(o){if(o.userData&&o.userData._s)rm.push(o);});
   for(var i=0;i<rm.length;i++)G.scene.remove(rm[i]);
   G.interactables=[];G.churchPieces=[];G.fixedPieces=0;G.birds=[];G.particles3D=[];
   G.wolfGroup=null;G.wolfTail=null;G.wolfEyes=[];G.wolfTamed=false;
-  G.birdsDone=false;G.stigmataDone=false;G.glowLights=[];G.fishSpawned=false;
+  G.birdsDone=false;G.stigmataDone=false;G.glowLights=[];G.totalPieces=0;G.fishSpawned=false;
   G.childAppeared=false;G.saracensFled=false;G.christmasVision=false;G.bookDone=false;
   G.anthonyMuleDone=false;G.anthonyRaiseDone=false;G.anthonyPaduaDone=false;
   G.pioStigDone=false;G.pioFirstMassDone=false;G.pioConfessionalDone=false;
@@ -1081,7 +1064,7 @@ function bAssisi(){
   var comp=mkNPC(0xb06030,5,0,3);comp.userData.prompt='Speak with the Companion';comp.userData.dlgKey='assisi_welcome';
   G.interactables.push(comp);
   G.interactables.push({zone:true,x:0,z:-22,r:4,prompt:'Approach San Damiano Chapel — enter and pray',action:'dlgAdv',dlgKey:'voice_of_god'});
-  setPos(0,2);setObj('Walk north to the ruined Chapel of San Damiano');hideProgress();
+  setPos(0,2);setObj('Walk north to the ruined Chapel of San Damiano.');hideProgress();
 }
 
 function bSanDamiano(){
@@ -1131,7 +1114,7 @@ function bSanDamiano(){
   var sbMat=new THREE.MeshBasicMaterial({color:0xfff8cc,transparent:true,opacity:.06});
   var sb=new THREE.Mesh(new THREE.BoxGeometry(1,8,12),sbMat);sb.position.set(4,4,0);sb.rotation.z=.25;addS(sb);
   // Repair pieces
-  G.fixedPieces=0;
+  G.fixedPieces=0;G.totalPieces=5;
   addPiece(0xa09070,.8,3.2,12,7,4.6,0,'Upper Side Wall',0xd4c4a0);
   addPiece(0x998866,6.5,.8,.9,0,6.8,-6,'Apse Arch',0xc0a870);
   addPiece(0x5577aa,2.8,2.8,.3,0,4.2,-5.8,'Rose Window',0x4488cc);
@@ -1154,11 +1137,15 @@ function doRepair(piece){
   G.fixedPieces++;
   var idx=G.interactables.indexOf(piece);if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);spawnParts(piece.position,0xffd700,28);
-  showDlg([DLG.repair_piece[0]]);
   var p=piece;setTimeout(function(){if(p&&p.material)p.material.emissiveIntensity=0;},2200);
   showProgress('Repaired: '+G.fixedPieces+'/'+G.totalPieces);
   setObj('Repair all 5 broken sections ('+G.fixedPieces+'/5)');
-  if(G.fixedPieces>=G.totalPieces)setTimeout(function(){showDlg(DLG.repair_complete,advFrancis);},2800);
+  var rpEntry=[DLG.repair_piece[G.fixedPieces%DLG.repair_piece.length]];
+  if(G.fixedPieces>=G.totalPieces){
+    showDlg(rpEntry,function(){setTimeout(function(){showDlg(DLG.repair_complete,advFrancis);},400);});
+  }else{
+    showDlg(rpEntry);
+  }
 }
 
 function bBirds(){
@@ -1196,7 +1183,7 @@ function bBirds(){
     bm.position.set(bx,by,bz);bm.rotation.x=Math.PI/2;bm.userData={origY:by,phase:Math.random()*Math.PI*2,dancing:false};addS(bm);G.birds.push(bm);
   }
   G.interactables.push({zone:true,x:0,z:-12,r:4.5,prompt:'Preach to the birds',action:'birds'});
-  setPos(0,6);setObj('Walk to the flock of birds and preach to them');hideProgress();
+  setPos(0,6);setObj('Walk to the flock of birds and preach to them.');hideProgress();
 }
 
 function bWolf(){
@@ -1238,7 +1225,7 @@ function bWolf(){
   G.wolfGroup.userData.prompt='Make peace with Brother Wolf';
   G.wolfGroup.userData.action='wolf';
   G.interactables.push(G.wolfGroup);
-  setPos(0,5);setObj('Walk to Brother Wolf and bring peace between him and the people of Gubbio');hideProgress();
+  setPos(0,5);setObj('Walk to Brother Wolf and bring peace between him and the people of Gubbio.');hideProgress();
 }
 function buildWolfMesh(){
   var g=new THREE.Group();
@@ -1261,7 +1248,8 @@ function buildWolfMesh(){
   // Glowing amber eyes
   var eyeMat=new THREE.MeshLambertMaterial({color:0xff9900,emissive:new THREE.Color(0xff6600),emissiveIntensity:1.2});
   var eyeL=new THREE.Mesh(new THREE.SphereGeometry(.1,7,6),eyeMat);eyeL.position.set(-.28,1.76,-2.16);g.add(eyeL);
-  var eyeR=eyeL.clone();eyeR.position.set(.28,1.76,-2.16);g.add(eyeR);
+  var eyeR=new THREE.Mesh(new THREE.SphereGeometry(.1,7,6),eyeMat.clone());eyeR.position.set(.28,1.76,-2.16);g.add(eyeR);
+  G.wolfEyes.push(eyeL,eyeR);
   var eLight=new THREE.PointLight(0xff8800,.8,4);eLight.position.set(0,1.7,-2.2);eLight.userData.glow=true;g.add(eLight);
   // Legs (4)
   [[-.65,-.5,-.6],[.65,-.5,-.6],[-.65,-.5,.6],[.65,-.5,.6]].forEach(function(lp){
@@ -1325,7 +1313,7 @@ function bLaVerna(){
   // Moonlit cloud
   mkSph(5,7,5,0x223355,-28,38,-55);mkSph(7,7,5,0x1a2a44,28,44,-60);
   G.interactables.push({zone:true,x:0,z:-20,r:4,prompt:'Kneel before the Cross and receive the Stigmata',action:'stigmata'});
-  setPos(0,4);setObj('Ascend La Verna — kneel before the golden Cross at the summit');hideProgress();
+  setPos(0,4);setObj('Ascend La Verna — kneel before the golden Cross at the summit.');hideProgress();
 }
 
 function bCanticle(){
@@ -1342,7 +1330,7 @@ function bCanticle(){
   var sunD=new THREE.Mesh(new THREE.CircleGeometry(9,16),new THREE.MeshBasicMaterial({color:0xffcc00,side:THREE.DoubleSide}));sunD.position.set(-45,28,-55);sunD.rotation.y=.45;addS(sunD);
   var clare=mkNPC(0x6688cc,5,0,1);clare.userData.prompt='Speak with Sister Clare';clare.userData.dlgKey='canticle_scene';G.interactables.push(clare);
   G.interactables.push({zone:true,x:0,z:-19,r:4,prompt:'Enter chapel and sing the Canticle',action:'francisEnd'});
-  setPos(0,7);setObj('Approach the chapel and sing the Canticle of the Sun');hideProgress();
+  setPos(0,7);setObj('Approach the chapel and sing the Canticle of the Sun.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1365,7 +1353,7 @@ function bAnthonyFish(){
   }
   var npc=mkNPC(0x884422,4,0,4);npc.userData.prompt='Speak with Anthony';npc.userData.dlgKey='anthony_fish_intro';G.interactables.push(npc);
   G.interactables.push({zone:true,x:0,z:-10,r:4,prompt:'Call to the fish',action:'anthonyFish'});
-  setPos(0,5);setObj('Walk to the shore and call to the fish');hideProgress();
+  setPos(0,5);setObj('Walk to the shore and call to the fish.');hideProgress();
 }
 
 function bAnthonyChild(){
@@ -1385,7 +1373,7 @@ function bAnthonyChild(){
   var cl=new THREE.PointLight(0xffddaa,1.5,8);cl.position.set(2.5,1.5,-2);cl.userData.glow=true;addS(cl);
   // Kneeling zone
   G.interactables.push({zone:true,x:0,z:2,r:2.5,prompt:'Kneel in prayer',action:'anthonyChild'});
-  setPos(0,4);setObj('Enter the cell and kneel in prayer');hideProgress();
+  setPos(0,4);setObj('Enter the cell and kneel in prayer.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1406,7 +1394,7 @@ function bClareSaracen(){
   var pyx=new THREE.Mesh(pyxGeo,pyxMat);pyx.position.set(0,1.2,-6);addS(pyx);
   var gl=new THREE.PointLight(0xffd700,2,10);gl.position.set(0,2,-6);gl.userData.glow=true;addS(gl);
   G.interactables.push({zone:true,x:0,z:-15,r:3.5,prompt:'Face the invaders with the Blessed Sacrament',action:'clareSaracen'});
-  setPos(0,4);setObj('Carry the Blessed Sacrament to the gate and face the Saracens');hideProgress();
+  setPos(0,4);setObj('Carry the Blessed Sacrament to the gate and face the Saracens.');hideProgress();
 }
 
 function bClareChristmas(){
@@ -1422,7 +1410,7 @@ function bClareChristmas(){
   mkBox(3,.8,1.5,0xd4c090,0,.65,-4);
   mkGlowBox(.15,2,.15,0xffd700,0xffdd00,.7, 0,2,-4);mkGlowBox(.8,.15,.15,0xffd700,0xffdd00,.7, 0,2.6,-4);
   G.interactables.push({zone:true,x:-3,z:2,r:2.5,prompt:'Kneel and pray for the vision',action:'clareChristmas'});
-  setPos(0,4);setObj('Kneel at the sickbed and pray for the Christmas vision');hideProgress();
+  setPos(0,4);setObj('Kneel at the sickbed and pray for the Christmas vision.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1444,7 +1432,7 @@ function bBonaventure(){
   var sv=[];for(var k=0;k<400;k++)sv.push((Math.random()-.5)*200,25+Math.random()*80,(Math.random()-.5)*200-30);
   var sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sv,3));addS(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.35})));
   G.interactables.push({zone:true,x:0,z:-20,r:3.5,prompt:'Receive the mystical vision',action:'bonaVision'});
-  setPos(0,5);setObj('Ascend La Verna and receive the mystical vision');hideProgress();
+  setPos(0,5);setObj('Ascend La Verna and receive the mystical vision.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1476,8 +1464,8 @@ function bPioStigmata(){
   for(var c=0;c<5;c++){var cx=(c-2)*1;mkBox(.12,.7,.12,0xeeeebb,cx,1.15,-6);var cl=new THREE.PointLight(0xffddaa,.5,4);cl.position.set(cx,2,-6);cl.userData.glow=true;addS(cl);}
   // Padre Pio kneeling area
   mkBox(2,.1,2,0x9988aa,0,.06,2);
-  G.interactables.push({zone:true,x:0,z:-3.5,r:3,prompt:'Kneel before the crucifix',action:'pioStigmata'});
-  setPos(0,5);setObj('Approach the crucifix and kneel in prayer');hideProgress();
+  G.interactables.push({zone:true,x:0,z:-3.5,r:3,prompt:'Kneel before the crucifix — PRAY',action:'pioStigmata'});
+  setPos(0,5);setObj('Approach the crucifix and kneel in prayer.');hideProgress();
 }
 
 function bPioHealing(){
@@ -1551,7 +1539,7 @@ function bElizLeper(){
   addS(leper);G.interactables.push(leper);
   // Candle
   mkBox(.12,.7,.12,0xeeeebb,3,.75,3);var cl=new THREE.PointLight(0xffddaa,.9,8);cl.position.set(3,1.7,3);cl.userData.glow=true;addS(cl);
-  setPos(0,4);setObj('Approach the sick man and care for him in the name of Christ');hideProgress();
+  setPos(0,4);setObj('Approach the sick man and care for him in the name of Christ.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1631,7 +1619,7 @@ function bAnthonyRaise(){
   G.interactables.push(martino);
   // Prayer zone at the grave
   G.interactables.push({zone:true,x:0,z:-18,r:3,prompt:'Pray at the grave — PRAY',action:'anthonyRaise'});
-  setPos(0,5);setObj('Walk to the grave and call upon God to vindicate the innocent');hideProgress();
+  setPos(0,5);setObj('Walk to the grave and call upon God to vindicate the innocent.');hideProgress();
 }
 
 function bAnthonyPadua(){
@@ -1668,7 +1656,7 @@ function bAnthonyPadua(){
   // A few merchant figures for color
   var mcolors=[0x884422,0x446633,0x663322];
   for(var mm=0;mm<6;mm++)mkNPC(mcolors[mm%3],-4+(mm*3.5),0,4);
-  setPos(0,7);setObj('Walk to the pulpit and preach to the thirty thousand');hideProgress();
+  setPos(0,7);setObj('Walk to the pulpit and preach to the thirty thousand.');hideProgress();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1703,7 +1691,7 @@ function bPioFirstMass(){
   G.interactables.push(altZone);
   // Golden morning light from side window
   var winL=new THREE.PointLight(0xffeecc,1.5,14);winL.position.set(5.5,5,0);addS(winL);
-  setPos(0,4);setObj('Approach the altar for your first solemn Mass');hideProgress();
+  setPos(0,4);setObj('Approach the altar for your first solemn Mass.');hideProgress();
 }
 
 function bPioConfessional(){
@@ -1730,7 +1718,7 @@ function bPioConfessional(){
     var wl=new THREE.PointLight(0xffcc88,.6,6);wl.position.set(-3.5,1.4,-5+(wc*2.5));addS(wl);
   }
   // Penitent kneeling zone
-  G.interactables.push({zone:true,x:2,z:-5.5,r:2,prompt:'Kneel at the confessional — PRAY',action:'pioConfessional'});
+  G.interactables.push({zone:true,x:2,z:-5.5,r:2,prompt:'Kneel at the confessional and pray',action:'pioConfessional'});
   // Pio figure visible inside confessional (glimpse through screen)
   var pioSilhouette=mkNPC(0x2a1a08,-0.1,0,-6.8);
   setPos(0,4);setObj('Join the queue and approach Padre Pio\'s confessional');hideProgress();
@@ -1761,7 +1749,7 @@ function bPioBilocation(){
   var ghead=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));ghead.position.y=1.55+1.32;
   gen.add(gbody,ghead);gen.position.set(-1.5,0,-2);
   G.scene.add(gen);
-  gen.userData={prompt:'Speak with the General',dlgKey:'pio_bilocation_intro'};
+  gen.userData={prompt:'Approach General Cadorna'};
   G.interactables.push(gen);
   // Stars visible through tent flap
   for(var st3=0;st3<12;st3++){
@@ -1770,7 +1758,7 @@ function bPioBilocation(){
   }
   // Kneeling zone for Pio's prayer
   G.interactables.push({zone:true,x:2,z:1,r:2.5,prompt:'Kneel and pray — PRAY',action:'pioBilocation'});
-  setPos(0,4);setObj('Find General Cadorna and intercede for his soul');hideProgress();
+  setPos(0,4);setObj('Find General Cadorna and intercede for his soul.');hideProgress();
 }
 
 function bPioCancer(){
@@ -1796,12 +1784,11 @@ function bPioCancer(){
   var sbandage=new THREE.Mesh(new THREE.BoxGeometry(.55,.12,.3),mkMat(0xddddcc));sbandage.position.set(0,1.24,.12);
   savino.add(sbody,shead,sbandage);savino.position.set(2,0,-16);
   G.scene.add(savino);
-  savino.userData={prompt:'Speak with Giovanni Savino',dlgKey:'pio_cancer_intro'};
+  savino.userData={prompt:'Lay hands on Giovanni Savino — PRAY',action:'pioCancer'};
   G.interactables.push(savino);
-  G.interactables.push({zone:true,x:2,z:-16,r:2.5,prompt:'Lay hands on him — PRAY',action:'pioCancer'});
   // A few olive trees
   for(var ot=0;ot<4;ot++){mkBox(.4,3.5,.4,0x5a3a1a,-10+(ot*4),1.75,-8);mkSph(2.5,6,4,0x4a7030,-10+(ot*4),5,-8);}
-  setPos(0,5);setObj('Find Giovanni Savino and pray over his wounded eyes');hideProgress();
+  setPos(0,3);setObj('Find Giovanni Savino on the church steps and pray over his eyes.');hideProgress();
 }
 
 function bPioFragrance(){
@@ -1843,7 +1830,7 @@ function bPioFragrance(){
   G.interactables.push(fragZone);
   // Maria Pyle's window light (faint warm glow from building)
   var mpyl=new THREE.PointLight(0xffcc77,.8,12);mpyl.position.set(8,4,2);addS(mpyl);
-  setPos(0,4);setObj('Enter the cloister garden and experience the fragrance of grace');hideProgress();
+  setPos(0,4);setObj('Enter the cloister garden and experience the fragrance of grace.');hideProgress();
 }
 
 function bPioAgony(){
@@ -1870,15 +1857,13 @@ function bPioAgony(){
   var ph2=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));ph2.position.y=.85+1.2;
   pioFig2.add(pb2,ph2);pioFig2.position.set(-1,0,-1);
   G.scene.add(pioFig2);
-  pioFig2.userData={prompt:'Sit with Padre Pio',dlgKey:'pio_agony_intro'};
+  pioFig2.userData={prompt:'Kneel beside Padre Pio and pray',action:'pioAgony'};
   G.interactables.push(pioFig2);
   // Attending friars (2)
   mkNPC(0x2a1a08,-3,0,0);mkNPC(0x2a1a08,1.5,0,.5);
-  // Prayer zone — be present
-  G.interactables.push({zone:true,x:-1,z:-1,r:2,prompt:'Kneel beside Padre Pio — PRAY',action:'pioAgony'});
   // The cleaned hands detail — a white glow at Pio's hands position
   var handGlow=new THREE.PointLight(0xffffff,.3,3);handGlow.position.set(-1.3,1.3,-1);addS(handGlow);
-  setPos(2,4);setObj('Sit with Padre Pio on his last night on earth');hideProgress();
+  setPos(2,2);setObj('Walk to Padre Pio and kneel beside him on his last night.');hideProgress();
 }
 
 function startFlightSim(){
@@ -1890,7 +1875,7 @@ function startFlightSim(){
   document.getElementById('flightHUD').style.display='block';
   document.getElementById('crosshair').style.display='block';
   showHUD('✝ Flight of Faith — St. Francis & the Rosaries');
-  setObj('Fly over people and press PRAY to shoot rosaries. Catch 3 prayers to enter Heaven!');
+  setObj('Fly over the faithful and press PRAY to send rosaries. Catch 3 to open the gates of Heaven.');
   hideProgress();
   G.gameMode='flight';
 }
@@ -2076,7 +2061,7 @@ function buildHeavenScene(){
   G.interactables.push({zone:true,x:0,z:-23,r:5,prompt:'Approach Jesus',action:'meetJesus'});
   setPos(0,5);G.camera.position.set(0,8,14);
   showHUD('✝ Heaven — Walk Toward the Light');
-  setObj('Walk toward Jesus, who stands in the golden light');
+  setObj('Walk toward Jesus, who stands in the golden light.');
   hideProgress();
   showHeavenMsg('You have entered Heaven',2800);
 }
@@ -2154,7 +2139,11 @@ function checkNear(){
     if(obj.isObject3D){ox=obj.position.x;oz=obj.position.z;orr=2.5;}
     else{ox=obj.x;oz=obj.z;orr=obj.r||2.5;}
     var d2=(px-ox)*(px-ox)+(pz-oz)*(pz-oz),thr=(orr+.8)*(orr+.8);
-    if(d2<thr&&d2<bestD){bestD=d2;best=obj;}
+    if(d2<thr){
+      var hasAction=(obj.action)||(obj.userData&&obj.userData.action);
+      var bestHasAction=best&&(best.action||(best.userData&&best.userData.action));
+      if(d2<bestD||(d2===bestD&&hasAction&&!bestHasAction)){bestD=d2;best=obj;}
+    }
   }
   G.nearTarget=best;
   var ip=document.getElementById('interactPrompt');
@@ -2206,6 +2195,7 @@ function handleAct(){
   // NPC dialogue
   var dlgKey=(obj.userData&&obj.userData.dlgKey)||obj.dlgKey;
   if(dlgKey&&DLG[dlgKey])showDlg(DLG[dlgKey]);
+  else if(dlgKey&&!DLG[dlgKey])console.warn('Missing DLG key:',dlgKey);
 }
 
 /* ─── MIRACLE HANDLERS ─────────────────────────────── */
@@ -2276,7 +2266,7 @@ function doPioStigmata(){
 }
 function doPioFirstMass(){
   if(G.pioFirstMassDone)return;G.pioFirstMassDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioFirstMass';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioFirstMass';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);
   spawnParts(G.playerGroup.position.clone(),0xffffcc,60);spawnParts(G.playerGroup.position.clone(),0xffd700,40);
   var glow2=new THREE.PointLight(0xffeeaa,3,14);glow2.position.set(0,3,-4);addS(glow2);
@@ -2284,7 +2274,7 @@ function doPioFirstMass(){
 }
 function doPioConfessional(){
   if(G.pioConfessionalDone)return;G.pioConfessionalDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioConfessional';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioConfessional';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);
   var confGlow=new THREE.PointLight(0xffddaa,2.5,12);confGlow.position.set(0,3,-6);addS(confGlow);
   spawnParts(G.playerGroup.position.clone(),0xffd700,40);spawnParts(G.playerGroup.position.clone(),0xffffff,30);
@@ -2292,7 +2282,7 @@ function doPioConfessional(){
 }
 function doPioBilocation(){
   if(G.pioBilocationDone)return;G.pioBilocationDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioBilocation';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioBilocation';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);
   spawnParts(G.playerGroup.position.clone(),0xaaddff,50);spawnParts(G.playerGroup.position.clone(),0xffffff,35);
   var biGlow=new THREE.PointLight(0xaaddff,2.5,14);biGlow.position.set(2,3,1);addS(biGlow);
@@ -2307,7 +2297,7 @@ function doPioHealing(){
 }
 function doPioCancer(){
   if(G.pioCancerDone)return;G.pioCancerDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioCancer';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioCancer';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(true);
   var eyeGlow=new THREE.PointLight(0xffffff,4,10);eyeGlow.position.set(2,2.5,-16);addS(eyeGlow);
   spawnParts(new THREE.Vector3(2,1.8,-16),0xffffff,80);spawnParts(new THREE.Vector3(2,1.8,-16),0xffd700,50);
@@ -2315,7 +2305,7 @@ function doPioCancer(){
 }
 function doPioFragrance(){
   if(G.pioFragranceDone)return;G.pioFragranceDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioFragrance';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioFragrance';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);
   // Spawn rose-coloured particles as the fragrance
   spawnParts(new THREE.Vector3(0,2,-5),0xffaacc,55);spawnParts(new THREE.Vector3(0,2,-5),0xffffff,35);
@@ -2325,7 +2315,7 @@ function doPioFragrance(){
 }
 function doPioAgony(){
   if(G.pioAgonyDone)return;G.pioAgonyDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='pioAgony';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='pioAgony';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(true);
   // The white light of the clean hands — healing of stigmata
   var deathGlow=new THREE.PointLight(0xffffff,5,20);deathGlow.position.set(-1,2,-1);addS(deathGlow);
@@ -2343,7 +2333,7 @@ function doAnthonyMule(){
 }
 function doAnthonyRaise(){
   if(G.anthonyRaiseDone)return;G.anthonyRaiseDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='anthonyRaise';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='anthonyRaise';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(true);
   // Earth glows where the grave is
   var graveGlow=new THREE.PointLight(0xffffff,4,12);graveGlow.position.set(0,1,-18);addS(graveGlow);
@@ -2352,7 +2342,7 @@ function doAnthonyRaise(){
 }
 function doAnthonyPadua(){
   if(G.anthonyPaduaDone)return;G.anthonyPaduaDone=true;
-  var idx=G.interactables.findIndex(function(o){return o.zone&&o.action==='anthonyPadua';});if(idx!==-1)G.interactables.splice(idx,1);
+  var idx=G.interactables.findIndex(function(o){var a=(o.userData&&o.userData.action)||o.action;return a==='anthonyPadua';});if(idx!==-1)G.interactables.splice(idx,1);
   flashMiracle(false);
   spawnParts(G.playerGroup.position.clone(),0xffd700,60);spawnParts(G.playerGroup.position.clone(),0xffeecc,40);
   spawnParts(G.playerGroup.position.clone(),0xffffff,30);
@@ -2385,7 +2375,7 @@ function doMeetJesus(){
   flashMiracle(true);
   spawnParts(G.playerGroup.position.clone(),0xffffff,60);spawnParts(G.playerGroup.position.clone(),0xffd700,40);
   showDlg(DLG.heaven_jesus,function(){
-    setObj('Walk toward the Holy Spirit — the golden dove of light');
+    setObj('Walk toward the Holy Spirit — the golden dove of light.');
     G.interactables.push({zone:true,x:0,z:-48,r:5,prompt:'Approach the Holy Spirit',action:'meetHoly'});
     showHeavenMsg('Walk to the Holy Spirit',2000);
   });
@@ -2395,7 +2385,7 @@ function doMeetHoly(){
   flashMiracle(false);spawnParts(G.playerGroup.position.clone(),0xffffaa,80);
   if(G.holyGroup)G.holyGroup.userData.descending=true;
   showDlg(DLG.heaven_spirit,function(){
-    setObj('Walk toward God the Father — the great Pillar of Light');
+    setObj('Walk toward God the Father — the great Pillar of Light.');
     G.interactables.push({zone:true,x:0,z:-76,r:6,prompt:'Approach God the Father',action:'meetGod'});
     showHeavenMsg('Walk to God the Father',2000);
   });
@@ -2413,8 +2403,9 @@ function doMeetGod(){
 ═══════════════════════════════════════════════════════════ */
 function showDlg(lines,cb){
   if(!lines||!lines.length){if(cb)cb();return;}
+  if(G._typeTimer){clearInterval(G._typeTimer);G._typeTimer=null;}
   G.dlgQueue=lines;G.dlgIdx=0;G.dlgCb=cb||null;G.dlgActive=true;
-  renderDlg();document.getElementById('dialogueBox').style.display='block';
+  renderDlg();document.getElementById('dialogueBox').style.display='flex';
 }
 function renderDlg(){
   if(G.dlgIdx>=G.dlgQueue.length){closeDlg();return;}
@@ -2429,9 +2420,8 @@ function renderDlg(){
     tEl.textContent+=txt[idx++];
   },18);
   document.getElementById('dlgAttr').textContent=d.a?('— '+d.a):'';
-  document.getElementById('dialogueBox').style.animation='none';
-  document.getElementById('dialogueBox').getBoundingClientRect();
-  document.getElementById('dialogueBox').style.animation='dlgIn .28s ease-out';
+  var _db=document.getElementById('dialogueBox');
+  _db.style.animation='none';_db.getBoundingClientRect();_db.style.animation='dlgIn .28s ease-out';
   // Progress indicator
   var hint=document.querySelector('.dlg-hint');
   if(hint)hint.textContent='▼ '+(G.dlgIdx+1)+' / '+G.dlgQueue.length+' — Tap or press SPACE to continue';
@@ -2505,7 +2495,7 @@ function updateParts(dt){
     if(p.userData.life<=0){G.scene.remove(p);G.particles3D.splice(i,1);}
   }
 }
-setInterval(function(){
+var _partIv=setInterval(function(){
   if(!G.gameMode||G.gameMode==='none')return;
   var ov=document.getElementById('particleOverlay');
   if(!ov||ov.childNodes.length>18)return;
@@ -2674,7 +2664,7 @@ function elShow(id,d){var e=document.getElementById(id);if(e)e.style.display=d||
 function showHUD(title){
   document.getElementById('stageBanner').textContent=title;
   elShow('stageBanner');elShow('objectiveBar');elShow('joystickWrap');elShow('actionBtns','flex');
-  var mm=document.getElementById('minimap');if(mm){mm.style.display='block';if(!_mmCtx)initMinimap();}
+  var mm=document.getElementById('minimap');if(mm){mm.style.display='block';initMinimap();} // always reinit
 }
 function hideHUDMinimap(){var mm=document.getElementById('minimap');if(mm)mm.style.display='none';}
 function hideHUD(){
@@ -2694,6 +2684,7 @@ var MARATHON_ORDER=[
 ];
 // Cuts set after arrays are defined (called once at init)
 function initMarathonOrder(){
+  MARATHON_ORDER[0].cuts=CF;
   MARATHON_ORDER[1].cuts=CA;MARATHON_ORDER[2].cuts=CC;
   MARATHON_ORDER[3].cuts=CB;MARATHON_ORDER[4].cuts=CPio;MARATHON_ORDER[5].cuts=CEliz;
 }
@@ -2757,7 +2748,7 @@ function showMarathonEnd(){
     list.innerHTML='';
     MARATHON_ORDER.forEach(function(s){
       var sp=document.createElement('span');
-      sp.className='msl-saint';
+      sp.className='marathon-badge';
       sp.textContent=s.icon+' '+s.label;
       list.appendChild(sp);
     });
@@ -2799,8 +2790,8 @@ function showSaintEnd(saintKey){
     elizabeth:'Erzsbet Arpad was born on July 7, 1207, in Pressburg (modern Bratislava), daughter of King Andrew II of Hungary. At 14 she married Ludwig IV of Thuringia; they had three children and by all accounts a genuinely loving marriage. After Ludwig’s death on Crusade in 1227, Elizabeth was expelled from the castle by her brother-in-law, wandered the winter streets of Eisenach with her infant children, and founded a hospital at Marburg where she personally nursed the sick, washed lepers, and carried the dying on her back. She was 24 when she died on November 17, 1231. Pope Gregory IX canonised her on May 27, 1235 — just four years later, one of the fastest canonisations in medieval history. She is patron of the Franciscan Third Order, bakers, beggars, the homeless, hospitals, and all who serve the poor.',
   };
   var titles={anthony:'✝ Doctor Evangelicus ✝\nSt. Anthony of Padua',clare:'✝ A Life of Radical Poverty ✝\nSt. Clare of Assisi',bonaventure:'✝ The Seraphic Doctor ✝\nSt. Bonaventure',pio:'✝ A Living Stigmatic ✝\nPadre Pio of Pietrelcina',elizabeth:'✝ A Princess of the Poor ✝\nSt. Elizabeth of Hungary'};
-  document.getElementById('saintFinalTitle').textContent=titles[saintKey]||'✝ A Life of Grace ✝';
-  document.getElementById('saintFinalQuote').textContent=quotes[saintKey]||'';
+  document.getElementById('saintFinalTitle').textContent=(titles[saintKey]||'✝ A Life of Grace ✝').replace(/\n/g,'\n');
+  document.getElementById('saintFinalQuote').innerHTML=(quotes[saintKey]||'').replace(/\n/g,'<br>');
   var bioEl=document.getElementById('saintFinalBio');
   if(bioEl)bioEl.textContent=bios[saintKey]||'';
   elShow('finalSaint','flex');
@@ -2809,6 +2800,7 @@ function showHeavenEnd(){hideHUD();elHide('dialogueBox');elHide('heavenMsg');elS
 
 function goToMenu(){
   if(G._typeTimer){clearInterval(G._typeTimer);G._typeTimer=null;}
+  if(typeof _partIv!=='undefined')clearInterval(_partIv);
   ['finalFrancis','finalSaint','finalHeaven','finalMarathon','modeSelect','saintSelect','cutscene'].forEach(function(id){elHide(id);});
   clearStage();if(G.playerGroup){G.scene.remove(G.playerGroup);G.playerGroup=null;}
   if(G.flyGroup){G.scene.remove(G.flyGroup);G.flyGroup=null;}
@@ -2975,6 +2967,5 @@ window.addEventListener('load',function(){
   },200);
 });
 </script>
-
 </body>
 </html>
