@@ -1265,12 +1265,9 @@ function bSanDamiano(){
   }
 
   // Collision walls: chapel walls
-  addWallLine(-7,-7,-7,7,1.0); // left wall
-  addWallLine(7,-7,7,7,1.0);   // right wall
-  addWallLine(-7,-7,7,-7,1.0); // back wall
+  // bSanDamiano — open walls (Francis can walk anywhere)
   // San Damiano collision
-  addWallLine(-7,-7,-7,7,1.0);addWallLine(7,-7,7,7,1.0);addWallLine(-7,-7,7,-7,1.0);
-  addWallLine(-3,6,3,6,1.0); // entrance arch sides
+
   // ── Repair pieces ──
   G.fixedPieces=0;G.totalPieces=5;
   addPiece(0xa09070,.85,3.4,12, 7,4.8,0,'Right Side Wall',0xd0c098);
@@ -1490,22 +1487,51 @@ function bWolf(){
     mkBox(dl,.25,.25,0x1a1206,-10+Math.cos(da)*dl*.5,5+Math.sin(da)*dl*.5,-8);
   }
 
-  // ── WOLF — powerful, built wolfmesh ──
-  buildWolfMesh();
+  // ── WOLF MESH (built inline) ──
+  G.wolfGroup=new THREE.Group();tagObj(G.wolfGroup);
+  var wGrey=new THREE.MeshLambertMaterial({color:0x888888});
+  var wDark=new THREE.MeshLambertMaterial({color:0x555555});
+  // Body
+  var wBody=new THREE.Mesh(new THREE.BoxGeometry(1.4,1.0,2.4),wGrey);wBody.position.y=1.1;G.wolfGroup.add(wBody);
+  // Neck
+  var wNeck=new THREE.Mesh(new THREE.BoxGeometry(.7,.7,.7),wGrey);wNeck.position.set(0,1.7,.9);G.wolfGroup.add(wNeck);
+  // Head
+  var wHead=new THREE.Mesh(new THREE.BoxGeometry(.9,.75,1.1),wGrey);wHead.position.set(0,1.8,1.5);G.wolfGroup.add(wHead);
+  // Snout
+  var wSnout=new THREE.Mesh(new THREE.BoxGeometry(.5,.4,.6),wDark);wSnout.position.set(0,1.62,2.05);G.wolfGroup.add(wSnout);
+  // Ears
+  var wEarL=new THREE.Mesh(new THREE.BoxGeometry(.22,.4,.18),wDark);wEarL.position.set(-.3,2.25,1.4);G.wolfGroup.add(wEarL);
+  var wEarR=wEarL.clone();wEarR.position.set(.3,2.25,1.4);G.wolfGroup.add(wEarR);
+  // Eyes — red glow
+  var eyeMat=new THREE.MeshLambertMaterial({color:0xff2200,emissive:new THREE.Color(0xff0000),emissiveIntensity:1.2});
+  var wEyeL=new THREE.Mesh(new THREE.SphereGeometry(.1,6,5),eyeMat);wEyeL.position.set(-.22,1.9,1.98);G.wolfGroup.add(wEyeL);
+  var wEyeR=wEyeL.clone();wEyeR.position.set(.22,1.9,1.98);G.wolfGroup.add(wEyeR);
+  G.wolfEyes=[wEyeL,wEyeR];
+  // Legs
+  var legPos=[-.5,-.9,.5,-.9,-.5,.9,.5,.9]; // x,z pairs
+  for(var wl=0;wl<4;wl++){
+    var wLeg=new THREE.Mesh(new THREE.BoxGeometry(.35,1.0,.35),wGrey);
+    wLeg.position.set(legPos[wl*2],.55,legPos[wl*2+1]);G.wolfGroup.add(wLeg);
+  }
+  // Tail
+  G.wolfTail=new THREE.Mesh(new THREE.BoxGeometry(.2,.2,1.0),wDark);
+  G.wolfTail.position.set(0,1.3,-1.1);G.wolfTail.rotation.x=-.5;G.wolfGroup.add(G.wolfTail);
   G.wolfGroup.position.set(0,0,-11);
-  G.wolfGroup.rotation.y=Math.PI; // facing player
+  G.wolfGroup.rotation.y=Math.PI;
   G.wolfGroup.userData.prompt='Make peace with Brother Wolf — PRAY';
   G.wolfGroup.userData.action='wolf';
   G.interactables.push(G.wolfGroup);
-
-  // Collision: forest ring (approx 24 trees at r=26-38)
-  for(var _wt=0;_wt<24;_wt++){var _wa=(_wt/24)*Math.PI*2;addWall(Math.cos(_wa)*28,Math.sin(_wa)*28,2.5);}
-  // Gate walls
-  addWallLine(-20,-22,20,-22,1.2);
-  // Wolf collision
-  for(var _wt=0;_wt<24;_wt++){var _wa=(_wt/24)*Math.PI*2;addWall(Math.cos(_wa)*28,Math.sin(_wa)*28,2.5);}
-  addWallLine(-20,-22,20,-22,1.4); // gate wall
-  addWall(-10,-8,.6);addWall(10,-8,.6); // dead trees
+  G.scene.add(G.wolfGroup);
+  // Wolf eye glow light
+  var wGlow=new THREE.PointLight(0xff2200,.8,6);wGlow.position.set(0,2,-10);addS(wGlow);
+  // Wall colliders — forest ring + gate (no duplicate vars)
+  for(var wfi=0;wfi<24;wfi++){
+    var wfa=(wfi/24)*Math.PI*2;
+    addWall(Math.cos(wfa)*28,Math.sin(wfa)*28,2.5);
+  }
+  addWallLine(-20,-22,20,-22,1.4);
+  addWall(-10,-8,.6);addWall(10,-8,.6);
+  addWall(7,-22,2.0);addWall(-7,-22,2.0); // gate towers
   setPos(0,5);setObj('Walk to Brother Wolf and bring peace between him and the people of Gubbio.');hideProgress();
 }
 
@@ -1992,15 +2018,15 @@ function bAnthonyRaise(){
     if(Math.abs(gsx)<1.5&&gsz<-10) continue;
     mkBox(.25,.7+Math.random()*.3,.25,0x2a6a1a,gsx,.35,gsz);
   }
-  // Grave mound and cross
-  mkBox(2,.35,3.8,0x6b5a40,0,.18,-18);
-  mkBox(2.2,.06,4,0x4a3a28,0,.06,-18);
-  mkBox(.15,1.5,.15,0x5a3a1a,0,1.08,-18);mkBox(.95,.15,.15,0x5a3a1a,0,1.72,-18);
-  var graveGlow=new THREE.PointLight(0xffffcc,.4,8);graveGlow.position.set(0,1.5,-18);addS(graveGlow);
-  // Tribunal bench
-  mkBox(5.5,.85,1.8,0xaaaaaa,-10,2,-12);mkBox(5.5,.3,1.8,0x999999,-10,2.98,-12);
-  for(var bg=0;bg<3;bg++) mkBox(1.5,3,.3,0x9a9090,-12+bg*2,1.5,-11.2);
-  mkNPC(0x223355,-9,0,-12);mkNPC(0x223355,-11,0,-12);
+  // Grave mound and cross — placed inside cloister garden
+  mkBox(2,.35,3.8,0x6b5a40,0,.18,-11);
+  mkBox(2.2,.06,4,0x4a3a28,0,.06,-11);
+  mkBox(.15,1.5,.15,0x5a3a1a,0,1.08,-11);mkBox(.95,.15,.15,0x5a3a1a,0,1.72,-11);
+  var graveGlow=new THREE.PointLight(0xffffcc,.5,10);graveGlow.position.set(0,1.6,-11);addS(graveGlow);
+  // Tribunal bench — moved inside cloister on right side
+  mkBox(5.5,.85,1.8,0xaaaaaa,2,2,-6);mkBox(5.5,.3,1.8,0x999999,2,2.98,-6);
+  for(var bg=0;bg<3;bg++) mkBox(1.5,3,.3,0x9a9090,.5+bg*1.5,1.5,-5.2);
+  mkNPC(0x223355,1,0,-6);mkNPC(0x223355,3,0,-6);
   // Martino — kneeling, bound wrists
   var martino=new THREE.Group();tagObj(martino);
   var mb2=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.1,7),mkMat(0x886644));mb2.position.y=.55;
@@ -2010,9 +2036,11 @@ function bAnthonyRaise(){
   G.scene.add(martino);
   martino.userData={prompt:'Speak with Martino',dlgKey:'anthony_raise_intro'};
   G.interactables.push(martino);
-  for(var wt=0;wt<4;wt++) mkNPC(0x334455,-16+wt*3.5,0,-12);
+  // Witnesses — inside cloister, clear of walls
+  var witPos=[[-7,-2],[-5,0],[-3,-4],[-1,2]];
+  witPos.forEach(function(wp){mkNPC(0x334455,wp[0],0,wp[1]);});
   // Grave zone
-  G.interactables.push({zone:true,x:0,z:-18,r:3.5,prompt:'Pray at the grave — PRAY',action:'anthonyRaise'});
+  G.interactables.push({zone:true,x:0,z:-11,r:3.5,prompt:'Pray at the grave — PRAY',action:'anthonyRaise'});
   setPos(0,5);setObj('Walk to the grave and call upon God to vindicate the innocent.');hideProgress();
 }
 
@@ -2145,7 +2173,6 @@ function bClareChristmas(){
   var fl=new THREE.Mesh(new THREE.PlaneGeometry(14,12),sMat);fl.rotation.x=-Math.PI/2;fl.position.y=.01;addS(fl);
   mkBox(.5,5,12,0x3a2a1a,-7,2.5,0);mkBox(.5,5,12,0x3a2a1a,7,2.5,0);
   mkBox(14,5,.5,0x3a2a1a,0,2.5,-6);
-  addWallLine(-7,-6,7,-6,.9);addWallLine(-7,-6,-7,6,.9);addWallLine(7,-6,7,6,.9);
   // Stone ceiling arch hints
   for(var ca=0;ca<3;ca++){
     var cArc=new THREE.Mesh(new THREE.BoxGeometry(14,.2,.2),new THREE.MeshLambertMaterial({color:0x2a1a0a}));
@@ -2158,7 +2185,6 @@ function bClareChristmas(){
   mkBox(5,.3,2.8,0x4433aa,-3,1.0,.5);   // footboard
   mkBox(2,.35,1.2,0xeeddff,-4.8,1.88,2.4); // pillow
   mkBox(2,.35,1.2,0xeeddff,-2.2,1.88,2.4);
-  addWall(-3,2,3.2);
   // Candle on bedside table
   mkBox(1.4,.4,1,0x5a3a18,1.8,.45,3);
   mkBox(.12,.7,.12,0xeeeebb,1.8,.85,3);mkSph(.1,5,4,0xffdd88,1.8,1.58,3);
@@ -2363,562 +2389,510 @@ function bElizLeper(){
 /* ═══════════════════════════════════════════════════════════
    ── PADRE PIO EXTENDED STAGES ──
 ═══════════════════════════════════════════════════════════ */
-function bPioStigmata(){
-  // San Giovanni Rotondo, Capuchin friary — September 20, 1918.
-  // Padre Pio praying before the crucifix in the choir loft. The stigmata appear.
-  mkFog(0x0a0508,12,38);mkAmb(0x221133,.4);mkHemi(0x0a0508,0x040404,.18);mkDir(0x8877cc,.6,4,14,3);
-  G.scene.background=new THREE.Color(0x04020a);
-  mkGnd(0x3a2a1a,30,30);
-  // ── Choir loft / chapel interior ──
-  mkBox(12,.5,10,0x5a4a3a,0,.25,0);
-  mkBox(.5,7,10,0x4a3a2a,-6,3.5,0);mkBox(.5,7,10,0x4a3a2a,6,3.5,0);
-  mkBox(12,7,.5,0x4a3a2a,0,3.5,-5);mkBox(12,7,.5,0x3a2a1a,0,3.5,5);
-  addWallLine(-6,-5,-6,5,1.2);addWallLine(6,-5,6,5,1.2);addWallLine(-6,-5,6,-5,1.2);
-  // Stone vault ribs
-  for(var vb=0;vb<5;vb++){var rib=new THREE.Mesh(new THREE.BoxGeometry(13,.22,.22),new THREE.MeshLambertMaterial({color:0x3a2a18}));rib.position.set(0,7,-3+vb*2);addS(rib);}
-  // ── The great crucifix Padre Pio knelt before ──
-  // Cross background panel
-  var cPan=new THREE.Mesh(new THREE.BoxGeometry(2.8,4.8,.2),new THREE.MeshLambertMaterial({color:0x6a3a10,emissive:new THREE.Color(0x2a0800),emissiveIntensity:.2}));
-  cPan.position.set(0,5.5,-4.85);addS(cPan);
-  // The cross itself
-  var gMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffaa00),emissiveIntensity:1.1});
-  var vCr=new THREE.Mesh(new THREE.BoxGeometry(.28,4.5,.28),gMat);vCr.position.set(0,5.5,-4.7);addS(vCr);
-  var hCr=new THREE.Mesh(new THREE.BoxGeometry(2.2,.28,.28),gMat);hCr.position.set(0,6.8,-4.7);addS(hCr);
-  // Christ corpus
-  var cMat=new THREE.MeshLambertMaterial({color:0xf0c080,emissive:new THREE.Color(0xcc8820),emissiveIntensity:.3});
-  var cBody=new THREE.Mesh(new THREE.CylinderGeometry(.22,.28,.9,7),cMat);cBody.position.set(0,5.7,-4.6);addS(cBody);
-  var cHead=new THREE.Mesh(new THREE.SphereGeometry(.2,8,7),cMat);cHead.position.set(0,6.4,-4.6);addS(cHead);
-  // Cross glow — supernatural light
-  var cGl=new THREE.PointLight(0xffd700,3.0,18);cGl.position.set(0,6.5,-4.6);cGl.userData.glow=true;addS(cGl);
-  var cGl2=new THREE.PointLight(0xffffff,.8,28);cGl2.position.set(0,5.5,-4);cGl2.userData.glow=true;addS(cGl2);
-  // Altar rail
-  mkBox(10,.55,.25,0x5a3a18,0,.28,-3);
-  // Candles flanking
-  for(var ca=0;ca<2;ca++){
-    var cax=(ca===0?-3:3);mkBox(.14,1,.14,0xeeeebb,cax,.78,-3.5);mkSph(.11,5,4,0xffdd88,cax,1.82,-3.5);
-    var cgl3=new THREE.PointLight(0xffcc77,1.0,7);cgl3.position.set(cax,2.2,-3.5);cgl3.userData.glow=true;addS(cgl3);
-  }
-  // Kneeler / prayer stool
-  mkBox(2,.38,1.2,0x4a2a08,0,.19,-2);mkBox(2,.22,.3,0x5a3a18,0,.48,-1.4);
-  // Whisps of incense smoke (particle)
-  for(var is=0;is<3;is++){var im=new THREE.Mesh(new THREE.SphereGeometry(.06,4,3),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.18}));im.position.set(-1+is,3,-3.8);addS(im);}
-  G.interactables.push({zone:true,x:0,z:-2,r:2.8,prompt:'Kneel before the Crucifix — PRAY',action:'pioStigmata'});
-  setPos(0,3);setObj('Approach the crucifix and kneel in prayer.');hideProgress();
-}
-
-function bPioHealing(){
-  // San Giovanni Rotondo — 1947. Gemma di Giorgi, born without pupils, is brought to Padre Pio.
-  // After Mass, he places his hand on her eyes. She begins to see.
-  mkFog(0x99aacc,28,85);mkAmb(0xfff8ee,.6);mkHemi(0x88aacc,0x3a5a3a,.38);mkDir(0xffeedd,1.2,14,30,8);
-  var fill=new THREE.DirectionalLight(0x99ccff,.35);fill.position.set(-12,22,-5);addS(fill);
-  mkGnd(0x8a7a5a,80,80);
-  // ── Church of Santa Maria delle Grazie exterior courtyard ──
-  // Stone courtyard floor
-  for(var cp=0;cp<16;cp++)for(var cr2=0;cr2<10;cr2++){
-    if((cp+cr2)%3===0)mkBox(1.8,.08,1.8,0xaaa090,(cp-7.5)*2,.04,(cr2-4)*2.2-5);
-  }
-  // Church facade — Foggia style
-  mkBox(16,10,2.5,0xddd0b0,0,5,-22);mkBox(7,6,2.5,0xd8cca8,0,11,-22);
-  for(var fw=0;fw<3;fw++)mkBox(1.5,2.5,.4,0x4466aa,-4+fw*4,4.5,-20.5);
-  // Rose window
-  mkBox(3,3,.4,0x2244aa,0,9,-20.5);
-  // Church door arch
-  mkBox(2.5,5,.5,0xc8b888,-2,2.5,-20);mkBox(2.5,5,.5,0xc8b888,2,2.5,-20);mkBox(5,1.5,.5,0xb8a878,0,5.75,-20);
-  // Bell tower
-  mkBox(4,18,4,0xd0c098,12,9,-18);for(var bb=0;bb<4;bb++)mkBox(1.2,1.8,1.2,0xc0b088,10.5+(bb%2)*3,18.5,-16+(bb<2?0:4));
-  addWall(12,-18,2.5);
-  // Church steps with ramp
-  for(var cs=0;cs<3;cs++)mkBox(12+cs*.4,.3,1.2,0xcfbf88,0,.15+cs*.3,-18+cs*1.2);
-  addRamp(0,-17.5,0,-15,0,.9,5.5);
-  // Outer courtyard walls
-  addWallLine(-16,-24,16,-24,1.4);addWallLine(-16,-24,-16,4,1.4);addWallLine(16,-24,16,4,1.4);
-  // ── Crowd of pilgrims and sick ──
-  var pCols=[0x556677,0x886644,0x664422,0x447766,0x885533];
-  for(var pi=0;pi<14;pi++)mkNPC(pCols[pi%5],(Math.random()-.5)*18,0,-4+Math.random()*-8);
-  // ── Gemma and her grandmother ──
-  var gemma=new THREE.Group();tagObj(gemma);
-  var gb=new THREE.Mesh(new THREE.CylinderGeometry(.22,.30,.85,7),mkMat(0xaabbcc));gb.position.y=.42;
-  var gh=new THREE.Mesh(new THREE.SphereGeometry(.2,8,7),mkMat(0xDEB887));gh.position.y=1.05;
-  gemma.add(gb,gh);gemma.position.set(-2,0,-8);
-  G.scene.add(gemma);gemma.userData={prompt:'Pray for Gemma',dlgKey:'pio_healing_intro'};G.interactables.push(gemma);
-  // Grandmother figure
-  mkNPC(0x887766,-4,0,-8);
-  // Pio near altar (inside church)
-  var pio=new THREE.Group();tagObj(pio);
-  var pb=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.12,8),mkMat(0x2a1a0a));pb.position.y=.56;
-  var ph=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),mkMat(0xDEB887));ph.position.y=1.38;
-  pio.add(pb,ph);pio.position.set(0,0,-16);G.scene.add(pio);
-  addWall(0,-16,.8);
-  // Healing zone
-  G.interactables.push({zone:true,x:-2,z:-8,r:3.5,prompt:'Lay hands on Gemma and pray',action:'pioHealing'});
-  setPos(0,3);setObj('Approach the sick man and care for him in the name of Christ.');hideProgress();
-}
-
 function bPioFirstMass(){
-  // Pietrelcina — small village chapel, stone interior, morning light
-  mkFog(0x332211,12,40);mkAmb(0xfff0cc,.5);mkHemi(0x221108,0x0a0505,.2);mkDir(0xffeecc,.9,6,18,4);mkGnd(0x5a4a38,28,28);
-  // Stone chapel walls
-  mkBox(12,.5,10,0xaa9988,0,.25,0);mkBox(.5,7,10,0xaa9988,-6,3.5,0);mkBox(.5,7,10,0xaa9988,6,3.5,0);
-  mkBox(12,7,.5,0xaa9988,0,3.5,-5);mkBox(12,7,.5,0x998877,0,3.5,5);
-  // Barrel vault ceiling hints
-  for(var vb=0;vb<4;vb++)mkBox(13,.3,.4,0x998877,0,7,-3+(vb*2));
-  // Altar
-  mkBox(4,.9,1.5,0xffffff,0,.45,-4);mkBox(4,.15,1.5,0xeeeeff,0,1.0,-4);
-  // Altar crucifix
-  mkBox(.12,2.2,.12,0x6b4320,0,2.2,-4.65);mkBox(.9,.12,.12,0x6b4320,0,3.1,-4.65);
-  var corpus=new THREE.Mesh(new THREE.SphereGeometry(.16,6,5),mkMat(0xDEB887));corpus.position.set(0,3.1,-4.75);addS(corpus);
-  // Candles on altar
-  for(var ca2=0;ca2<3;ca2++){
-    mkBox(.08,.6,.08,0xffffee,-1+(ca2*.9),.75,-3.4);
-    var cf2=new THREE.Mesh(new THREE.SphereGeometry(.04,4,3),mkMat(0xffdd44,0xffaa00,.9));cf2.position.set(-1+(ca2*.9),1.4,-3.4);addS(cf2);
-    var pcl=new THREE.PointLight(0xffddaa,.5,4);pcl.position.set(-1+(ca2*.9),1.6,-3.4);addS(pcl);
+  // Pietrelcina, August 10 1910. Padre Pio celebrates his first solemn Mass
+  // at the church of Sant'Anna. His family fills the pews. He falls into ecstasy.
+  mkFog(0x332211,14,48);mkAmb(0xfff8e8,.62);mkHemi(0x442200,0x0a0505,.25);
+  mkDir(0xffeecc,1.1,8,20,5);
+  var sideLight=new THREE.DirectionalLight(0xff9944,.4);sideLight.position.set(7,12,2);addS(sideLight);
+  mkGnd(0x5a4a38,32,32);
+  // ── Sant'Anna, Pietrelcina — Romanesque village church ──
+  // Stone floor
+  var flMat=new THREE.MeshLambertMaterial({color:0x6a5a4a});
+  var fl=new THREE.Mesh(new THREE.PlaneGeometry(14,12),flMat);fl.rotation.x=-Math.PI/2;fl.position.y=.01;addS(fl);
+  // Nave walls
+  mkBox(.5,8,12,0xaa9988,-7,4,0);mkBox(.5,8,12,0xaa9988,7,4,0);
+  mkBox(14,8,.5,0xaa9988,0,4,-6);mkBox(14,8,.5,0x998877,0,4,6);
+  addWallLine(-7,-6,-7,6,1.0);addWallLine(7,-6,7,6,1.0);addWallLine(-7,-6,7,-6,1.0);
+  // Stone barrel vault — series of arches
+  for(var vb=0;vb<5;vb++){
+    var vRib=new THREE.Mesh(new THREE.BoxGeometry(14,.22,.22),new THREE.MeshLambertMaterial({color:0x887766}));
+    vRib.position.set(0,7.8,-3+vb*2);addS(vRib);
   }
-  // Pews
-  for(var pw=0;pw<3;pw++){mkBox(3.5,.4,1.2,0x8b5a2a,(pw%2===0?-2.2:2.2),.2,-1+(pw*.8));}
-  // A few village congregation NPCs
-  var vcols=[0x778866,0x665544,0x886644];
-  for(var vn=0;vn<5;vn++)mkNPC(vcols[vn%3],(vn%2===0?-2.5:2.5),0,1+(vn*.7));
-  addWallLine(-6,-5,-6,5,1.2);addWallLine(6,-5,6,5,1.2);addWallLine(-6,-5,6,-5,1.2);
-  // Prayer zone at the altar rail
-  var altZone={zone:true,x:0,z:-3,r:2.5,prompt:'Approach the altar — PRAY',action:'pioFirstMass'};
-  G.interactables.push(altZone);
-  // Golden morning light from side window
-  var winL=new THREE.PointLight(0xffeecc,1.5,14);winL.position.set(5.5,5,0);addS(winL);
+  // Painted apse semi-dome suggestion
+  mkBox(10,6,1,0x9988cc,0,5.5,-5.6);
+  var apseFresco=new THREE.MeshLambertMaterial({color:0x7788cc,emissive:new THREE.Color(0x112244),emissiveIntensity:.3});
+  var apseSemi=new THREE.Mesh(new THREE.SphereGeometry(4.8,8,5,0,Math.PI),apseFresco);apseSemi.position.set(0,7,-5.6);addS(apseSemi);
+  // ── High Altar — richly adorned ──
+  mkBox(5,.95,2,0xffffff,0,.47,-4.8);mkBox(5,.22,2,0xeeeef8,0,1.06,-4.8);
+  // Altar frontal cloth (embroidered white/gold)
+  mkBox(5,.8,.1,0xffe8aa,0,.45,-3.85);mkBox(5,.08,.1,0xffd700,0,.9,-3.85);
+  // Altar candles — 6 tall
+  for(var ac=0;ac<6;ac++){
+    var acx=-2.2+ac*.9;
+    mkBox(.1,1.4,.1,0xffffff,acx,.78,-4.5);
+    mkSph(.09,5,4,0xffee88,acx,2.22,-4.5);
+    var acl=new THREE.PointLight(0xffdd88,.55,5);acl.position.set(acx,2.6,-4.5);addS(acl);
+  }
+  // Tabernacle — golden box in centre
+  var tabMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xaa8800),emissiveIntensity:.5});
+  var tab=new THREE.Mesh(new THREE.BoxGeometry(.7,1,.5),tabMat);tab.position.set(0,1.7,-4.8);addS(tab);
+  mkBox(.3,.3,.3,0xffd700,0,2.26,-4.8); // tabernacle top
+  var tabGlow=new THREE.PointLight(0xffd700,1.5,8);tabGlow.position.set(0,2.2,-4.6);tabGlow.userData.glow=true;addS(tabGlow);
+  // Crucifix above altar
+  mkBox(.16,2.6,.16,0x6b4320,0,4.2,-5.3);mkBox(1.1,.16,.16,0x6b4320,0,5.5,-5.3);
+  var corpus=new THREE.Mesh(new THREE.SphereGeometry(.18,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));corpus.position.set(0,5.5,-5.35);addS(corpus);
+  // ── Communion rail (Communion railing) ──
+  mkBox(10,.55,.2,0xd4c090,0,.28,-2.8);
+  for(var rp=0;rp<8;rp++) mkBox(.1,1.4,.1,0xc4a870,-4.2+rp*1.2,.28,-2.8);
+  // ── Pews — two rows ──
+  for(var pw=0;pw<4;pw++){
+    mkBox(4.5,.45,1,0x7a4a2a,-2.5+pw%2*.2,.22,pw<2?-1.2+pw*.5:-.2+pw*.4);
+    mkBox(4.5,.9,.18,0x6a3a1a,-2.5+pw%2*.2,1.02,pw<2?-.75+pw*.5:.2+pw*.4);
+  }
+  // ── Family congregation — seated ──
+  var famCols=[0x886644,0x664422,0x778866,0x557788,0x665533];
+  var famPos=[[-3,1.5],[3,1.5],[-3,.5],[3,.5],[-2,2.5],[2,2.5],[0,3],[0,1.5]];
+  famPos.forEach(function(fp,i){
+    mkNPC(famCols[i%5],fp[0],0,fp[1]);
+  });
+  // ── Side windows — coloured glass effect ──
+  var glassColors=[0x2244cc,0x44aa22,0xcc4422,0x2299aa];
+  for(var gw=0;gw<4;gw++){
+    var gwx=(gw%2===0)?-6.88:6.88, gwz=-2+(gw>>1)*3;
+    var wMat=new THREE.MeshBasicMaterial({color:glassColors[gw],transparent:true,opacity:.45});
+    var wMesh=new THREE.Mesh(new THREE.PlaneGeometry(.7,1.4),wMat);wMesh.position.set(gwx,4.5,gwz);wMesh.rotation.y=(gw%2===0)?Math.PI/2:-Math.PI/2;addS(wMesh);
+    var wLight=new THREE.PointLight(glassColors[gw],.4,7);wLight.position.set(gwx*.7,4.5,gwz);addS(wLight);
+  }
+  // Morning sunbeam (east side)
+  var beamMat=new THREE.MeshBasicMaterial({color:0xffeecc,transparent:true,opacity:.07});
+  var beam=new THREE.Mesh(new THREE.PlaneGeometry(2,6),beamMat);beam.position.set(5,3.5,-1);beam.rotation.y=-.4;beam.rotation.x=.2;addS(beam);
+  // Incense thurible — swinging chain hint
+  mkBox(.25,.25,.25,0xaa9944,0,3.5,-4);
+  var thuGlow=new THREE.PointLight(0x88cc88,.4,5);thuGlow.position.set(0,3.5,-4);addS(thuGlow);
+  // Pio at altar
+  var pioGrp=new THREE.Group();tagObj(pioGrp);
+  var pioBod=new THREE.Mesh(new THREE.CylinderGeometry(.32,.44,1.1,8),new THREE.MeshLambertMaterial({color:0xffffff}));pioBod.position.y=.55;
+  var pioHd=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));pioHd.position.y=1.38;
+  pioGrp.add(pioBod,pioHd);pioGrp.position.set(0,0,-4.5);G.scene.add(pioGrp);addWall(0,-4.5,.6);
+  // Altar zone
+  G.interactables.push({zone:true,x:0,z:-2.8,r:2.2,prompt:'Approach the altar rail — PRAY',action:'pioFirstMass'});
   setPos(0,4);setObj('Approach the altar for your first solemn Mass.');hideProgress();
 }
 
-function bPioConfessional(){
-  // San Giovanni Rotondo — the famous confessional corridor
-  mkFog(0x1a1015,10,35);mkAmb(0x333344,.5);mkHemi(0x111118,0x080508,.15);mkDir(0x8899aa,.65,5,16,3);mkGnd(0x4a3a30,30,30);
-  // Church corridor walls — narrow and intimate
-  mkBox(8,.5,16,0x6a5a4a,0,.25,0);mkBox(.5,6,16,0x6a5a4a,-4,3,0);mkBox(.5,6,16,0x6a5a4a,4,3,0);
-  mkBox(8,6,.5,0x6a5a4a,0,3,-8);mkBox(8,6,.5,0x5a4a3a,0,3,8);
-  // The wooden confessional box — distinctive dark wood structure
-  mkBox(1.8,5,1.4,0x4a2a0a,-2,2.5,-6); // confessional left panel
-  mkBox(1.8,5,1.4,0x4a2a0a,0,2.5,-6);  // center
-  mkBox(1.8,5,1.4,0x4a2a0a,2,2.5,-6);  // right panel
-  mkBox(5.6,.4,1.4,0x3a1a00,0,5.2,-6); // top
-  // Dark screen panel (mesh-like — darker box)
-  mkBox(.08,3,1,0x1a0800,1.0,3.5,-6.7); // screen divider
-  // Kneeler outside confessional
-  mkBox(2,.3,.6,0x8b6340,2,0.15,-5.5);
-  // Long queue of waiting penitents — people in a line
-  var pcols=[0x556677,0x774433,0x446633,0x665544,0x557755,0x443355,0x776644,0x445566];
-  for(var qn=0;qn<10;qn++)mkNPC(pcols[qn%8],3.2,0,-6+(qn*1.3));
-  // Candlelight along the walls
-  for(var wc=0;wc<4;wc++){
-    mkBox(.1,.5,.1,0xffffcc,-3.5,.5+(wc==0?.1:0),-5+(wc*2.5));
-    var wl=new THREE.PointLight(0xffcc88,.6,6);wl.position.set(-3.5,1.4,-5+(wc*2.5));addS(wl);
+function bPioStigmata(){
+  // San Giovanni Rotondo, September 20 1918. The permanent stigmata.
+  // Padre Pio alone in the choir loft before a crucifix after Mass.
+  mkFog(0x080412,12,38);mkAmb(0x1a0a22,.4);mkHemi(0x080412,0x030204,.18);
+  mkDir(0x6655aa,.55,4,14,3);
+  G.scene.background=new THREE.Color(0x040208);
+  mkGnd(0x2a1a0a,30,30);
+  // ── Choir loft — stone, old, intimate ──
+  var flMat2=new THREE.MeshLambertMaterial({color:0x3a2a1a});
+  var fl2=new THREE.Mesh(new THREE.PlaneGeometry(12,10),flMat2);fl2.rotation.x=-Math.PI/2;fl2.position.y=.01;addS(fl2);
+  mkBox(.5,6,10,0x3a2a16,-6,3,0);mkBox(.5,6,10,0x3a2a16,6,3,0);
+  mkBox(12,6,.5,0x3a2a16,0,3,-5);mkBox(12,6,.5,0x2a1a0a,0,3,5);
+  addWallLine(-6,-5,-6,5,1.1);addWallLine(6,-5,6,5,1.1);addWallLine(-6,-5,6,-5,1.1);
+  // Carved stone vault ribs
+  for(var vb=0;vb<6;vb++){
+    var ribMat=new THREE.MeshLambertMaterial({color:0x2a1a0c});
+    var rib=new THREE.Mesh(new THREE.BoxGeometry(12,.2,.2),ribMat);rib.position.set(0,5.8,-4+vb*1.8);addS(rib);
   }
-  // Penitent kneeling zone
-  G.interactables.push({zone:true,x:2,z:-5.5,r:2,prompt:'Kneel at the confessional and pray',action:'pioConfessional'});
-  // Pio figure visible inside confessional (glimpse through screen)
-  var pioSilhouette=mkNPC(0x2a1a08,-0.1,0,-6.8);
-  setPos(0,4);setObj('Join the queue and approach Padre Pio\'s confessional');hideProgress();
+  // ── The San Damiano-style crucifix Pio prayed before ──
+  // Painted wood panel background
+  var panMat=new THREE.MeshLambertMaterial({color:0x5a2a08,emissive:new THREE.Color(0x1a0400),emissiveIntensity:.25});
+  var panel=new THREE.Mesh(new THREE.BoxGeometry(3.2,5.2,.22),panMat);panel.position.set(0,5.8,-4.88);addS(panel);
+  // Gold border
+  var goldMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xaa6600),emissiveIntensity:.6});
+  var borderH=new THREE.Mesh(new THREE.BoxGeometry(3.4,.18,.18),goldMat);borderH.position.set(0,8.45,-4.82);addS(borderH);
+  var borderB=borderH.clone();borderB.position.set(0,3.15,-4.82);addS(borderB);
+  var borderL=new THREE.Mesh(new THREE.BoxGeometry(.18,5.4,.18),goldMat);borderL.position.set(-1.72,5.8,-4.82);addS(borderL);
+  var borderR=borderL.clone();borderR.position.set(1.72,5.8,-4.82);addS(borderR);
+  // Cross beams
+  var xMat=new THREE.MeshLambertMaterial({color:0x8b4a10,emissive:new THREE.Color(0x3a1400),emissiveIntensity:.2});
+  var xVert=new THREE.Mesh(new THREE.BoxGeometry(.32,5,.32),xMat);xVert.position.set(0,5.8,-4.72);addS(xVert);
+  var xHorz=new THREE.Mesh(new THREE.BoxGeometry(2.6,.32,.32),xMat);xHorz.position.set(0,7.2,-4.72);addS(xHorz);
+  // Christ figure — more detailed
+  var cMat=new THREE.MeshLambertMaterial({color:0xf0c080,emissive:new THREE.Color(0xdd8820),emissiveIntensity:.35});
+  var cBody=new THREE.Mesh(new THREE.CylinderGeometry(.24,.3,1.0,7),cMat);cBody.position.set(0,5.9,-4.62);addS(cBody);
+  var cHead=new THREE.Mesh(new THREE.SphereGeometry(.22,8,7),cMat);cHead.position.set(0,6.72,-4.62);addS(cHead);
+  var cArmL=new THREE.Mesh(new THREE.BoxGeometry(.8,.2,.18),cMat);cArmL.position.set(-.7,6.15,-4.62);cArmL.rotation.z=.15;addS(cArmL);
+  var cArmR=cArmL.clone();cArmR.position.set(.7,6.15,-4.62);cArmR.rotation.z=-.15;addS(cArmR);
+  // Supernatural light emanating from cross
+  var cGl=new THREE.PointLight(0xffd700,3.2,20);cGl.position.set(0,6.8,-4.5);cGl.userData.glow=true;addS(cGl);
+  var cGl2=new THREE.PointLight(0xff8800,1.2,32);cGl2.position.set(0,5.5,-3.5);cGl2.userData.glow=true;addS(cGl2);
+  var cGl3=new THREE.PointLight(0xffffff,.5,12);cGl3.position.set(0,7.5,-4);addS(cGl3);
+  // ── Altar rail ──
+  mkBox(10,.55,.22,0x5a3818,0,.28,-3.2);
+  for(var rp=0;rp<7;rp++) mkBox(.1,1.4,.1,0x4a2808,-3+rp,0.28,-3.2);
+  // Choir stalls — wooden benches along sides
+  for(var cs2=0;cs2<3;cs2++){
+    mkBox(1.2,2.4,.9,0x4a2a08,-5.5,.5,-1.5+cs2*1.5);
+    mkBox(1.2,2.4,.9,0x4a2a08,5.5,.5,-1.5+cs2*1.5);
+  }
+  // Candles — pair flanking cross
+  for(var cc=0;cc<2;cc++){
+    var ccx=(cc===0)?-3:3;
+    mkBox(.14,1.2,.14,0xffffff,ccx,.85,-4.2);mkSph(.11,5,4,0xffee88,ccx,2.1,-4.2);
+    var cgl3=new THREE.PointLight(0xffcc88,1.0,8);cgl3.position.set(ccx,2.5,-4.2);cgl3.userData.glow=true;addS(cgl3);
+  }
+  // Kneeler and prayer book
+  mkBox(2.2,.38,1.2,0x3a1a08,0,.19,-1.8);mkBox(2.2,.22,.28,0x4a2a08,0,.5,-1.2);
+  mkBox(.8,.1,.6,0xf0e0cc,0,.62,-1.8);
+  // Incense smoke wisps
+  for(var iw=0;iw<5;iw++){
+    var iwm=new THREE.Mesh(new THREE.SphereGeometry(.06,4,3),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.14}));
+    iwm.position.set(-1+iw*.5,3.5+iw*.3,-4);addS(iwm);
+  }
+  G.interactables.push({zone:true,x:0,z:-1.8,r:2.5,prompt:'Kneel before the Crucifix — PRAY',action:'pioStigmata'});
+  setPos(0,3);setObj('Approach the crucifix and kneel in prayer.');hideProgress();
+}
+
+function bPioConfessional(){
+  // San Giovanni Rotondo — the famous confessional corridor, 1920s-1960s.
+  // People wait for hours, days. Pio's confessional is a place of transformation.
+  mkFog(0x100810,10,38);mkAmb(0x222230,.48);mkHemi(0x100810,0x060308,.18);
+  mkDir(0x8888aa,.6,5,16,4);
+  mkGnd(0x4a3a2a,32,32);
+  // ── Long corridor of Santa Maria delle Grazie ──
+  var cflMat=new THREE.MeshLambertMaterial({color:0x5a4a3a});
+  var cfl=new THREE.Mesh(new THREE.PlaneGeometry(9,20),cflMat);cfl.rotation.x=-Math.PI/2;cfl.position.y=.01;addS(cfl);
+  mkBox(.5,6,20,0x6a5848,-4.5,3,0);mkBox(.5,6,20,0x6a5848,4.5,3,0);
+  mkBox(9,6,.5,0x6a5848,0,3,-10);mkBox(9,6,.5,0x5a4838,0,3,10);
+  addWallLine(-4.5,-10,-4.5,10,1.0);addWallLine(4.5,-10,4.5,10,1.0);addWallLine(-4.5,-10,4.5,-10,1.0);
+  // Stone barrel vault
+  for(var vb=0;vb<8;vb++){
+    var rv=new THREE.Mesh(new THREE.BoxGeometry(9,.2,.2),new THREE.MeshLambertMaterial({color:0x3a2820}));
+    rv.position.set(0,5.6,-7+vb*2);addS(rv);
+  }
+  // ── The confessional — three-panelled wooden structure ──
+  // Left kneeling compartment
+  mkBox(1.6,4.8,1.5,0x3a1a04,-2.2,2.4,-7.5);
+  // Centre priest's box (slightly taller)
+  mkBox(1.6,5.5,1.5,0x2a1202,0,2.75,-7.5);
+  // Right kneeling compartment
+  mkBox(1.6,4.8,1.5,0x3a1a04,2.2,2.4,-7.5);
+  // Top cornice
+  mkBox(5.6,.4,1.6,0x2a1000,0,5.25,-7.5);
+  // Cross atop confessional
+  mkBox(.1,1,.1,0x5a3010,0,5.7,-7.4);mkBox(.55,.1,.1,0x5a3010,0,6.12,-7.4);
+  // Mesh screen dividers (dark thin panels)
+  mkBox(.06,3.2,1.2,0x150a00,-1.1,3.4,-8.1);mkBox(.06,3.2,1.2,0x150a00,1.1,3.4,-8.1);
+  // Kneelers outside confessional
+  mkBox(1.4,.28,.6,0x7a5030,2.2,.14,-6.4);mkBox(1.4,.28,.6,0x7a5030,-2.2,.14,-6.4);
+  // Pio silhouette inside centre box
+  var pioSil=mkNPC(0x1a0a02,0,0,-8);addWall(0,-7.5,.5);
+  // ── Long queue of waiting penitents ──
+  var pcols=[0x556677,0x774433,0x446633,0x665544,0x557755,0x443355,0x776644,0x445566,0x887744,0x554477];
+  var queuePos=[[3.2,-7],[3.2,-5.5],[3.2,-4],[3.2,-2.5],[3.2,-1],[3.2,.5],[3.2,2],[3.2,3.5],[-3.2,2.5],[-3.2,1]];
+  queuePos.forEach(function(qp,i){mkNPC(pcols[i%10],qp[0],0,qp[1]);});
+  // ── Candlelit atmosphere — wall sconces ──
+  for(var wc=0;wc<6;wc++){
+    var wcs=wc%2===0?-4.2:4.2,wcz=-6+wc*2.5;
+    mkBox(.14,.55,.14,0xffffcc,wcs,.78+Math.random()*.1,wcz);
+    mkSph(.1,5,4,0xffee88,wcs,1.4,wcz);
+    var wl=new THREE.PointLight(0xffcc88,.7,8);wl.position.set(wcs,1.8,wcz);wl.userData.glow=true;addS(wl);
+  }
+  // Wall icons/paintings (rectangular placeholders)
+  for(var ic=0;ic<4;ic++){
+    mkBox(1.2,1.6,.1,0x8877aa+(ic*0x050000),(ic%2===0?-4.25:4.25),3.5,-4+ic*3);
+    var icl=new THREE.PointLight(0xffeecc,.35,4);icl.position.set((ic%2===0?-3.8:3.8),3.5,-4+ic*3);addS(icl);
+  }
+  // Kneeling zone
+  G.interactables.push({zone:true,x:2.2,z:-6.4,r:2,prompt:'Kneel at the confessional',action:'pioConfessional'});
+  setPos(0,4);setObj('Join the queue and approach Padre Pio\'s confessional.');hideProgress();
 }
 
 function bPioBilocation(){
-  // WWI command tent — nighttime, urgent atmosphere
-  mkFog(0x050810,8,28);mkAmb(0x112233,.4);mkHemi(0x050810,0x030304,.12);mkDir(0x3355aa,.5,4,14,2);mkGnd(0x3a3220,25,25);
-  // Tent walls — canvas-coloured flat panels leaning inward
-  mkBox(10,.2,8,0x5a5040,0,.1,0);
-  mkBox(10,5,.3,0x4a4030,0,2.5,-4);mkBox(10,5,.3,0x3a3020,0,2.5,4);
-  mkBox(.3,5,8,0x4a4030,-5,2.5,0);mkBox(.3,5,8,0x4a4030,5,2.5,0);
-  // Tent ridge peak
-  mkBox(.2,1.5,.2,0x6a5a40,0,5.8,0);
-  mkBox(10.4,.2,.2,0x5a4a30,0,5.5,-3.8);mkBox(10.4,.2,.2,0x5a4a30,0,5.5,3.8);
-  // Field desk and military map table
-  mkBox(3,.7,1.8,0x5a4020,0,.35,-2);
-  mkBox(3,.06,1.8,0x7a6040,0,.72,-2); // map/papers surface
-  mkBox(.5,.2,2,0x4a3010,-0.8,.75,-1.4);mkBox(1,.2,.8,0x4a3010,.6,.75,-2.4); // map papers
-  // Oil lamp — warm glow
-  mkBox(.2,.5,.2,0xaa8833,0,1.05,-2);
-  var lamp=new THREE.PointLight(0xff9944,1.8,10);lamp.position.set(0,1.8,-2);addS(lamp);
-  // General's chair
-  mkBox(1.2,.6,.9,0x5a3a10,-1.5,.3,-2);mkBox(.2,2,.9,0x4a2a00,-2.1,1.3,-2);
-  // General Cadorna figure — seated, head in hands
+  // Armistice night, 1918. A military command tent near the front.
+  // General Luigi Cadorna, dismissed in disgrace, is on the verge of suicide.
+  // Padre Pio appears to him — 500 miles away in San Giovanni Rotondo.
+  mkFog(0x040610,8,30);mkAmb(0x0a1020,.42);mkHemi(0x040610,0x020204,.14);
+  mkDir(0x3355aa,.5,4,14,2);
+  G.scene.background=new THREE.Color(0x020408);
+  mkGnd(0x3a3020,28,28);
+  // ── Military command tent ──
+  // Canvas floor panel
+  mkBox(11,.18,9,0x4a4030,0,.09,0);
+  // Tent walls — slanting inward
+  mkBox(11,5,.3,0x4a4030,0,2.5,-4.5);mkBox(11,5,.3,0x3a3020,0,2.5,4.5);
+  mkBox(.3,5,9,0x4a4030,-5.5,2.5,0);mkBox(.3,5,9,0x4a4030,5.5,2.5,0);
+  // Tent roof ridge
+  mkBox(.18,1.5,.18,0x6a5a40,0,5.9,0);
+  mkBox(11.2,.18,.18,0x5a4a30,0,5.5,-4.3);mkBox(11.2,.18,.18,0x5a4a30,0,5.5,4.3);
+  // ── Field command table ──
+  mkBox(3.2,.65,1.8,0x5a3a1a,0,.33,-1.5);mkBox(3.2,.07,1.8,0x7a5830,0,.67,-1.5);
+  // Maps and papers
+  mkBox(2.2,.06,1.3,0xf0e0c0,-.4,.7,-1.5);mkBox(1,.06,.8,0xeeddaa,.8,.7,-1.8);
+  // Military insignia box
+  mkBox(.4,.4,.3,0x4a3a20,1.2,.7,-.8);
+  // Oil lamp — warm guttering glow
+  mkBox(.18,.5,.18,0xaa8833,0,1.0,-1.5);mkSph(.14,6,5,0xffcc44,0,1.55,-1.5);
+  var lamp=new THREE.PointLight(0xff9944,2.2,12);lamp.position.set(0,2,-1.5);lamp.userData.glow=true;addS(lamp);
+  // Table legs
+  for(var tl=0;tl<4;tl++){mkBox(.12,.65,.12,0x4a2808,(tl<2?-1.4:1.4),.33,(tl%2===0?-.75:.75)-1.5);}
+  // General's folding chair
+  mkBox(1.2,.55,.9,0x4a2a0a,-1.5,.28,-1.5);mkBox(1.2,2,.14,0x3a1a00,-1.5,1.55,-1.0);
+  mkBox(.18,2,.18,0x3a1a00,-2.1,1.55,-1.0);mkBox(.18,2,.18,0x3a1a00,-.9,1.55,-1.0);
+  // ── General Cadorna — seated, head bowed in despair ──
   var gen=new THREE.Group();tagObj(gen);
-  var gbody=new THREE.Mesh(new THREE.CylinderGeometry(.32,.44,1.1,6),mkMat(0x223355));gbody.position.y=1.55+.55;
-  var ghead=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),mkMat(0xDEB887));ghead.position.y=1.55+1.32;
-  gen.add(gbody,ghead);gen.position.set(-1.5,0,-2);
-  G.scene.add(gen);
-  gen.userData={prompt:'Approach General Cadorna'};
-  G.interactables.push(gen);
-  // Stars visible through tent flap
-  for(var st3=0;st3<12;st3++){
-    var sm=new THREE.Mesh(new THREE.SphereGeometry(.06,4,3),mkMat(0xffffff,0xffffff,1));
-    sm.position.set((Math.random()-.5)*12,4.5+Math.random()*1.5,(Math.random()-.5)*8);addS(sm);
+  var gbody=new THREE.Mesh(new THREE.CylinderGeometry(.32,.44,1.12,8),new THREE.MeshLambertMaterial({color:0x223355}));gbody.position.y=.55+.56;
+  var ghead=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));ghead.position.y=.55+1.38;
+  var ghat=new THREE.Mesh(new THREE.CylinderGeometry(.28,.3,.25,8),new THREE.MeshLambertMaterial({color:0x1a2233}));ghat.position.y=.55+1.72;
+  gen.add(gbody,ghead,ghat);gen.position.set(-1.5,0,-1.5);gen.rotation.x=.35; // head bowed
+  G.scene.add(gen);gen.userData={prompt:'Approach the General'};G.interactables.push(gen);
+  // ── Surrounding soldiers — shadows ──
+  var solCols=[0x334455,0x223344,0x445566];
+  for(var so=0;so<5;so++) mkNPC(solCols[so%3],-4+so*2,0,2+Math.sin(so)*.5);
+  // ── Stars visible through tent opening ──
+  for(var st3=0;st3<20;st3++){
+    var sm=new THREE.Mesh(new THREE.SphereGeometry(.05,4,3),new THREE.MeshBasicMaterial({color:0xffffff}));
+    sm.position.set((Math.random()-.5)*10,4.2+Math.random()*1.2,(Math.random()-.5)*6);addS(sm);
   }
-  // Kneeling zone for Pio's prayer
-  G.interactables.push({zone:true,x:2,z:1,r:2.5,prompt:'Kneel and pray — PRAY',action:'pioBilocation'});
+  // Pio bilocation figure — faint, translucent glow on far side of tent
+  var bioMat=new THREE.MeshLambertMaterial({color:0xffeedd,emissive:new THREE.Color(0x886644),emissiveIntensity:.5,transparent:true,opacity:.65});
+  var bioBody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,.9,6),bioMat);bioBody.position.y=.45;
+  var bioHead=new THREE.Mesh(new THREE.SphereGeometry(.24,7,6),bioMat);bioHead.position.y=1.12;
+  var bioGrp=new THREE.Group();tagObj(bioGrp);bioGrp.add(bioBody,bioHead);bioGrp.position.set(2.5,0,-3.5);
+  G.scene.add(bioGrp);
+  var bioGlow=new THREE.PointLight(0xffeedd,.9,8);bioGlow.position.set(2.5,2,-3.5);bioGlow.userData.glow=true;addS(bioGlow);
+  // Prayer zone
+  G.interactables.push({zone:true,x:2,z:1,r:2.5,prompt:'Kneel and pray for the General — PRAY',action:'pioBilocation'});
   setPos(0,4);setObj('Find General Cadorna and intercede for his soul.');hideProgress();
 }
 
+function bPioHealing(){
+  // San Giovanni Rotondo, 1947. Seven-year-old Gemma di Giorgi — born without pupils.
+  // Her grandmother brings her to Padre Pio's Mass. He blesses her. She begins to see.
+  mkFog(0x99aacc,30,90);mkAmb(0xfff8ee,.62);mkHemi(0x88aacc,0x3a5a3a,.4);
+  mkDir(0xffeedd,1.25,16,32,10);
+  var sideL=new THREE.DirectionalLight(0x99ccff,.35);sideL.position.set(-14,24,-6);addS(sideL);
+  mkGnd(0x8a7a5a,90,90);
+  // ── Church of Santa Maria delle Grazie — outdoor piazza ──
+  // Stone piazza floor (cobblestone pattern)
+  for(var cp=0;cp<12;cp++)for(var cr2=0;cr2<8;cr2++){
+    mkBox(1.8,.09,1.8,(cp+cr2)%2===0?0xaaa090:0x9a9080,(cp-5.5)*2,.045,(cr2-3.5)*2-5);
+  }
+  // Church facade — Puglia Baroque style
+  mkBox(18,11,2.8,0xddd0b0,0,5.5,-22);mkBox(8,6,2.8,0xd8cca8,0,12.5,-22);
+  // Baroque facade decoration
+  for(var fw=0;fw<5;fw++) mkBox(.4,8,.5,0xccc0a0,-8+fw*4,5.5,-20.4);
+  for(var fw2=0;fw2<3;fw2++) mkBox(1.6,2.8,.4,0x4466aa,-4+fw2*4,4,-20.5);
+  mkBox(3.5,3.5,.4,0x2244aa,0,9,-20.5); // rose window
+  // Church door arch — double
+  mkBox(2.6,5.5,.5,0x9a8060,-2,2.75,-20);mkBox(2.6,5.5,.5,0x9a8060,2,2.75,-20);mkBox(5.5,1.5,.5,0xa09070,0,5.75,-20);
+  // Carved tympanum
+  mkBox(5.2,.4,.5,0xb0a080,0,7,-20);
+  // Bell towers — twin
+  mkBox(4,20,4,0xd0c098,-12,10,-20);mkBox(4,20,4,0xd0c098,12,10,-20);
+  for(var bt=0;bt<4;bt++){
+    mkBox(1.2,1.8,1.2,0xc0b080,(bt<2?-13.5+bt*3:10.5+bt%2*3),(bt<2?20.5:20.5),-18+(bt%2)*4);
+  }
+  addWall(-12,-20,2.5);addWall(12,-20,2.5);
+  // Church steps — wide
+  for(var cs=0;cs<4;cs++) mkBox(14,.3,1.2,0xcfbf90,0,.15+cs*.3,-18+cs*1.2);
+  addRamp(0,-17.5,0,-14,0,1.2,6);
+  // Courtyard walls
+  addWallLine(-18,-26,18,-26,1.5);addWallLine(-18,-26,-18,5,1.5);addWallLine(18,-26,18,5,1.5);
+  // ── Crowd of pilgrims — fixed positions away from interaction zone ──
+  var pCols=[0x556677,0x886644,0x664422,0x447766,0x885533];
+  var pilgPos=[[-6,-4],[-8,-6],[6,-4],[8,-6],[-4,-10],[4,-10],[-6,-7],[6,-7],[-3,-5],[3,-5],[-8,-9],[8,-9],[-5,-12],[5,-12]];
+  pilgPos.forEach(function(pp,i){mkNPC(pCols[i%5],pp[0],0,pp[1]);});
+  // Friars near the door
+  for(var fr=0;fr<3;fr++) mkNPC(0x2a1a08,-4+fr*4,0,-14);
+  // ── Gemma di Giorgi — small child, eyes closed ──
+  var gemGrp=new THREE.Group();tagObj(gemGrp);
+  var gemBod=new THREE.Mesh(new THREE.CylinderGeometry(.18,.26,.75,7),new THREE.MeshLambertMaterial({color:0xaabbcc}));gemBod.position.y=.38;
+  var gemHd=new THREE.Mesh(new THREE.SphereGeometry(.18,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));gemHd.position.y=.98;
+  gemGrp.add(gemBod,gemHd);gemGrp.position.set(-2,0,-7);
+  G.scene.add(gemGrp);gemGrp.userData={prompt:'Pray for Gemma',dlgKey:'pio_healing_intro'};G.interactables.push(gemGrp);
+  // Grandmother — beside Gemma
+  mkNPC(0x887766,-4,0,-7);
+  // Padre Pio — emerging from church after Mass, in white vestments
+  var pioGrp2=new THREE.Group();tagObj(pioGrp2);
+  var pioBod2=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.12,8),new THREE.MeshLambertMaterial({color:0xffffff}));pioBod2.position.y=.56;
+  var pioHd2=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));pioHd2.position.y=1.38;
+  // Mitts/gloves covering stigmata wounds
+  var gloveMat=new THREE.MeshLambertMaterial({color:0x3a2808});
+  var gloveL=new THREE.Mesh(new THREE.BoxGeometry(.22,.2,.35),gloveMat);gloveL.position.set(-.4,.55,.3);
+  var gloveR=gloveL.clone();gloveR.position.set(.4,.55,.3);
+  pioGrp2.add(pioBod2,pioHd2,gloveL,gloveR);pioGrp2.position.set(0,0,-14);
+  G.scene.add(pioGrp2);addWall(0,-14,.8);
+  // Healing zone
+  G.interactables.push({zone:true,x:-2,z:-7,r:3,prompt:'Bring Gemma to Padre Pio — PRAY',action:'pioHealing'});
+  setPos(0,3);setObj('Bring the blind child Gemma to Padre Pio after Mass.');hideProgress();
+}
+
 function bPioCancer(){
-  // Chapel steps outside Santa Maria delle Grazie, Foggia — bright morning
-  mkFog(0x88aacc,28,90);mkAmb(0xffeedd,.6);mkHemi(0x88aacc,0x3a5a3a,.35);mkDir(0xffeecc,1.2,12,26,8);mkGnd(0x9a8a70,60,60);
-  // Church façade
-  mkBox(14,12,2,0xd4c4a0,0,6,-20);mkBox(14,3,2,0x8b3a1a,0,14,-20); // main wall + band
-  for(var cw=0;cw<2;cw++)mkBox(4,15,3,0xd0c0a0,(cw===0?-9:9),7.5,-20); // towers
-  for(var cw2=0;cw2<2;cw2++)mkBox(4,2,3,0x8b3a1a,(cw2===0?-9:9),16.5,-20);
-  // Church door arch
-  mkBox(4,6,.5,0x6b4820,0,3,-19); // dark door
-  mkBox(4.4,.5,.5,0xd0c0a0,0,6.3,-19); // arch top
-  // Steps leading up
-  for(var s=0;s<4;s++)mkBox(6+s*0.5,.28,1,0xbbaa95,0,s*.28,-18+(s*.8));
-  // Pilgrim crowd — a dozen NPCs
+  // San Giovanni Rotondo, Jan 25 1908. Giovanni Savino — blind from cancer.
+  // Padre Pio appears in a bilocation vision, lays his hands on Savino's eyes.
+  mkFog(0x88aacc,30,95);mkAmb(0xffeedd,.62);mkHemi(0x88aacc,0x3a5a3a,.38);
+  mkDir(0xffeecc,1.25,14,28,9);
+  mkGnd(0x9a8a70,65,65);
+  // ── Church courtyard — morning ──
+  // Cobbled plaza
+  for(var pf=0;pf<8;pf++)for(var pr=0;pr<6;pr++)
+    mkBox(2,.08,2,pf+pr%2===0?0xa09880:0x908870,(pf-3.5)*2,.04,(pr-2.5)*2-8);
+  // Church facade
+  mkBox(16,12,2.2,0xd4c4a0,0,6,-22);mkBox(8,4,2.2,0xccc0a0,0,14,-22);
+  for(var cw=0;cw<2;cw++) mkBox(4,16,3,0xd0c0a0,(cw===0?-9:9),8,-20);
+  // Windows + rose
+  for(var cw2=0;cw2<3;cw2++) mkBox(1.6,2.8,.4,0x4466aa,-4+cw2*4,6,-20.2);
+  mkBox(3.5,3.5,.4,0x2244aa,0,10.5,-20.2);
+  // Church door
+  mkBox(3.5,6,.5,0x6b4820,0,3,-20);mkBox(4,.55,.5,0xd4c4a0,0,6.3,-20);
+  // Steps
+  for(var s=0;s<4;s++) mkBox(7+s*.4,.28,1.1,0xccbb95,0,s*.28,-18.5+s*.9);
+  addRamp(0,-18,0,-14.5,0,1.12,3.5);
+  // Outer walls
+  addWallLine(-18,-26,18,-26,1.4);addWallLine(-18,-26,-18,5,1.4);addWallLine(18,-26,18,5,1.4);
+  // ── Pilgrims at the church — fixed positions ──
   var pilgCols=[0x556677,0x778844,0x665533,0x447766,0x886644,0x334455,0x775544,0x447744];
-  for(var pl=0;pl<14;pl++){var plx=-6+pl*1.0,plz=-12+(Math.random()*4);if(Math.abs(plx)<2&&Math.abs(plz)<3)continue;mkNPC(pilgCols[pl%8],plx,0,plz);}
-  // Giovanni Savino — sitting on the steps, head covered, cane
+  var pilgFixed=[[-7,-5],[-5,-8],[5,-5],[7,-8],[-6,-10],[6,-10],[-4,-4],[4,-4],[0,-11],[-8,-3],[8,-3],[-3,-6],[3,-6],[-9,-8],[9,-8]];
+  pilgFixed.forEach(function(pp,i){mkNPC(pilgCols[i%8],pp[0],0,pp[1]);});
+  // ── Giovanni Savino — bandaged eyes, on steps ──
   var savino=new THREE.Group();tagObj(savino);
-  var sbody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1,6),mkMat(0x445566));sbody.position.y=.5;
-  var shead=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));shead.position.y=1.18;
-  // Eye bandage suggestion — grey strip
-  var sbandage=new THREE.Mesh(new THREE.BoxGeometry(.55,.12,.3),mkMat(0xddddcc));sbandage.position.set(0,1.24,.12);
-  savino.add(sbody,shead,sbandage);savino.position.set(2,0,-16);
+  var sbody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.02,7),new THREE.MeshLambertMaterial({color:0x445566}));sbody.position.y=.51;
+  var shead=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));shead.position.y=1.25;
+  var sbandage=new THREE.Mesh(new THREE.BoxGeometry(.58,.14,.3),new THREE.MeshLambertMaterial({color:0xddddcc}));sbandage.position.set(0,1.3,.13);
+  // Cane
+  var cane=new THREE.Mesh(new THREE.BoxGeometry(.08,1.1,.08),new THREE.MeshLambertMaterial({color:0x5a3010}));cane.position.set(.4,.55,.2);
+  savino.add(sbody,shead,sbandage,cane);savino.position.set(2,0,-16);
   G.scene.add(savino);
-  savino.userData={prompt:'Lay hands on Giovanni Savino — PRAY',action:'pioCancer'};
-  G.interactables.push(savino);
-  // A few olive trees
-  for(var ot=0;ot<4;ot++){mkBox(.4,3.5,.4,0x5a3a1a,-10+(ot*4),1.75,-8);mkSph(2.5,6,4,0x4a7030,-10+(ot*4),5,-8);}
+  savino.userData={prompt:'Lay hands on Giovanni Savino — PRAY',action:'pioCancer'};G.interactables.push(savino);
+  // Olive trees lining the piazza
+  for(var ot=0;ot<5;ot++){
+    var otx=-10+ot*5,otz=-5;
+    mkBox(.4,3.5,.4,0x5a3a1a,otx,1.75,otz);mkSph(2.5,6,4,0x4a7030,otx,5,otz);
+    addWall(otx,otz,.7);
+  }
   setPos(0,3);setObj('Find Giovanni Savino on the church steps and pray over his eyes.');hideProgress();
 }
 
 function bPioFragrance(){
-  // Pre-dawn cloister garden of the Capuchin friary — stars, silent, Pio at prayer
-  mkFog(0x040810,9,30);mkAmb(0x223344,.4);mkHemi(0x040810,0x020204,.1);mkDir(0x4466aa,.4,3,12,2);mkGnd(0x2a3020,30,30);
-  // Cloister pillars around the open garden
+  // Pre-dawn, Capuchin friary cloister — San Giovanni Rotondo, 1920s.
+  // The fragrance of violets, roses, or tobacco precedes Pio's invisible presence.
+  mkFog(0x040812,9,32);mkAmb(0x1a2234,.42);mkHemi(0x040812,0x020205,.12);
+  mkDir(0x3a5588,.4,3,12,2);
+  G.scene.background=new THREE.Color(0x020408);
+  mkGnd(0x1a2018,32,32);
+  // ── Romanesque cloister ──
+  // Cloister garth (garden)
+  var gMat=new THREE.MeshLambertMaterial({color:0x1a2812});
+  var garth=new THREE.Mesh(new THREE.PlaneGeometry(16,16),gMat);garth.rotation.x=-Math.PI/2;garth.position.set(0,.01,-5);addS(garth);
+  // Stone walk (ambulatory) surrounding the garden
+  var walkMat=new THREE.MeshLambertMaterial({color:0x4a3a2a});
+  var walkN=new THREE.Mesh(new THREE.PlaneGeometry(18,.9),walkMat);walkN.rotation.x=-Math.PI/2;walkN.position.set(0,.02,-13.5);addS(walkN);
+  var walkS=walkN.clone();walkS.position.set(0,.02,3.5);addS(walkS);
+  var walkE=new THREE.Mesh(new THREE.PlaneGeometry(18,.9),walkMat);walkE.rotation.x=-Math.PI/2;walkE.rotation.z=Math.PI/2;walkE.position.set(9,.02,-5);addS(walkE);
+  var walkW=walkE.clone();walkW.position.set(-9,.02,-5);addS(walkW);
+  // 12 Romanesque columns — squat, rounded capitals
   for(var cp=0;cp<12;cp++){
-    var ang=cp*(Math.PI*2/12),rr=10;
-    mkBox(.5,6,.5,0x8a7a68,Math.cos(ang)*rr,3,Math.sin(ang)*rr-5);
-    mkBox(.7,.5,.7,0x9a8a78,Math.cos(ang)*rr,6.3,Math.sin(ang)*rr-5);
+    var ang=(cp/12)*Math.PI*2,rr=8.5;
+    var cpx=Math.cos(ang)*rr,cpz=Math.sin(ang)*rr-5;
+    mkBox(.52,5.5,.52,0x7a6a58,cpx,2.75,cpz);
+    mkBox(.78,.52,.78,0x8a7a68,cpx,5.58,cpz);
+    mkBox(.62,.38,.62,0x8a7a68,cpx,.19,cpz);
+    addWall(cpx,cpz,.55);
   }
-  // Connecting arches between pillars (flat spanning boxes)
-  for(var ca3=0;ca3<12;ca3++){
-    var a1=ca3*(Math.PI*2/12),a2=(ca3+1)*(Math.PI*2/12);
-    var mx=(Math.cos(a1)+Math.cos(a2))/2*10,mz=(Math.sin(a1)+Math.sin(a2))/2*10-5;
-    mkBox(5.5,.5,.4,0x8a7a68,mx,6.1,mz);
+  // Arches between columns
+  for(var ar=0;ar<12;ar++){
+    var a1=(ar/12)*Math.PI*2,a2=((ar+1)/12)*Math.PI*2;
+    var mx=(Math.cos(a1)+Math.cos(a2))/2*8.5,mz=(Math.sin(a1)+Math.sin(a2))/2*8.5-5;
+    mkBox(4.6,.45,.38,0x7a6a58,mx,5.35,mz);
   }
-  // Central garden — low hedge maze shapes
-  mkBox(4,.4,4,0x2a5a22,0,.2,-5);
-  for(var hg=0;hg<8;hg++){var hgx=(Math.random()-.5)*4,hgz=-3+Math.random()*-4;if(Math.abs(hgx)<1.5&&hgz>-6)continue;mkBox(.3,1,.3,0x338833,hgx,.5,hgz);}
-  // Stone well in garden center
-  mkBox(1.2,1,1.2,0x888877,0,.5,-5);mkBox(1.4,.25,1.4,0x999988,0,1.12,-5);
-  mkBox(.1,1.5,.1,0x6b4320,0,1.8,-5);mkBox(.8,.1,.2,0x6b4320,0,2.6,-5);
-  // Stars — lots of them
-  for(var s3=0;s3<30;s3++){
-    var sm2=new THREE.Mesh(new THREE.SphereGeometry(.05+(Math.random()*.04),4,3),mkMat(0xffffff,0xffffff,1));
-    sm2.position.set((Math.random()-.5)*26,8+Math.random()*4,(Math.random()-.5)*26-5);addS(sm2);
+  // Outer cloister walls
+  mkBox(.5,7,18,0x6a5a48,-10.5,3.5,-5);mkBox(.5,7,18,0x6a5a48,10.5,3.5,-5);
+  mkBox(22,7,.5,0x6a5a48,0,3.5,-14.5);mkBox(22,7,.5,0x5a4a38,0,3.5,4.5);
+  // ── Central garden — formal layout ──
+  // Herb plots (long box partitions)
+  for(var hb=0;hb<4;hb++){
+    var hbx=(hb<2?-2.5:2.5),hbz=-3+hb%2*3.5;
+    mkBox(4,.28,1.4,0x2a4a18,hbx,.14,hbz);
+    // Low herbs/plants in each plot
+    for(var hp=0;hp<4;hp++) mkBox(.25,.5+Math.random()*.2,.25,0x2a5a1a,hbx-1.5+hp,0.42,hbz);
   }
-  // Padre Pio kneeling in prayer at a stone ledge — pre-dawn
+  // Stone cross in garden centre
+  mkBox(.16,2,.16,0x7a6a58,0,1,-5);mkBox(1.2,.16,.16,0x7a6a58,0,1.82,-5);
+  var crossGl=new THREE.PointLight(0x8899ff,.4,8);crossGl.position.set(0,2,-5);addS(crossGl);
+  // Garden well
+  mkBox(1.2,.9,1.2,0x8a7a60,4,.45,-5);mkBox(1.4,.22,1.4,0x9a8a70,4,1,-5);
+  mkBox(.1,1.2,.1,0x5a3818,4,1.7,-5);mkBox(.7,.1,.12,0x5a3818,4,2.35,-5);
+  addWall(4,-5,1.0);
+  // ── Stars — dense pre-dawn sky ──
+  var sv4=[];for(var sk=0;sk<40;sk++)sv4.push((Math.random()-.5)*30,8+Math.random()*5,(Math.random()-.5)*30-5);
+  var sg4=new THREE.BufferGeometry();sg4.setAttribute('position',new THREE.Float32BufferAttribute(sv4,3));
+  addS(new THREE.Points(sg4,new THREE.PointsMaterial({color:0xffffff,size:.12,transparent:true,opacity:.9})));
+  // ── Padre Pio kneeling at stone prayer ledge ──
   var pioFig=new THREE.Group();tagObj(pioFig);
-  var pibody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,.9,6),mkMat(0x2a1a08));pibody.position.y=.45;
-  var pihead=new THREE.Mesh(new THREE.SphereGeometry(.25,6,5),mkMat(0xDEB887));pihead.position.y=1.1;
-  pioFig.add(pibody,pihead);pioFig.position.set(-1,0,-7);pioFig.rotation.x=-.2;
-  G.scene.add(pioFig);
-  // Stone prayer ledge
-  mkBox(2,.5,1,0x888877,-1,.25,-8);
-  // The fragrance zone — a subtle golden cloud of particles around the garden center
-  var fragZone={zone:true,x:0,z:-5,r:5,prompt:'Stand in the garden at dawn — PRAY',action:'pioFragrance'};
-  G.interactables.push(fragZone);
-  // Maria Pyle's window light (faint warm glow from building)
-  var mpyl=new THREE.PointLight(0xffcc77,.8,12);mpyl.position.set(8,4,2);addS(mpyl);
+  var pibody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,.9,7),new THREE.MeshLambertMaterial({color:0x2a1a08}));pibody.position.y=.45;
+  var pihead=new THREE.Mesh(new THREE.SphereGeometry(.24,7,6),new THREE.MeshLambertMaterial({color:0xDEB887}));pihead.position.y=1.1;
+  pioFig.add(pibody,pihead);pioFig.position.set(-1,0,-7);pioFig.rotation.x=-.22;G.scene.add(pioFig);
+  mkBox(2,.48,1.0,0x7a6a58,-1,.24,-8); // prayer ledge
+  addWall(-1,-8,.7);
+  // Faint warm light in a window (friary building)
+  var winL=new THREE.PointLight(0xffcc77,.8,12);winL.position.set(9,4.5,2);addS(winL);
+  var winM=new THREE.MeshBasicMaterial({color:0xffcc44,transparent:true,opacity:.3});
+  var winMesh=new THREE.Mesh(new THREE.PlaneGeometry(.8,1.1),winM);winMesh.position.set(10.4,4.5,2);winMesh.rotation.y=-Math.PI/2;addS(winMesh);
+  // Moonlight
+  var moonL=new THREE.DirectionalLight(0x8899cc,.3);moonL.position.set(-8,30,-10);addS(moonL);
+  var moonGl=new THREE.PointLight(0x8899cc,.2,30);moonGl.position.set(-8,18,-15);addS(moonGl);
+  G.interactables.push({zone:true,x:0,z:-5,r:5.5,prompt:'Stand in the garden at dawn — PRAY',action:'pioFragrance'});
   setPos(0,4);setObj('Enter the cloister garden and experience the fragrance of grace.');hideProgress();
 }
 
 function bPioAgony(){
-  // San Giovanni Rotondo — the sacristy, September 22 1968, just before dawn
-  mkFog(0x080508,8,28);mkAmb(0x1a0a10,.45);mkHemi(0x080508,0x030203,.12);mkDir(0x4433aa,.4,2,12,2);mkGnd(0x3a2a2a,22,22);
+  // San Giovanni Rotondo, September 22-23 1968. Padre Pio's last night.
+  // He celebrates his last Mass, renews his vows, and dies peacefully in the sacristy.
+  // On his deathbed the stigmata wounds have completely closed — not even a scar.
+  mkFog(0x060408,8,28);mkAmb(0x180a14,.5);mkHemi(0x060408,0x030203,.14);
+  mkDir(0x3a2244,.42,2,12,2);
+  G.scene.background=new THREE.Color(0x030206);
+  mkGnd(0x2a1a1a,24,24);
+  // ── Sacristy of Santa Maria delle Grazie ──
+  var sflMat=new THREE.MeshLambertMaterial({color:0x2a1a18});
+  var sfl=new THREE.Mesh(new THREE.PlaneGeometry(12,10),sflMat);sfl.rotation.x=-Math.PI/2;sfl.position.y=.01;addS(sfl);
+  // Stone tile pattern
+  for(var tp=0;tp<12;tp++) mkBox(2,.06,2,tp%2===0?0x3a2a1a:0x2a1a12,(tp%4-1.5)*2.4,.04,(Math.floor(tp/4)-1)*2.4);
   // Sacristy walls
-  mkBox(10,.4,8,0x5a4040,0,.2,0);mkBox(.4,7,8,0x5a4040,-5,3.5,0);mkBox(.4,7,8,0x5a4040,5,3.5,0);
-  mkBox(10,7,.4,0x5a4040,0,3.5,-4);mkBox(10,7,.4,0x4a3030,0,3.5,4);
-  // Sacristy crucifix — large, central
-  mkBox(.18,3.5,.18,0x4a2a00,0,4,-3.7);mkBox(1.6,.18,.18,0x4a2a00,0,5.8,-3.7);
-  var crpFig=new THREE.Mesh(new THREE.SphereGeometry(.18,6,5),mkMat(0xDEB887,0xffffff,.2));crpFig.position.set(0,5.8,-3.8);addS(crpFig);
-  // Red votive lamps (sanctuary lights)
-  for(var rv=0;rv<3;rv++){
-    var rvc=new THREE.PointLight(0xff2200,.5,8);rvc.position.set(-2+(rv*2),4,-3.5);addS(rvc);
-    mkBox(.15,.4,.15,0x660000,-2+(rv*2),3.7,-3.5);
+  mkBox(.5,6.5,10,0x3a2818,-6,3.25,0);mkBox(.5,6.5,10,0x3a2818,6,3.25,0);
+  mkBox(12,6.5,.5,0x3a2818,0,3.25,-5);mkBox(12,6.5,.5,0x2a1808,0,3.25,5);
+  addWallLine(-6,-5,-6,5,1.0);addWallLine(6,-5,6,5,1.0);addWallLine(-6,-5,6,-5,1.0);
+  // Vault ribs
+  for(var vb=0;vb<4;vb++){
+    var vrb=new THREE.Mesh(new THREE.BoxGeometry(12,.18,.18),new THREE.MeshLambertMaterial({color:0x241410}));
+    vrb.position.set(0,6.2,-3.5+vb*2.2);addS(vrb);
   }
-  // Padre Pio's chair — simple wooden armchair
-  mkBox(1.2,.7,1,0x5a3510,-1,.35,-1); // seat
-  mkBox(.2,2.5,1,0x4a2a00,-1.7,1.65,-1); // left arm rest back
-  mkBox(1.2,.25,.9,0x5a3510,-1,1.05,-.55); // arm rests
-  // Pio himself — elderly, seated, face peaceful
-  var pioFig2=new THREE.Group();tagObj(pioFig2);
-  var pb2=new THREE.Mesh(new THREE.CylinderGeometry(.33,.44,1,6),mkMat(0x2a1a08));pb2.position.y=.85+.5;
-  var ph2=new THREE.Mesh(new THREE.SphereGeometry(.26,6,5),mkMat(0xDEB887));ph2.position.y=.85+1.2;
-  pioFig2.add(pb2,ph2);pioFig2.position.set(-1,0,-1);
-  G.scene.add(pioFig2);
-  pioFig2.userData={prompt:'Kneel beside Padre Pio and pray',action:'pioAgony'};
-  G.interactables.push(pioFig2);
-  // Attending friars (2)
-  mkNPC(0x2a1a08,-3,0,0);mkNPC(0x2a1a08,1.5,0,.5);
-  // The cleaned hands detail — a white glow at Pio's hands position
-  var handGlow=new THREE.PointLight(0xffffff,.3,3);handGlow.position.set(-1.3,1.3,-1);addS(handGlow);
+  // ── Great sacristy crucifix ──
+  mkBox(.18,3.6,.18,0x3a1a00,0,4,-4.7);mkBox(1.8,.18,.18,0x3a1a00,0,5.9,-4.7);
+  var crpFig=new THREE.Mesh(new THREE.SphereGeometry(.2,7,6),new THREE.MeshLambertMaterial({color:0xDEB887,emissive:new THREE.Color(0xffffff),emissiveIntensity:.18}));crpFig.position.set(0,5.88,-4.78);addS(crpFig);
+  var crArm1=new THREE.Mesh(new THREE.BoxGeometry(.7,.18,.14),new THREE.MeshLambertMaterial({color:0xDEB887}));crArm1.position.set(-.55,5.65,-4.78);addS(crArm1);
+  var crArm2=crArm1.clone();crArm2.position.set(.55,5.65,-4.78);addS(crArm2);
+  // Red sanctuary lamps
+  for(var rv=0;rv<3;rv++){
+    var rvl=new THREE.PointLight(0xcc1100,.6,9);rvl.position.set(-2+rv*2,4.2,-3.8);addS(rvl);
+    mkBox(.14,.4,.14,0x880000,-2+rv*2,3.9,-3.8);mkSph(.1,5,4,0xff2200,-2+rv*2,4.35,-3.8);
+  }
+  // Central sanctuary lamp
+  var sancL=new THREE.PointLight(0xff3300,.5,5);sancL.position.set(0,4.5,-4.5);addS(sancL);
+  // ── Padre Pio's armchair ──
+  mkBox(1.4,.7,1.1,0x4a2808,-1,.35,-1.2);
+  mkBox(.2,2.6,1.1,0x3a1800,-1.9,1.6,-1.2);
+  mkBox(1.4,.24,.9,0x4a2808,-1,1.07,-.65);
+  // Pio — elderly, seated, face at peace
+  var pioFig3=new THREE.Group();tagObj(pioFig3);
+  var pb3=new THREE.Mesh(new THREE.CylinderGeometry(.33,.44,1.0,7),new THREE.MeshLambertMaterial({color:0x2a1a08}));pb3.position.y=.7+.5;
+  var ph3=new THREE.Mesh(new THREE.SphereGeometry(.26,8,7),new THREE.MeshLambertMaterial({color:0xDEB887}));ph3.position.y=.7+1.22;
+  // Beard
+  var beard=new THREE.Mesh(new THREE.SphereGeometry(.14,6,5),new THREE.MeshLambertMaterial({color:0xaaaaaa}));beard.position.y=.7+.98;beard.position.z=.14;
+  // Hands folded — showing healed wounds
+  var handMat=new THREE.MeshLambertMaterial({color:0xDEB887,emissive:new THREE.Color(0xffffff),emissiveIntensity:.15});
+  var handL=new THREE.Mesh(new THREE.BoxGeometry(.28,.16,.35),handMat);handL.position.set(-.35,.7+.55,.3);
+  var handR=handL.clone();handR.position.set(.35,.7+.55,.3);
+  pioFig3.add(pb3,ph3,beard,handL,handR);pioFig3.position.set(-1,0,-1.2);
+  G.scene.add(pioFig3);
+  pioFig3.userData={prompt:'Kneel beside Padre Pio and pray',action:'pioAgony'};G.interactables.push(pioFig3);
+  // Attending Capuchin friars
+  mkNPC(0x2a1a08,-3.5,0,0);mkNPC(0x2a1a08,1.5,0,.5);mkNPC(0x2a1a08,-2,0,-3.5);
+  // ── A soft miraculous glow on Pio's hands (healed stigmata) ──
+  var handGlow=new THREE.PointLight(0xffffff,.45,4);handGlow.position.set(-1,1.8,-1.2);handGlow.userData.glow=true;addS(handGlow);
+  // Candle on vestment press
+  mkBox(1.5,1,1,0x5a3818,4,.5,-3.5);mkBox(.12,.7,.12,0xffffee,4,1.05,-3.5);
+  var agonyCandle=new THREE.PointLight(0xffddaa,.8,8);agonyCandle.position.set(4,2,-3.5);agonyCandle.userData.glow=true;addS(agonyCandle);
   setPos(2,2);setObj('Walk to Padre Pio and kneel beside him on his last night.');hideProgress();
 }
 
-function startFlightSim(){
-  clearStage();
-  createFlyPlayer();
-  buildFlightWorld();
-  G.prayerCount=0;G.goldenRingFired=false;G.inHeaven=false;
-  updateFlightHUD();
-  document.getElementById('flightHUD').style.display='block';
-  document.getElementById('crosshair').style.display='block';
-  showHUD('✝ Flight of Faith — St. Francis & the Rosaries');
-  setObj('Fly over the faithful and press PRAY to send rosaries. Catch 3 to open the gates of Heaven.');
-  hideProgress();
-  G.gameMode='flight';
-}
 
-function buildFlightWorld(){
-  mkFog(0x5599cc,60,250);mkAmb(0xfff5cc,.6);mkHemi(0x5599cc,0x3a7a3a,.45);mkDir(0xffeedd,1.2,20,45,10);mkGnd(0x4a8a3a,240,240);
-  // Distant hills
-  for(var i=0;i<8;i++){var a=(i/8)*Math.PI*2;mkSph(18+Math.random()*10,6,4,0x3a7a3a,Math.cos(a)*80,10+Math.random()*8,Math.sin(a)*80-30);}
-  // Village buildings
-  var buildingCols=[0xd4c4a0,0xc8b090,0xb09878];
-  for(var b=0;b<12;b++){
-    var bx=(Math.random()-.5)*120,bz=(Math.random()-.5)*120;
-    var bh=4+Math.random()*4,bw=3+Math.random()*4;
-    var bc2=buildingCols[Math.floor(Math.random()*3)];
-    mkBox(bw,bh,bw,bc2,bx,bh/2,bz);
-    mkCone(bw*.7,3,4,0x8b3a3a,bx,bh+1.5,bz);
-  }
-  // Trees
-  for(var t=0;t<20;t++){
-    var tx=(Math.random()-.5)*140,tz=(Math.random()-.5)*140;
-    mkBox(.5,4,.5,0x5D3A1A,tx,2,tz);mkCone(2.5,5,5,0x2d6b2d,tx,7,tz);
-  }
-  // Church
-  mkBox(10,7,6,0xd4c4a0,30,3.5,-30);mkBox(4,4,4,0xd4c4a0,30,9,-30);mkBox(2,2,2,0xffdd88,30,12,-30);
-  mkGlowBox(.2,3,.2,0xffd700,0xffdd00,.6, 30,13.5,-30);mkGlowBox(1.2,.2,.2,0xffd700,0xffdd00,.6, 30,14.5,-30);
-  // Clouds
-  for(var cl=0;cl<15;cl++){
-    var cx=(Math.random()-.5)*160,cy=28+Math.random()*12,cz=(Math.random()-.5)*160;
-    var cg=new THREE.Mesh(new THREE.SphereGeometry(5+Math.random()*4,5,4),new THREE.MeshLambertMaterial({color:0xffffff}));cg.position.set(cx,cy,cz);addS(cg);
-  }
-  // GROUND PEOPLE (pray-catchers)
-  G.groundPeople=[];
-  var pCols=[0x4488cc,0xcc4444,0x44aa44,0xaaaa22,0x884488,0x22aaaa,0xcc8822,0x4422cc];
-  var personPositions=[];
-  for(var p=0;p<20;p++){
-    var valid=false,px2,pz2,attempts=0;
-    while(!valid&&attempts<30){
-      px2=(Math.random()-.5)*100;pz2=(Math.random()-.5)*100;
-      valid=true;
-      for(var q=0;q<personPositions.length;q++){var dpx=px2-personPositions[q][0],dpz=pz2-personPositions[q][1];if(Math.sqrt(dpx*dpx+dpz*dpz)<8){valid=false;break;}}
-      attempts++;
-    }
-    personPositions.push([px2,pz2]);
-    var pc=pCols[p%8];
-    var pg=new THREE.Group();
-    var pbody=new THREE.Mesh(new THREE.CylinderGeometry(.3,.42,1.1,6),new THREE.MeshLambertMaterial({color:pc}));pbody.position.y=.55;
-    var phead=new THREE.Mesh(new THREE.SphereGeometry(.27,6,5),new THREE.MeshLambertMaterial({color:0xDEB887}));phead.position.y=1.32;
-    // Arms (stored for raise animation)
-    var armL=new THREE.Mesh(new THREE.BoxGeometry(.22,.7,.22),new THREE.MeshLambertMaterial({color:pc}));armL.position.set(-.5,.55,0);armL.rotation.z=.3;
-    var armR=new THREE.Mesh(new THREE.BoxGeometry(.22,.7,.22),new THREE.MeshLambertMaterial({color:pc}));armR.position.set(.5,.55,0);armR.rotation.z=-.3;
-    pg.add(pbody,phead,armL,armR);
-    pg.position.set(px2,0,pz2);addS(pg);
-    G.groundPeople.push({mesh:pg,armL:armL,armR:armR,caught:false,celebrating:false,celebTimer:0,glowTimer:0,baseColor:pc});
-  }
-}
-
-function shootRosary(){
-  if(!G.flyGroup||G.inHeaven)return;
-  var geo=new THREE.TorusGeometry(.35,.08,6,12);
-  var mat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffaa00),emissiveIntensity:.85});
-  var r=new THREE.Mesh(geo,mat);r.position.copy(G.flyGroup.position);
-  // Direction: forward of flyYaw, angled down
-  var vel=new THREE.Vector3(Math.sin(G.flyYaw)*11,-2.5,-Math.cos(G.flyYaw)*11);
-  r.userData={vel:vel,life:3.5,caught:false};addS(r);G.rosaries.push(r);
-  spawnParts(r.position.clone(),0xffd700,8);
-}
-
-function updateRosaries(dt){
-  // Update crosshair lock-on
-  var ch=document.getElementById('crosshair');
-  var locked=false;
-  if(G.flyGroup&&!G.inHeaven){
-    for(var pp=0;pp<G.groundPeople.length;pp++){
-      var person2=G.groundPeople[pp];if(person2.caught)continue;
-      var pm2=person2.mesh.position;
-      var dx2=G.flyX-pm2.x,dz2=G.flyZ-pm2.z,d2=Math.sqrt(dx2*dx2+dz2*dz2);
-      if(d2<18){locked=true;break;}
-    }
-  }
-  if(ch)ch.className=locked?'locked':'';
-  for(var i=G.rosaries.length-1;i>=0;i--){
-    var r=G.rosaries[i];
-    if(r.userData.caught){G.scene.remove(r);G.rosaries.splice(i,1);continue;}
-    r.userData.life-=dt;r.userData.vel.y-=7*dt;
-    r.position.x+=r.userData.vel.x*dt;r.position.y+=r.userData.vel.y*dt;r.position.z+=r.userData.vel.z*dt;
-    r.rotation.x+=dt*4;r.rotation.y+=dt*3;
-    // Check catches
-    for(var j=0;j<G.groundPeople.length;j++){
-      var person=G.groundPeople[j];if(person.caught)continue;
-      var pm=person.mesh.position;
-      var dx=r.position.x-pm.x,dy=r.position.y-pm.y,dz=r.position.z-pm.z;
-      if(Math.sqrt(dx*dx+dy*dy+dz*dz)<3){catchRosary(person,r);break;}
-    }
-    if(r.userData.life<=0||r.position.y<-2){G.scene.remove(r);G.rosaries.splice(i,1);}
-  }
-}
-
-function catchRosary(person,rosary){
-  rosary.userData.caught=true;person.caught=true;person.celebrating=true;person.celebTimer=3;
-  // Raise arms
-  if(person.armL&&person.armR){person.armL.rotation.z=1.8;person.armR.rotation.z=-1.8;}
-  G.prayerCount++;playCelebrationTones();updateFlightHUD();
-  flashMiracle(false);spawnParts(rosary.position.clone(),0xffd700,22);
-  if(G.prayerCount>=G.prayerTarget&&!G.goldenRingFired){G.goldenRingFired=true;setTimeout(doGoldenRing,800);}
-}
-
-function updateFlightHUD(){
-  for(var i=0;i<3;i++){
-    var b=document.getElementById('bead'+i);if(b)b.className='fhud-bead'+(i<G.prayerCount?' lit':'');
-  }
-}
-
-function doGoldenRing(){
-  var ring=document.getElementById('goldenRing');
-  ring.classList.remove('fire');ring.getBoundingClientRect();ring.classList.add('fire');
-  showHeavenMsg('Heaven Awaits...',2000);
-  setTimeout(startHeavenSequence,2400);
-}
-
-function showHeavenMsg(txt,dur){
-  var el=document.getElementById('heavenMsg');el.textContent=txt;el.style.display='block';el.style.animation='none';el.getBoundingClientRect();el.style.animation='heavenFadeIn .5s ease-out';
-  if(dur>0)setTimeout(function(){if(el)el.style.display='none';},dur);
-}
-
-function startHeavenSequence(){
-  // Fade to white
-  var ov=document.getElementById('heavenOverlay');ov.classList.remove('fade');ov.getBoundingClientRect();ov.classList.add('fade');
-  setTimeout(buildHeavenScene,1200);
-}
-
-function buildHeavenScene(){
-  var ov=document.getElementById('heavenOverlay');ov.style.display='none';ov.classList.remove('fade');
-  document.getElementById('flightHUD').style.display='none';
-  document.getElementById('crosshair').style.display='none';
-  clearStage();
-  if(G.flyGroup){G.scene.remove(G.flyGroup);G.flyGroup=null;}
-  createPlayer();G.gameMode='heaven';G.inHeaven=true;
-  // Heaven environment — luminous gold and ivory
-  G.scene.background=new THREE.Color(0xfff5cc);
-  G.scene.fog=new THREE.FogExp2(0xfff8dd,.012);
-  mkAmb(0xffffff,1.1);
-  mkHemi(0xfff5cc,0xffeeaa,.5);
-  mkDir(0xfff8cc,1.6,5,35,5);
-  // Second rim light for depth
-  var rim=new THREE.DirectionalLight(0xaaddff,.5);rim.position.set(-15,20,-10);addS(rim);
-  // Golden ground — subdivided for visual richness
-  var groundM=new THREE.Mesh(new THREE.PlaneGeometry(250,250,24,24),
-    new THREE.MeshLambertMaterial({color:0xfff5aa,emissive:new THREE.Color(0xffeeaa),emissiveIntensity:.1}));
-  groundM.rotation.x=-Math.PI/2;groundM.receiveShadow=true;addS(groundM);
-  // Glowing ground grid — subtle golden veins
-  for(var gx=-5;gx<=5;gx+=2){mkGlowBox(.05,.02,80,0xffd700,0xffaa00,.2,gx*8,.01,-20);}
-  // Path of golden light — central approach
-  mkGlowBox(6,.06,90,0xffd700,0xffc200,.55,0,.02,-22);
-  // Clouds — layered, translucent
-  for(var c=0;c<32;c++){
-    var cc=new THREE.Mesh(
-      new THREE.SphereGeometry(5+Math.random()*7,6,4),
-      new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.55+Math.random()*.25}));
-    cc.scale.set(1,.35+Math.random()*.3,1);
-    cc.position.set((Math.random()-.5)*140,3+Math.random()*28,(Math.random()-.5)*100-10);
-    addS(cc);
-  }
-  // Floating light pillars lining the path
-  for(var p=0;p<6;p++){
-    var px2=p%2===0?-8:8,pz2=-10-Math.floor(p/2)*18;
-    var pillarMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.6,transparent:true,opacity:.3});
-    var pillarM=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,14,6),pillarMat);pillarM.position.set(px2,.0,pz2);addS(pillarM);
-    var pLight=new THREE.PointLight(0xffeeaa,.8,14);pLight.position.set(px2,7,pz2);pLight.userData.glow=true;addS(pLight);
-  }
-  // Subtle star-points floating in sky
-  for(var s2=0;s2<40;s2++){
-    var stMat=new THREE.MeshBasicMaterial({color:0xffd700,transparent:true,opacity:.6+Math.random()*.4});
-    var st=new THREE.Mesh(new THREE.SphereGeometry(.12,4,3),stMat);
-    st.position.set((Math.random()-.5)*100,12+Math.random()*25,(Math.random()-.5)*80-10);addS(st);
-  }
-  // ─ JESUS FIGURE ─
-  G.jesusGroup=buildJesusFigure(0,0,-25);
-  // ─ HOLY SPIRIT DOVE ─
-  G.holyGroup=buildDoveFigure(0,12,-52);
-  // ─ GOD THE FATHER ─
-  G.godGroup=buildGodFather(0,0,-85);
-  // Trigger zone
-  G.interactables.push({zone:true,x:0,z:-23,r:5,prompt:'Approach Jesus',action:'meetJesus'});
-  setPos(0,5);G.camera.position.set(0,8,14);
-  showHUD('✝ Heaven — Walk Toward the Light');
-  setObj('Walk toward Jesus, who stands in the golden light.');
-  hideProgress();
-  showHeavenMsg('You have entered Heaven',2800);
-}
-
-function buildJesusFigure(x,y,z){
-  var g=new THREE.Group();
-  // Robe (tall, white)
-  var robe=new THREE.Mesh(new THREE.CylinderGeometry(.5,.75,2.8,8),mkMat(0xffffff,0xffffff,.2));robe.position.y=1.4;g.add(robe);
-  // Head
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.42,8,7),mkMat(0xf0c898));head.position.y=3.05;g.add(head);
-  // Hair/crown
-  var hair=new THREE.Mesh(new THREE.SphereGeometry(.44,8,4,0,Math.PI*2,0,Math.PI*.55),mkMat(0x8B4513));hair.position.y=3.18;g.add(hair);
-  // Arms outstretched
-  var armL=new THREE.Mesh(new THREE.BoxGeometry(1.2,.25,.25),mkMat(0xffffff));armL.position.set(-1.0,2.5,0);armL.rotation.z=.35;g.add(armL);
-  var armR=armL.clone();armR.position.set(1.0,2.5,0);armR.rotation.z=-.35;g.add(armR);
-  // Hands
-  var handL=new THREE.Mesh(new THREE.SphereGeometry(.18,5,4),mkMat(0xf0c898,0xffddcc,.3));handL.position.set(-1.5,2.3,0);g.add(handL);
-  var handR=handL.clone();handR.position.set(1.5,2.3,0);g.add(handR);
-  // Halo (large, golden, glowing)
-  var haloMat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:1.0});
-  var halo=new THREE.Mesh(new THREE.TorusGeometry(.7,.06,5,18),haloMat);halo.position.y=3.3;g.add(halo);
-  // Wound marks (red dots)
-  var wm=new THREE.MeshLambertMaterial({color:0xcc2222,emissive:new THREE.Color(0xff0000),emissiveIntensity:.5});
-  var wL=new THREE.Mesh(new THREE.SphereGeometry(.06,4,4),wm);wL.position.set(-1.45,2.3,.15);g.add(wL);
-  var wR=wL.clone();wR.position.set(1.45,2.3,.15);g.add(wR);
-  // Light source
-  var jesusPL=new THREE.PointLight(0xfff5cc,2.5,20);jesusPL.position.set(0,3,0);g.add(jesusPL);
-  g.position.set(x,y,z);addS(g);return g;
-}
-
-function buildDoveFigure(x,y,z){
-  var g=new THREE.Group();
-  // Dove body
-  var body=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,6),mkMat(0xffffff,0xffffff,.5));g.add(body);
-  // Head
-  var head=new THREE.Mesh(new THREE.SphereGeometry(.5,6,5),mkMat(0xffffff,0xffffff,.5));head.position.set(0,.6,-1);g.add(head);
-  // Wings
-  var wGL=new THREE.Mesh(new THREE.ConeGeometry(.4,2.5,4),mkMat(0xffffff,0xffffcc,.3));wGL.rotation.z=Math.PI*.55;wGL.position.set(-1.5,.3,0);g.add(wGL);
-  var wGR=wGL.clone();wGR.rotation.z=-Math.PI*.55;wGR.position.set(1.5,.3,0);g.add(wGR);
-  // Tail
-  var tail=new THREE.Mesh(new THREE.ConeGeometry(.3,1,4),mkMat(0xffffff));tail.rotation.x=-.5;tail.position.set(0,-.3,1.2);g.add(tail);
-  // Golden glow
-  var dovePL=new THREE.PointLight(0xffffaa,2,15);dovePL.position.set(0,0,0);g.add(dovePL);
-  g.position.set(x,y,z);g.userData={origY:y,phase:0};addS(g);return g;
-}
-
-function buildGodFather(x,y,z){
-  var g=new THREE.Group();
-  // Immense pillar of light (white/gold column)
-  var pillarMat=new THREE.MeshLambertMaterial({color:0xffffff,emissive:new THREE.Color(0xffffff),emissiveIntensity:0.9,transparent:true,opacity:.85});
-  var pillar=new THREE.Mesh(new THREE.CylinderGeometry(4,6,50,12),pillarMat);pillar.position.y=25;g.add(pillar);
-  // Outer glow layers
-  var glow1Mat=new THREE.MeshLambertMaterial({color:0xffd700,emissive:new THREE.Color(0xffd700),emissiveIntensity:.6,transparent:true,opacity:.4});
-  var glow1=new THREE.Mesh(new THREE.CylinderGeometry(6,9,50,12),glow1Mat);glow1.position.y=25;g.add(glow1);
-  var glow2Mat=new THREE.MeshLambertMaterial({color:0xffaa00,emissive:new THREE.Color(0xffaa00),emissiveIntensity:.3,transparent:true,opacity:.2});
-  var glow2=new THREE.Mesh(new THREE.CylinderGeometry(10,14,50,12),glow2Mat);glow2.position.y=25;g.add(glow2);
-  // Multiple point lights
-  for(var i=0;i<5;i++){var gl2=new THREE.PointLight(0xffffff,1.5,25);gl2.position.set(0,5+i*8,0);gl2.userData.glow=true;g.add(gl2);}
-  // Clouds of glory at base
-  for(var j=0;j<8;j++){var a=(j/8)*Math.PI*2,cr=8+Math.random()*4,ch=4+Math.random()*6;
-    var cloud=new THREE.Mesh(new THREE.SphereGeometry(cr,5,4),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.6}));
-    cloud.position.set(Math.cos(a)*10+x,ch,Math.sin(a)*10+z);addS(cloud);}
-  g.position.set(x,y,z);g.userData={glow:true};addS(g);return g;
-}
 
 /* ═══════════════════════════════════════════════════════════
    INTERACTION
